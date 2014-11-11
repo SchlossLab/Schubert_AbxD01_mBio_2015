@@ -134,6 +134,8 @@ summary.single(calc=nseqs-coverage-chao-sobs-invsimpson-simpsoneven-shannoneven-
 
 ## Figure 1
 
+This figure shows the differences in the communities' structures following different antibiotic treatments. The average *C. difficile* CFU/g Feces is also calculated in this code for each treatment group. 
+
 This figure was built using the following R code.  The input files are listed in Github.
 
 ```{r, eval=FALSE}
@@ -147,7 +149,7 @@ This figure was built using the following R code.  The input files are listed in
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Desktop/mothur/abxD01/barcharts/abxD01.final.tx.1.subsample.1.pick.relabund.topdose2.forlogscale.csv", header=T)
+file<-read.csv("~/Desktop/mothur/abxD01/barcharts/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
 fileIDS<-read.csv("~/Desktop/mothur/abxD01/barcharts/topdose_tx1_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
@@ -438,4 +440,93 @@ The graph can be sorted 2 ways either by the untreated's decreasing relabund, or
 - also wanted to try to make this table in the other direction: Phyla/OTUs as each graph with different shadings or colors for each treatment... will be good for titration graphs
 
 
+## Figure 2
 
+This figure shows the correlation analysis of bacterial species present on Day 0 with *C. difficile* levels on Day 1. 
+
+### Figure 2 Correlation Calculations
+
+Before we get to how this graph was made, we first used an R script to calculate the spearman correlation of OTUs' relative abundance. 
+
+The required file is located on Github.
+
+```{r, eval=FALSE}
+
+meta <- read.table('~/Desktop/mothur/abxD01/correlation/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.txt',header=T)
+#meta<-meta[1:96] #change based on number of OTUs above .05%, then add 2 for first two cols
+c<-1
+otu <- c()
+cor.spear <- c()
+pval.spear <- c()
+cor.ken = c()
+pval.ken = c()
+for(i in 3:length(meta)){
+  otu[c] <- colnames(meta[i])
+  cor.spear[c] <- cor.test(meta[,2],meta[,i], method="spearman")$estimate
+  pval.spear[c] <- cor.test(meta[,2],meta[,i], method="spearman")$p.value
+  cor.ken[c] <- cor.test(meta[,2],meta[,i], method="kendall")$estimate #good to see because kendall handles ties
+  pval.ken[c] <- cor.test(meta[,2],meta[,i], method="kendall")$p.value #but only works if this is tao-b and not tao-a which im not sure about
+  c <- c+1
+}
+
+pval.spear<-p.adjust(pval.spear, method='BH') #adjust for multiple comparisons
+pval.ken<-p.adjust(pval.ken, method='BH') #adjust for multiple comparisons
+
+results = NULL
+results <- matrix(c(otu, cor.spear, pval.spear, cor.ken, pval.ken), ncol=5)
+colnames(results) <- c('otu','corSpear','pvalSpear', "corKen", "pvalKen")
+results <- results[order(results[,3]),]  #order by pvalue column=3
+write.table(results[1:dim(results)[1],], file="~/Desktop/mothur/abxD01/correlation/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.results.txt", sep="\t", row.names=FALSE)
+
+```
+
+
+### Figure 2 Graph
+
+Necessary files are on github, and it was made using the following code: 
+
+```{r, eval=FALSE}
+
+##Paper Figure: correlations for topdose 
+c<-read.csv("~/Desktop/mothur/abxD01/correlation/corr_allSig_topdose2_stripchart.csv", header=T)
+labels=c("Lachnospiraceae", "Ruminococcaceae", "Clostridia", "Lactobacillales", "Firmicutes", "Bacillales", "Porphyromonadaceae", "Bacteroidales", "Bacteroidetes", "Actinobacteria", "Proteobacteria", "Anaeroplasma", "Deinococcus", "Unclassified")
+ns=c("n=18", "n=9", "n=8", "n=4", "n=2", "n=1", "n=15", "n=4", "n=1", "n=4", "n=3", "n=1", "n=1", "n=3")
+
+par(mar=c(12, 7, 2, 2) +0.1, mgp=c(5, 1, 0)) #default is 5.1 4.1 4.1 2.1 [bottom, left, top, right space], mgp=c(3, 1, 0) [label line location for x/y location labels, tick mark labels location, tick mark locations]
+stripchart(c$cor~c$order, vertical=TRUE, ylab="Correlation", ylim=c(.85, -.85), cex.axis=1.1, cex=2, pch=21, lwd=3, col="black", xaxt="n", method="jitter",  cex.lab=1.7, yaxt="n")
+axis(1, cex.axis=1, at=(1:nlevels(c$name)), labels=FALSE)
+text(1:nlevels(c$name)+.1, par("usr")[3]-0.16, label=labels, xpd=NA, pos=2, srt=45, cex=1.2)
+text(1:nlevels(c$name), par("usr")[3]-0.01, label=ns, xpd=NA, pos=1, cex=.9)
+axis(2, cex.axis=1.1, at=seq(-0.85,+0.85, by=.1), las=1)
+abline(v=c(1:nlevels(c$name)), col="dark gray")
+#abline(h=c(.3, -.3), col="dark gray", lty="dashed", lwd=4) #change to something else
+abline(h=0, col="black", lwd=2)
+
+```
+
+Figure saved as "corr_allSig_topdose2_10x8.pdf".
+
+### TO DO STILL
+- Do I want to change the groupings?
+
+## Figure 3
+
+This figure shows the effect of titrating antibiotics on the community as well as the resulting *C. difficile* levels.  
+
+### TO DO STILL
+- I want to change the graph so that the OTUs are their own graphs and the titrations are side by side
+
+## Figure 4
+
+This figure is a heatmap showing the correlation analysis results for the original set of antibiotic treatments and doses with the titration data sets. 
+
+### TO DO STILL
+- Add "ns" to the graph where not significant
+
+## Figure 5
+
+This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole.
+
+### TO DO STILL
+- Do for ampicillin too
+- Pick the same groups showed in Figure 2. 
