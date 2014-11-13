@@ -2,7 +2,7 @@
 title: "AbxD01 Analysis"
 author: "Alyx Schubert"
 date: "September 29, 2014"
-output: word_document
+output: pdf_document
 ---
 
 # Introduction
@@ -530,3 +530,10 @@ This figure shows the difference between the Day 0's in the delayed and original
 ### TO DO STILL
 - Do for ampicillin too
 - Pick the same groups showed in Figure 2. 
+
+## Figure 6
+ 
+This figure shows the results of our model predicting *C. difficile* colonization given relative abundances of a subset of bacteria.
+
+### TO DO STILL
+- Make figure!
