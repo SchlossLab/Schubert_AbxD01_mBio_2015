@@ -311,7 +311,7 @@ if(graphbyphyl==FALSE){
 if(graphbyphyl==TRUE){  
   par(mfrow=c(numphyla+1, 1)) #+2 to give extra labeling space--numphyl doesn't include the Other group
 #  par(mfrow=c(3, 1)) #temporarily for testing
-  par(mar=c(2, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is  par(mar=c(5, 4, 4, 2 ) +0.1, mgp=c(3, 1, 0)) bot/left/top/right, also default mgp is c(3,1,0)
+  par(mar=c(2.5, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is  par(mar=c(5, 4, 4, 2 ) +0.1, mgp=c(3, 1, 0)) bot/left/top/right, also default mgp is c(3,1,0)
   colors= gray.colors(numgr, start=0, end=1, alpha=NULL)
   currphy=ids[1, 4]
   k <- 1
@@ -330,13 +330,14 @@ if(graphbyphyl==TRUE){
           break}
       }
      
-    label<-barplot(mavgs[,j:(leng+j-1)], beside=TRUE, ylab=ids[j,3], col=colors, yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=5)
+    label<-barplot(mavgs[,j:(leng+j-1)],, beside=TRUE, ylab=ids[j,3], col=colors, yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=5)
+    
     axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
    # mtext("Relative Abundance", side=2, line=6, cex=.8)
     #mtext(avgCD[j], side=2, line=4.5, cex=.8)
     abline(h=c(0.001, 1), lwd=3) #min/max
-    abline(h=c(0.01, 0.1), col="black", lty="longdash", lwd=2)
-    abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="black", lty="dashed")
+    abline(h=c(0.01, 0.1), col="gray", lty="longdash", lwd=2)
+    abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="gray", lty="dashed")
 
     labelAVG=apply(label, 2, mean)
     axis(1, at=(labelAVG), labels=FALSE)

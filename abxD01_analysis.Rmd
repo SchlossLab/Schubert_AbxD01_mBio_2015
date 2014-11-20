@@ -525,9 +525,12 @@ Input files on github:
 
 ### TO DO STILL
 - I want to change the graph so that the OTUs are their own graphs and the titrations are side by side
+    -**11/20/14, completed most of the graphical parameters.*
 - once code is working then put up the other titration data files
 - change min relabund from 0.0001 to 0.001 for cef and strep
     - **11/20/14, changed the vanc titrations min**
+- *Possibly work on merging singles*
+- *Possibly work on getting plots on top of grid lines*
 
 ## Figure 4
 
