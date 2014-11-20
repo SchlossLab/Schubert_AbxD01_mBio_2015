@@ -513,27 +513,198 @@ Figure saved as "corr_allSig_topdose2_10x8.pdf".
 
 This figure shows the effect of titrating antibiotics on the community as well as the resulting *C. difficile* levels.  
 
+The code for this is still in the works. But is uploaded to github under Figure 3 folder.
+
+Input files on github:
+1. abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv
+2. abxD01/barcharts/allvanctitr_tx2_barchart_ids.csv
+
 ### TO DO STILL
 - I want to change the graph so that the OTUs are their own graphs and the titrations are side by side
+-once code is working then put up the other titration data files
 
 ## Figure 4
 
-This figure is a heatmap showing the correlation analysis results for the original set of antibiotic treatments and doses with the titration data sets. 
+This figure is a heatmap showing the correlation analysis results for the original set of antibiotic treatments and doses with the titration data sets.
+
+2 input files found in Figure 4 github folder:
+1. correl_heatmap_0.01rel_topdose2_newtitr.csv
+2. correl_heatmapSIDE_0.01rel_topdose2_newtitr.csv
+
+
+```{r, eval=FALSE}
+library(gplots)
+correl<- read.csv("~/Desktop/mothur/abxD01/correlation/correl_heatmap_0.01rel_topdose2_newtitr.csv", header=T)
+
+row.names(correl)<-correl$OTU
+correl_matrix<-data.matrix(correl)
+correl_matrix<-correl_matrix[,-1]
+correl_matrix<-data.matrix(correl_matrix)
+my_palette <- colorRampPalette(c("blue", "white", "red"))(n = 299)
+breaks = c(seq(-1,-.33,length=100),seq(-.33,.33,length=100),seq(.33,1,length=100))#changed to equal numbers
+
+#par(mar=c(4, 6, 3, 4.5) +0.1) #default is 5.1 4.1 4.1 2.1
+
+side<-scan("~/Desktop/mothur/abxD01/correlation/correl_heatmapSIDE_0.01rel_topdose2_newtitr.csv", what=",", sep=",")
+side2<-read.csv("~/Desktop/mothur/abxD01/correlation/correl_heatmapSIDE_0.01rel_topdose2_newtitr.csv", header=T)
+side3<-as.matrix(side2)
+#lmat=rbind(c(4,3), c(2,1))
+#lmat=rbind(c(4,3), c(1,2))
+
+#lmat order: 1)row dendrogram, 2) heatmap, 3)col?, 4)key?--key disappeared
+lmat = rbind(3:4, 1:2)
+lmat = rbind(c(2,4), c(1,3))
+lmat = rbind(c(0,3), c(2,1))
+lmat=NULL
+lwid=NULL
+lhei=NULL
+lwid = c(.5, 2, 4)
+lhei = c(.7, 4)
+  
+correl_heatmap<-heatmap.2(correl_matrix, scale="none",  col=my_palette, breaks=breaks, density.info="none", lhei=lhei,lwid=lwid, RowSideColors=side3[,2], labRow=side3[,1], trace="none",margins=c(8, 25), dendrogram="none",  Rowv=FALSE, Colv=FALSE,  na.color="black", cexCol=1.5,  key=TRUE, keysize=1, cexRow=1) #then plot was 7x8in, portrait
+
+```
+
+Each row in this heatmap represents a single OTU. The side colors show broad taxonomic groups of each OTU. The subsequent columns show the correlation value for each OTU (Day 0) with Day 1 *C. difficile* colonization levels by plating. The first column represents the correlations calculations over all the original antibiotics used in the study. The last 3 columns represent the correlation calculations over the titration experiments for the given antibiotic. An example pdf of this figure is on github.
 
 ### TO DO STILL
 - Add "ns" to the graph where not significant
+- Is this the order of drugs I want-keep consistent
+- for all the significant values for each pair of original + abx rows that are both significant, quantify that significance for each column (abx treatment)... see personal notes for more
+- change xlabel names
+- change code to get the key back
 
 ## Figure 5
 
-This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole.
+This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole. The figure is shown as a pdf on github.
+
+Input files found on github:
+1. abxD01.final.tx.2.subsample.2.pick.metro.relabund.d0s.txt
+
+```{r, eval=FALSE}
+#First calculating:
+b<-read.delim("~/Desktop/mothur/abxD01/barcharts/abxD01.final.tx.2.subsample.2.pick.metro.relabund.d0s.txt", header=T)
+
+avg1<-tapply(b$Otu001, b$order, mean)
+sd1<-tapply(b$Otu001, b$order, sd)
+
+avg11<-tapply(b$Otu011, b$order, mean)
+sd11<-tapply(b$Otu011, b$order, sd)
+
+avg02<-tapply(b$Otu002, b$order, mean)
+sd02<-tapply(b$Otu002, b$order, sd)
+
+avg03<-tapply(b$Otu003, b$order, mean)
+sd03<-tapply(b$Otu003, b$order, sd)
+
+avg7<-tapply(b$Otu007, b$order, mean)
+sd7<-tapply(b$Otu007, b$order, sd)
+
+avg05<-tapply(b$Otu005, b$order, mean)
+sd05<-tapply(b$Otu005, b$order, sd)
+
+avg16<-tapply(b$Otu016, b$order, mean)
+sd16<-tapply(b$Otu016, b$order, sd)
+
+avg06<-tapply(b$Otu006, b$order, mean)
+sd06<-tapply(b$Otu006, b$order, sd)
+
+avg04<-tapply(b$Otu004, b$order, mean)
+sd04<-tapply(b$Otu004, b$order, sd)
+
+#Now graphing:
+par(mfrow=c(4, 3)) 
+
+par(mar=c(2, 4, 2, 3) +0.1)
+plot1<-barplot(avg1, col="darkblue", cex.axis=1.3, xaxt="n") 
+error.bar(plot1, avg1, sd1) #plot SD
+
+par(mar=c(2, 3, 2, 3) +0.1)
+plot03<-barplot(avg03, col="steelblue", cex.axis=1.3, xaxt="n")
+error.bar(plot03, avg03, sd03) #plot SD
+
+plot11<-barplot(avg11, col="darkgreen", cex.axis=1.3, xaxt="n")
+error.bar(plot11, avg11, sd11) #plot SD
+
+par(mar=c(2, 4, 2, 3) +0.1)
+plot02<-barplot(avg02, col="darkred", cex.axis=1.3, xaxt="n")
+error.bar(plot02, avg02, sd02) #plot SD
+
+par(mar=c(2, 3, 2, 3) +0.1)
+plot05<-barplot(avg05, col="orange2", cex.axis=1.3, xaxt="n")
+error.bar(plot05, avg05, sd05) #plot SD
+
+plot04<-barplot(avg04, col="gold1", cex.axis=1.3, xaxt="n")
+error.bar(plot04, avg04, sd04) #plot SD
+
+par(mar=c(2, 4, 2, 3) +0.1)
+plot16<-barplot(avg16, col="deeppink3", cex.axis=1.3, xaxt="n")
+error.bar(plot16, avg16, sd16) #plot SD
+axis(1, at=plot16, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+par(mar=c(2, 3, 2, 3) +0.1)
+plot7<-barplot(avg7, col="blueviolet", cex.axis=1.3, xaxt="n")
+error.bar(plot7, avg7, sd7) #plot SD
+axis(1, at=plot7, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+plot06<-barplot(avg06, col="black", cex.axis=1.3, xaxt="n")
+error.bar(plot06, avg06, sd06) #plot SD
+axis(1, at=plot06, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+#Now figure legend:
+plot(1, type="n", axes=F, xlab="", ylab="")
+
+leg<-c("Porphyromonadaceae", "Bacteroides","Erysipelotrichaceae" )
+col<-c("darkblue",  "steelblue", "darkgreen" )
+#pch<-c(16, 16, 16)
+legend("left", legend=leg, pch=15, col=col,  cex=1.7, bty="n", ncol=1)
+
+plot(1, type="n", axes=F, xlab="", ylab="")
+
+leg<-c("Lachnospiraceae",  "Lactobacillus", "Ruminococcaceae" )
+col<-c("darkred", "orange2", "gold1" )
+#pch<-c(16, 16, 16)
+legend("left", legend=leg, pch=15, col=col,  cex=1.7, bty="n", ncol=1)
+
+plot(1, type="n", axes=F, xlab="", ylab="")
+
+leg<-c("Bifidobacterium",  "Enterobacteriaceae","Akkermansia" )
+col<-c("deeppink3", "blueviolet", "black" )
+#pch<-c(16, 16, 16)
+legend("left", legend=leg, pch=15, col=col,  cex=1.7, bty="n", ncol=1)
+
+
+par(mfrow=c(1, 1)) 
+
+
+```
 
 ### TO DO STILL
 - Do for ampicillin too
-- Pick the same groups showed in Figure 2. 
+- Pick the same groups showed in Figure 2. AND as side heatmap.
 
 ## Figure 6
  
 This figure shows the results of our model predicting *C. difficile* colonization given relative abundances of a subset of bacteria.
 
+### Figure 6: Model Building
+
+In order to determine the best possible set of models, I first narrowed down the list of candidate OTUs to be considered in the model. This candidate list was created using several criteria, based on the data from the original set of antibiotic experiments alone:
+
+1. Using top results of random forest's feature selection. 
+2. Incorporating both strongly positively correlated OTUs and strongly negatively correlated OTUs. We used the spearman correlation analysis for this, see Figure 2.
+3. Using sparCC in mothur to determine any strong correlations (>90%) among the candidate list OTUs. We found the highest correlation between OTUs to be ___% This was not high enough to consider eliminating from the list.
+4. Limiting the candidate list to 15 OTUs. 
+
+For the model, I limited models to include anywhere from 1 to 10 parameters. I log transformed the *C. difficile* CFU/g feces on Day 1 for inclusion in a linear model. The OTU data was in the form of a shared file.  
+
+The script for running this code is called "abxD01.lmModel.compare.R". The input files for this script are:
+1. abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.15otus.rfnegpos.csv
+
+I realize I could've done the modelling comparison script in a loop and shortened the code length significantly, but deal with it. 
+
 ### TO DO STILL
-- Make figure!
+- Make figure! for modelling results
+- The criteria for picking the otus, these results can be listed in supplementary tables possibly. 
+- Consider rerunning the model building code using a bigger candidate list, or using higher level taxonomy!!!
+- Calculate the BIC for each--change code for this
