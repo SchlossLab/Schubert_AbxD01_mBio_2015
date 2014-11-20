@@ -435,8 +435,10 @@ par(mfrow=c(1, 1))
 The graph can be sorted 2 ways either by the untreated's decreasing relabund, or by the most abundant within each phylum. For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. File saved as "topdose2_tx1_sorted_10x20.pdf"
 
 ### TO DO STILL
-- change the "0" to be min o 0.001 instead
+- change the "0" to be min of 0.001 instead of 0.0001 relabund
+    - **completed 11/20/14, just make sure future files are changed for other graphs using the "abxD01.barcharts.xOTU.test.r"**
 - add the 1/2 dashed lines
+    - **completed 11/20/14**
 - also wanted to try to make this table in the other direction: Phyla/OTUs as each graph with different shadings or colors for each treatment... will be good for titration graphs
 
 
@@ -483,6 +485,8 @@ write.table(results[1:dim(results)[1],], file="~/Desktop/mothur/abxD01/correlati
 
 ### Figure 2 Graph
 
+This figure shows correlation values for OTUs with next day *C. difficile* CFU levels calculated across the original set of antibiotic experiments. 
+
 Necessary files are on github, and it was made using the following code: 
 
 ```{r, eval=FALSE}
@@ -521,7 +525,9 @@ Input files on github:
 
 ### TO DO STILL
 - I want to change the graph so that the OTUs are their own graphs and the titrations are side by side
--once code is working then put up the other titration data files
+- once code is working then put up the other titration data files
+- change min relabund from 0.0001 to 0.001 for cef and strep
+    - **11/20/14, changed the vanc titrations min**
 
 ## Figure 4
 

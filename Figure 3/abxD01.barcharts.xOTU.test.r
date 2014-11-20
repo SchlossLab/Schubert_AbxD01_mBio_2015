@@ -8,7 +8,7 @@
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Desktop/mothur/abxD01/barcharts/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
 fileIDS<-read.csv("~/Desktop/mothur/abxD01/barcharts/allvanctitr_tx2_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
 abx<-c("Untreated", "Vanc 0.625", "Vanc 0.3", "Vanc 0.1")
@@ -274,29 +274,29 @@ if(graphbyphyl==FALSE){
   for(j in 1:numgr){
     
     if(j != numgr){
-      barplot(mavgs[j, 1:leng], ylab=NULL, col="black", yaxt="n", xaxt="n", ylim=c(0.0001, 1), log="y", cex.names=3)
+      barplot(mavgs[j, 1:leng], ylab=NULL, col="black", yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=3)
       #error.bar(bp[k], mavgs[j, 1:leng[2]], mstds[j, 1:leng[2]])  #the bp[k] was for storing the barplot locations to use for these errors
       # k <- k+1
-      axis(2, las=1, at=c(.0001, .001, .01, .1, 1), labels=c(0, .001, .01, .1, 1), cex.axis=1.1)
+      axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
       mtext(abx[j], side=2, line=6, cex=.8)
       mtext(avgCD[j], side=2, line=4.5, cex=.8)
-      abline(h=c(0.0001, 1), lwd=3)
-      abline(h=c(0.001, 0.01, 0.1), col="black", lty="longdash", lwd=1.5)
-      abline(h=c(.25,.5, .75), col="black", lty="dashed")
+      abline(h=c(0.001, 1), lwd=3) #min/max
+      abline(h=c(0.01, 0.1), col="black", lty="longdash", lwd=2)
+      abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="black", lty="dashed")
     }
     
     else{ #the last graph needs different margins    
-      label<-barplot(mavgs[j, 1:leng], col="black",ylab=NULL,  yaxt="n", xaxt="n", ylim=c(0.0001, 1), log="y", cex.names=3)
+      label<-barplot(mavgs[j, 1:leng], col="black",ylab=NULL,  yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=3)
       #error.bar(bp[k], mavgs[j, 1:leng[2]], mstds[j, 1:leng[2]])  #the bp[k] was for storing the barplot locations to use for these errors
-      axis(2, las=1, at=c(.0001, .001, .01, .1, 1), labels=c(0, .001, .01, .1, 1), cex.axis=1.1)
+      axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
       mtext(abx[j], side=2, line=6, cex=.8)
       mtext(avgCD[j], side=2, line=4.5, cex=.8)
       axis(1, at=(label[,1]), labels=FALSE)
-      text(label[,1]+.13, .00005, label=ids[,2], xpd=NA, pos=2, srt=45, cex=1.2)
+      text(label[,1]+.13, .0005, label=ids[,2], xpd=NA, pos=2, srt=45, cex=1.2)
       #text(-3.9,.0001, label=expression(paste(italic("C.d."), " CFU/g Feces:")), xpd=NA, pos=2, srt=90, cex=1.1)
-      abline(h=c(0.0001,1), lwd=3)
-      abline(h=c(0.001, 0.01, 0.1), col="black", lty="longdash", lwd=1.5)
-      abline(h=c(.25,.5, .75), col="black", lty="dashed") 
+      abline(h=c(0.001,1), lwd=3) #min/max
+      abline(h=c(0.01, 0.01), col="black", lty="longdash", lwd=2)
+      abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="black", lty="dashed") 
     }  
     
   }
@@ -309,35 +309,41 @@ if(graphbyphyl==FALSE){
 
 ###2nd PLOT PARAMETERS
 if(graphbyphyl==TRUE){  
-  par(mfrow=c(numphyla+2, 1)) #+2 to give extra labeling space--numphyl doesn't include the Other group
-  par(mar=c(4, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is  par(mar=c(5, 4, 4, 2 ) +0.1, mgp=c(3, 1, 0)) bot/left/top/right, also default mgp is c(3,1,0)
+  par(mfrow=c(numphyla+1, 1)) #+2 to give extra labeling space--numphyl doesn't include the Other group
+#  par(mfrow=c(3, 1)) #temporarily for testing
+  par(mar=c(2, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is  par(mar=c(5, 4, 4, 2 ) +0.1, mgp=c(3, 1, 0)) bot/left/top/right, also default mgp is c(3,1,0)
   colors= gray.colors(numgr, start=0, end=1, alpha=NULL)
   currphy=ids[1, 4]
-  k=1
+  k <- 1
   idleng<-dim(mavgs)[2]
-  j=1
+  j <- 1
   
-  while(j < idleng){
-    leng = 0
+  while(j < (idleng+1)){
+    leng <- 0
     
+
       while(currphy==ids[k, 4])
       {
-        leng = leng+1
-        k=k+1
+        leng <- leng+1
+        k <- k+1
+        if( k > idleng ){
+          break}
       }
-        
-      label<-barplot(mavgs[,1:leng], beside=TRUE, ylab=ids[leng,3], col=colors, yaxt="n", xaxt="n", ylim=c(0.0001, 1), log="y", cex.names=3)
-      axis(2, las=1, at=c(.0001, .001, .01, .1, 1), labels=c(0, .001, .01, .1, 1), cex.axis=1.1)
-     # mtext("Relative Abundance", side=2, line=6, cex=.8)
-      #mtext(avgCD[j], side=2, line=4.5, cex=.8)
-      abline(h=c(0.0001, 1), lwd=3)
-      abline(h=c(0.001, 0.01, 0.1), col="black", lty="longdash", lwd=1.5)
-      abline(h=c(.25,.5, .75), col="black", lty="dashed")
+     
+    label<-barplot(mavgs[,j:(leng+j-1)], beside=TRUE, ylab=ids[j,3], col=colors, yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=5)
+    axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
+   # mtext("Relative Abundance", side=2, line=6, cex=.8)
+    #mtext(avgCD[j], side=2, line=4.5, cex=.8)
+    abline(h=c(0.001, 1), lwd=3) #min/max
+    abline(h=c(0.01, 0.1), col="black", lty="longdash", lwd=2)
+    abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="black", lty="dashed")
 
-      labelAVG=apply(label, 2, mean)
-      axis(1, at=(labelAVG), labels=FALSE)
-      text(labelAVG+.13, .00005, label=ids[j:(leng),2], xpd=NA, pos=2, srt=45, cex=1.2)
-      j=j+leng
+    labelAVG=apply(label, 2, mean)
+    axis(1, at=(labelAVG), labels=FALSE)
+    text(labelAVG+.13, .0005, label=ids[j:(leng+j-1),2], xpd=NA, pos=1, srt=15, cex=.8)
+    
+    j<-j+leng
+    currphy <- ids[j, 4]
   }
   par(mfrow=c(1, 1))
 } #if(graphbyphyl=TRUE) 
