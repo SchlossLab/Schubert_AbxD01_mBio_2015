@@ -434,14 +434,6 @@ par(mfrow=c(1, 1))
 
 The graph can be sorted 2 ways either by the untreated's decreasing relabund, or by the most abundant within each phylum. For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. File saved as "topdose2_tx1_sorted_10x20.pdf"
 
-### TO DO STILL
-- change the "0" to be min of 0.001 instead of 0.0001 relabund
-    - **completed 11/20/14, just make sure future files are changed for other graphs using the "abxD01.barcharts.xOTU.test.r"**
-- add the 1/2 dashed lines
-    - **completed 11/20/14**
-- also wanted to try to make this table in the other direction: Phyla/OTUs as each graph with different shadings or colors for each treatment... will be good for titration graphs
-
-
 ## Figure 2
 
 This figure shows the correlation analysis of bacterial species present on Day 0 with *C. difficile* levels on Day 1. 
@@ -510,9 +502,6 @@ abline(h=0, col="black", lwd=2)
 
 Figure saved as "corr_allSig_topdose2_10x8.pdf".
 
-### TO DO STILL
-- Do I want to change the groupings?
-
 ## Figure 3
 
 This figure shows the effect of titrating antibiotics on the community as well as the resulting *C. difficile* levels.  
@@ -522,15 +511,6 @@ The code for this is still in the works. But is uploaded to github under Figure 
 Input files on github:
 1. abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv
 2. abxD01/barcharts/allvanctitr_tx2_barchart_ids.csv
-
-### TO DO STILL
-- I want to change the graph so that the OTUs are their own graphs and the titrations are side by side
-    -**11/20/14, completed most of the graphical parameters.*
-- once code is working then put up the other titration data files
-- change min relabund from 0.0001 to 0.001 for cef and strep
-    - **11/20/14, changed the vanc titrations min**
-- *Possibly work on merging singles*
-- *Possibly work on getting plots on top of grid lines*
 
 ## Figure 4
 
@@ -575,13 +555,6 @@ correl_heatmap<-heatmap.2(correl_matrix, scale="none",  col=my_palette, breaks=b
 ```
 
 Each row in this heatmap represents a single OTU. The side colors show broad taxonomic groups of each OTU. The subsequent columns show the correlation value for each OTU (Day 0) with Day 1 *C. difficile* colonization levels by plating. The first column represents the correlations calculations over all the original antibiotics used in the study. The last 3 columns represent the correlation calculations over the titration experiments for the given antibiotic. An example pdf of this figure is on github.
-
-### TO DO STILL
-- Add "ns" to the graph where not significant
-- Is this the order of drugs I want-keep consistent
-- for all the significant values for each pair of original + abx rows that are both significant, quantify that significance for each column (abx treatment)... see personal notes for more
-- change xlabel names
-- change code to get the key back
 
 ## Figure 5
 
@@ -688,10 +661,6 @@ par(mfrow=c(1, 1))
 
 ```
 
-### TO DO STILL
-- Do for ampicillin too
-- Pick the same groups showed in Figure 2. AND as side heatmap.
-
 ## Figure 6
  
 This figure shows the results of our model predicting *C. difficile* colonization given relative abundances of a subset of bacteria.
@@ -712,8 +681,3 @@ The script for running this code is called "abxD01.lmModel.compare.R". The input
 
 I realize I could've done the modelling comparison script in a loop and shortened the code length significantly, but deal with it. 
 
-### TO DO STILL
-- Make figure! for modelling results
-- The criteria for picking the otus, these results can be listed in supplementary tables possibly. 
-- Consider rerunning the model building code using a bigger candidate list, or using higher level taxonomy!!!
-- Calculate the BIC for each--change code for this
