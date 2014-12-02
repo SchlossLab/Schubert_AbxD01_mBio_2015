@@ -1600,6 +1600,8 @@ print(model_logtrans)
 
 #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
 varImpPlot(model_logtrans, type=1)
+imp<-importance(model_logtrans)
+most.imp<-rownames(imp[order(imp[, "MeanDecreaseAccuracy"], decreasing=T)[1:5],])
 
 #predict the outcome of the testing data
 predicted_logtrans <- predict(model_logtrans, newdata=testing_logtrans[ ,-1])

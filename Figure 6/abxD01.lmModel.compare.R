@@ -13,22 +13,22 @@ require(MASS)
 
 
 
-topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.15otus.rfnegpos.csv", header=T)
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.19otus.rfnegpos.csv", header=T)
 td<-topdose[,-1]
 ids<-names(td)
 ids = ids[-1]
 
 numOTU=length(td)-1
 
-results = data.frame(matrix(0, ncol=numOTU+5)) #table as follows: model# AIC numVar intercept OTU1B OTU2B ... etc all included
-colnames(results)[1:5] = c("Modelnum", "AIC", "rsq", "vars", "intCoeff")
-colnames(results)[6:(numOTU+5)] = ids
+results = data.frame(matrix(0, ncol=numOTU+6)) #table as follows: model# AIC numVar intercept OTU1B OTU2B ... etc all included
+colnames(results)[1:6] = c("Modelnum", "AIC", "BIC", "rsq", "vars", "intCoeff")
+colnames(results)[7:(numOTU+6)] = ids
 #make results headings
 
 #results = NULL
 #results = data.frame(NULL)
 
-
+######################################################
 #all combos for a model with 1 variable
 for(i in 1:numOTU){ 
   m1 = NULL
@@ -48,20 +48,22 @@ if(is.null(err)) {
   results[i, 1] = i
   results[i, 2] = c("NA")
   results[i, 3] = c("NA")
-  results[i, 4] = c(1)
-  results[i, 5] = names(td)[(i+1)] #add more names as in formula
+  results[i, 4] = c("NA")
+  results[i, 5] = c(1)
+  results[i, 6] = names(td)[(i+1)] #add more names as in formula
 }
 else{
   results[i, 1] = i #model number
   results[i, 2] = AIC(m1) #AIC 
+  results[i, 3] = BIC(m1) #BIC 
   coeff=m1$coefficients
   names(coeff)[2] = names(td)[i+1]
   vars = length(coeff)-1
-  results[i, 3] = summary(m1)$r.squared
-  results[i, 4] = vars #number of variables in model
-  results[i, 5] = coeff[1] #intercept coefficient
+  results[i, 4] = summary(m1)$r.squared
+  results[i, 5] = vars #number of variables in model
+  results[i, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     for(k in 2:(vars+1)){
       if(names(coeff)[k]==names(results)[j]){
         results[i, j] =   coeff[k]  #print coefficient value
@@ -76,7 +78,7 @@ else{
 }
 }
 
-
+######################################################
 #all combos for a model with 2 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -99,10 +101,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(2) #change based on vars#
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(2) #change based on vars#
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -125,16 +128,17 @@ if(is.null(err)) {
 else{
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       if(names(coeff)[k]==names(results)[j]){
@@ -157,7 +161,7 @@ rowNum = rowNum+1
 }
 
 
-
+######################################################
 #all combos for a model with 3 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -181,10 +185,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(3) #change based on var num
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(3) #change based on var num
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -211,16 +216,17 @@ if(is.null(err)) {
 else{
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
   names(coeff)[4] = names(td)[(c)] #add more names as in formula
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -247,7 +253,7 @@ rowNum = rowNum+1
 }
 
 
-
+######################################################
 #all combos for a model with 4 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -272,10 +278,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(4) #changed based on var#
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(4) #changed based on var#
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -306,6 +313,8 @@ if(is.null(err)) {
 else{
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
+  
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
@@ -313,11 +322,11 @@ else{
   names(coeff)[5] = names(td)[(d)] #add more names as in formula
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -343,7 +352,7 @@ rowNum = rowNum+1
   } #for(b in bstart:numOTU)
 }
 
-
+#########################################################
 #all combos for a model with 5 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -369,10 +378,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(5) #changed based on var#
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(5) #changed based on var#
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -407,6 +417,8 @@ if(is.null(err)) {
 else{ #no error in model building
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
+  
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
@@ -415,11 +427,11 @@ else{ #no error in model building
   names(coeff)[6] = names(td)[(e)] #add more names as in formula
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -447,7 +459,7 @@ rowNum = rowNum+1
 }
 
 
-
+######################################################
 #all combos for a model with 6 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -475,10 +487,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA") 
-  results[rowNum, 4] = c(6) #changed based on var#
-  results[rowNum, 5] = c("NA") 
+  results[rowNum, 4] = c("NA") 
+  results[rowNum, 5] = c(6) #changed based on var#
+  results[rowNum, 6] = c("NA") 
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -517,6 +530,8 @@ if(is.null(err)) {
 else{ #no error in model building
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
+  
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
@@ -527,11 +542,11 @@ else{ #no error in model building
   
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -561,7 +576,7 @@ rowNum = rowNum+1
 }
 
 
-
+############################################################
 #all combos for a model with 7 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -589,10 +604,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(7) #changed based on var#
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(7) #changed based on var#
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -635,6 +651,8 @@ if(is.null(err)) {
 else{ #no error in model building
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
+  
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
@@ -646,11 +664,11 @@ else{ #no error in model building
   
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -681,7 +699,7 @@ rowNum = rowNum+1
 }
 
 
-
+###############################################################
 #all combos for a model with 8 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -711,10 +729,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(8) #changed based on var#
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(8) #changed based on var#
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -761,6 +780,8 @@ if(is.null(err)) {
 else{ #no error in model building
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
+  
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
@@ -773,11 +794,11 @@ else{ #no error in model building
   
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -810,7 +831,7 @@ rowNum = rowNum+1
 
 
 
-
+############################################################
 #all combos for a model with 9 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -841,10 +862,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(9) #changed based on var#
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(9) #changed based on var#
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -895,6 +917,8 @@ if(is.null(err)) {
 else{ #no error in model building
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
+  
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
@@ -908,11 +932,11 @@ else{ #no error in model building
   
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -945,7 +969,7 @@ rowNum = rowNum+1
 }
 
 
-
+#########################################################
 #all combos for a model with 10 variables
 totmodels = dim(results)[1]
 rowNum = totmodels +1
@@ -977,10 +1001,11 @@ if(is.null(err)) {
   results[rowNum, 1] = rowNum
   results[rowNum, 2] = c("NA")
   results[rowNum, 3] = c("NA")
-  results[rowNum, 4] = c(10) #changed based on var#
-  results[rowNum, 5] = c("NA")
+  results[rowNum, 4] = c("NA")
+  results[rowNum, 5] = c(10) #changed based on var#
+  results[rowNum, 6] = c("NA")
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     
     if(names(td)[i]==names(results)[j]){
@@ -1035,6 +1060,8 @@ if(is.null(err)) {
 else{ #no error in model building
   results[rowNum, 1] = rowNum #model number
   results[rowNum, 2] = AIC(m1) #AIC 
+  results[rowNum, 3] = BIC(m1) #BIC 
+  
   coeff=m1$coefficients      
   names(coeff)[2] = names(td)[(i)]
   names(coeff)[3] = names(td)[(b)]
@@ -1049,11 +1076,11 @@ else{ #no error in model building
   
   
   vars = length(coeff)-1
-  results[rowNum, 3] = summary(m1)$r.squared
-  results[rowNum, 4] = vars #number of variables in model
-  results[rowNum, 5] = coeff[1] #intercept coefficient
+  results[rowNum, 4] = summary(m1)$r.squared
+  results[rowNum, 5] = vars #number of variables in model
+  results[rowNum, 6] = coeff[1] #intercept coefficient
   
-  for(j in 6:(numOTU+5)){  #fill results columns for each OTU whether NA or a coefficient value
+  for(j in 7:(numOTU+6)){  #fill results columns for each OTU whether NA or a coefficient value
     found = FALSE
     for(k in 2:(vars+1)){
       
@@ -1086,4 +1113,4 @@ rowNum = rowNum+1
   } #for(b in bstart:numOTU)
 }
 
-write.table(results[1:dim(results)[1],], file="~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.15otus.rfnegpos.results.txt", sep="\t", row.names=FALSE)
+write.table(results[1:dim(results)[1],], file="~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.19otus.rfnegpos.results.txt", sep="\t", row.names=FALSE)

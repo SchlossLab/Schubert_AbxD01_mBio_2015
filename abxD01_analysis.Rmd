@@ -669,10 +669,10 @@ This figure shows the results of our model predicting *C. difficile* colonizatio
 
 In order to determine the best possible set of models, I first narrowed down the list of candidate OTUs to be considered in the model. This candidate list was created using several criteria, based on the data from the original set of antibiotic experiments alone:
 
-1. Using top results of random forest's feature selection. 
-2. Incorporating both strongly positively correlated OTUs and strongly negatively correlated OTUs. We used the spearman correlation analysis for this, see Figure 2.
-3. Using sparCC in mothur to determine any strong correlations (>90%) among the candidate list OTUs. We found the highest correlation between OTUs to be ___% This was not high enough to consider eliminating from the list.
-4. Limiting the candidate list to 15 OTUs. 
+1. Using top 15 results from random forest's feature selection. These OTUs had the highest % increase in MSE in the random forest regression model. These 15 were the top OTUs that were also not "unclassified".
+2. Incorporating both the top 5 most positively correlated OTUs and 10 most negatively correlated OTUs. We used the spearman correlation analysis for this, see Figure 2. The number of significantly negatively correlated OTUs far outnumber the number of signifacntly positive correlated OTUs. Due to this difference we chose to incorporate more negative OTUs over positive.
+3. Using sparCC in mothur to determine any strong correlations (>90%) among the candidate list OTUs. We found the highest correlation between OTUs to be 84.0% between OTUs 6 & 7, which subsequently dropped off to 70.1%. This was not high enough to consider eliminating from the list.
+
 
 For the model, I limited models to include anywhere from 1 to 10 parameters. I log transformed the *C. difficile* CFU/g feces on Day 1 for inclusion in a linear model. The OTU data was in the form of a shared file.  
 
@@ -681,3 +681,66 @@ The script for running this code is called "abxD01.lmModel.compare.R". The input
 
 I realize I could've done the modelling comparison script in a loop and shortened the code length significantly, but deal with it. 
 
+### Figure 6: Model Building - Random Forest's Feature Selection
+
+The input file includes the Day 0 shared values for OTUs (whose relative abundance was equal to or greater than 1%) and the log transformed next day CFU values (log(CFU)).
+
+Then in r: 
+```{r, eval=TRUE}
+topdose_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv", header=T)
+training_logtrans<-topdose_logtrans[,-1]
+newtit_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.csv", header=T)
+testing_logtrans<-newtit_logtrans[,-1] #new titration data only
+delay_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delays.regression.logtrans.csv", header=T)
+testing2_logtrans<-delay_logtrans[,-1]
+
+library(randomForest)
+
+#fit the randomforest model
+model_logtrans <- randomForest(nextDayCFU~., 
+                      data = training_logtrans,  outscale=TRUE,
+                      importance=TRUE, proximity=TRUE,
+                      keep.forest=TRUE, ntree=5000
+)
+plot(model_logtrans)
+
+print(model_logtrans)
+
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+varImpPlot(model_logtrans, type=1)
+imp<-importance(model_logtrans)
+most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
+
+
+#predict the outcome of the testing data
+predicted_logtrans <- predict(model_logtrans, newdata=testing_logtrans[ ,-1])
+predicted2_logtrans <- predict(model_logtrans, newdata=testing2_logtrans[ ,-1])
+
+# what is the proportion variation explained in the outcome of the testing data?
+# i.e., what is 1-(SSerror/SStotal)
+actual_logtrans <- testing_logtrans$nextDayCFU
+actual2_logtrans <- testing2_logtrans$nextDayCFU
+
+ybar = mean(actual_logtrans)
+SSres = sum((actual_logtrans-predicted_logtrans)^2)
+SStot = sum((actual_logtrans-ybar)^2)
+rsq = 1-(SSres/SStot)
+
+#rsq_logtrans <- 1-sum((actual_logtrans-predicted_logtrans)^2)/sum((actual_logtrans-mean(actual_logtrans))^2)
+print(rsq)
+
+ybar2 = mean(actual2_logtrans)
+SSres2 = sum((actual2_logtrans-predicted2_logtrans)^2)
+SStot2 = sum((actual2_logtrans-ybar2)^2)
+rsq2 = 1-(SSres2/SStot2)
+
+print(rsq2)
+
+write.table(cbind(actual_logtrans, predicted_logtrans), file="~/Desktop/mothur/abxD01/rf/RF.regression.topTitr.txt", sep="\t", row.names=FALSE)
+
+```
+
+The "plot(model_logtrans)" shows that setting ntree=5000 is enough to get a consistently low error. 
+
+We can also see from printing the results that the percent variation explained is 88.4%. 
