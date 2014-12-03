@@ -673,13 +673,12 @@ In order to determine the best possible set of models, I first narrowed down the
 2. Incorporating both the top 5 most positively correlated OTUs and 10 most negatively correlated OTUs. We used the spearman correlation analysis for this, see Figure 2. The number of significantly negatively correlated OTUs far outnumber the number of signifacntly positive correlated OTUs. Due to this difference we chose to incorporate more negative OTUs over positive.
 3. Using sparCC in mothur to determine any strong correlations (>90%) among the candidate list OTUs. We found the highest correlation between OTUs to be 84.0% between OTUs 6 & 7, which subsequently dropped off to 70.1%. This was not high enough to consider eliminating from the list.
 
-
 For the model, I limited models to include anywhere from 1 to 10 parameters. I log transformed the *C. difficile* CFU/g feces on Day 1 for inclusion in a linear model. The OTU data was in the form of a shared file.  
 
-The script for running this code is called "abxD01.lmModel.compare.R". The input files for this script are:
+The script for running this code is called "abxD01.lmModel.compare2.R". The input files for this script are:
 1. abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.15otus.rfnegpos.csv
 
-I realize I could've done the modelling comparison script in a loop and shortened the code length significantly, but deal with it. 
+I found a program "leaps" in r which will calculate all subsets of a model for a given range of parameters in the model. That is what is used in the above .R file. The methods I used were an exhaustive search and sequential replacement, which is a combination of both forward and backward stepwise directions for model building.  Both of these methods produced similar results. Interestingly, the top models in both methods included 5 common OTUs: 6, 7, 20, 39, and 283 corresponding to a porphyromonadaceae, porphyromonadaceae, alistipes, lachnospiraceae, and blautia OTU respectively.  The blautia OTU is the only one in the group positively (though low and not significantly) correlated with *C. difficile* CFU. There are also several OTUs from the candidate list that did not appear in the top models.
 
 ### Figure 6: Model Building - Random Forest's Feature Selection
 
