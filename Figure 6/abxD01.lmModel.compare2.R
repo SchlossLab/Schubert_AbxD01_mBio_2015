@@ -38,6 +38,24 @@ lmadjr2<-lm(nextDayCFU ~ Otu00002 + Otu00006 + Otu00007 + Otu00013 + Otu00015 + 
 summary(lmadjr2)
 
 
+####################
+##testing the model with 3 OTUs against the new titration
+
+lm3<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020, data=td)
+summary(lm3)
+newtit2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.csv", header=T)
+newtit2<-newtit2[,-1]
+actual<-as.data.frame(newtit2[,1])
+newtit<-newtit2[,-1]
+predictlm3 <- as.data.frame(predict.lm(lm3, newdata=newtit))
+
+ybar = colMeans(actual)[1]
+SStot = sum((actual-ybar)^2)
+
+SSres = sum((actual-predictlm3)^2)
+rsq = 1-(SSres/SStot)
+rsq
+
 
 ####################
 ##testing the model with 5 OTUs against the new titration
@@ -55,6 +73,8 @@ SStot = sum((actual-ybar)^2)
 SSres = sum((actual-predictlm5)^2)
 rsq = 1-(SSres/SStot)
 rsq
+
+
 
 
 ####################
