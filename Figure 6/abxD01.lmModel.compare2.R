@@ -23,76 +23,177 @@ leapsf<-regsubsets(nextDayCFU ~ Otu00002 + Otu00003 + Otu00006 + Otu00007 + Otu0
 leapsb<-regsubsets(nextDayCFU ~ Otu00002 + Otu00003 + Otu00006 + Otu00007 + Otu00011 + Otu00013 + Otu00015 + Otu00019 + Otu00020 + Otu00023 + Otu00027 + Otu00029 + Otu00039 + Otu00044 + Otu00065 + Otu00078 + Otu00120 + Otu00283 + Otu00431, data=td, nbest=3, nvmax=10, method="backward")
 leapss<-regsubsets(nextDayCFU ~ Otu00002 + Otu00003 + Otu00006 + Otu00007 + Otu00011 + Otu00013 + Otu00015 + Otu00019 + Otu00020 + Otu00023 + Otu00027 + Otu00029 + Otu00039 + Otu00044 + Otu00065 + Otu00078 + Otu00120 + Otu00283 + Otu00431, data=td, nbest=3, nvmax=10, method="seqrep")
 
+
+#which is the best model? using method=exhaustive, based on adjusted R^2
 summary.leaps<-summary(leaps)
 which.max(summary.leaps$adjr2) #outputted 28, which is model number
 summary.leaps$which[28,]
 
-lm5<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020 + Otu00039 + Otu00283, data=td)
-summary(lm5)
-
-summary.leapss<-summary(leapss)
-which.max(summary.leapss$adjr2) 
-summary.leapss$which[26,]
-
-lmadjr2<-lm(nextDayCFU ~ Otu00002 + Otu00006 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00120 + Otu00283, data=td)
-summary(lmadjr2)
+lmB<-lm(nextDayCFU ~ Otu00002 + Otu00006 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00120 + Otu00283, data=td)
+summary(lmB)
 
 
 ####################
 ##testing the model with 3 OTUs against the new titration
-
 lm3<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020, data=td)
 summary(lm3)
+p <- 3  #number of parameters
+
 newtit2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.csv", header=T)
 newtit2<-newtit2[,-1]
 actual<-as.data.frame(newtit2[,1])
 newtit<-newtit2[,-1]
+n <- dim(newtit)[1] #number of samples
+
 predictlm3 <- as.data.frame(predict.lm(lm3, newdata=newtit))
 
 ybar = colMeans(actual)[1]
 SStot = sum((actual-ybar)^2)
-
 SSres = sum((actual-predictlm3)^2)
 rsq = 1-(SSres/SStot)
 rsq
+
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
+
+res<-cbind(actual, predictlm3)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
 
 
 ####################
 ##testing the model with 5 OTUs against the new titration
 lm5<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020 + Otu00039 + Otu00283, data=td)
 summary(lm5)
+p <- 5  #number of parameters
+
 newtit2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.csv", header=T)
 newtit2<-newtit2[,-1]
 actual<-as.data.frame(newtit2[,1])
 newtit<-newtit2[,-1]
+n <- dim(newtit)[1] #number of samples
+
 predictlm5 <- as.data.frame(predict.lm(lm5, newdata=newtit))
 
 ybar = colMeans(actual)[1]
 SStot = sum((actual-ybar)^2)
-
 SSres = sum((actual-predictlm5)^2)
 rsq = 1-(SSres/SStot)
 rsq
 
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
 
+res<-cbind(actual, predictlm5)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
+
+######################
+##Compare the lm3 to lm5, can use the anova() function because these two models are nested
+anova(lm3, lm5)
 
 
 ####################
-##testing the best model against the new titration
-lmadjr2<-lm(nextDayCFU ~ Otu00002 + Otu00006 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00120 + Otu00283, data=td)
+##testing the model with 5 OTUs against the delayed data
+lm5<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020 + Otu00039 + Otu00283, data=td)
+summary(lm5)
+p <- 5  #number of parameters
+
+delay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.logtrans.filter16mintotal.19otus.csv", header=T)
+delay2<-delay2[,-1] #remove sample names
+actual.2<-as.data.frame(delay2[,1])
+delay<-delay2[,-1]
+n <- dim(delay)[1] #number of samples
+
+predictlm5.2 <- as.data.frame(predict.lm(lm5, newdata=delay))
+
+ybar = colMeans(actual.2)[1]
+SStot = sum((actual.2-ybar)^2)
+SSres = sum((actual.2-predictlm5.2)^2)
+rsq = 1-(SSres/SStot)
+rsq
+
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
+
+res<-cbind(actual.2, predictlm5.2)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
+####################
+##testing the best model against the delay data
+lmB<-lm(nextDayCFU ~ Otu00002 + Otu00006 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00120 + Otu00283, data=td)
+p <- 10  #number of parameters
+
+delay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.logtrans.filter16mintotal.19otus.csv", header=T)
+delay2<-delay2[,-1] #remove sample names
+actual<-as.data.frame(delay2[,1])
+delay<-delay2[,-1]
+n <- dim(delay)[1] #number of samples
+
+predictlmBdelay <- as.data.frame(predict.lm(lmB, newdata=delay))
+
+ybar = colMeans(actual)[1]
+SStot = sum((actual-ybar)^2)
+SSres = sum((actual-predictlmBdelay)^2)
+rsq = 1-(SSres/SStot)
+rsq
+
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
+
+res<-cbind(actual, predictlmBdelay)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
+
+####################
+##testing the best model against the titration data
+lmB<-lm(nextDayCFU ~ Otu00002 + Otu00006 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00120 + Otu00283, data=td)
+p <- 10  #number of parameters
 
 newtit2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.csv", header=T)
 newtit2<-newtit2[,-1]
 actual<-as.data.frame(newtit2[,1])
 newtit<-newtit2[,-1]
-predictlmadjr2 <- as.data.frame(predict.lm(lmadjr2, newdata=newtit))
+n <- dim(newtit)[1] #number of samples
+
+predictlmBtit <- as.data.frame(predict.lm(lmB, newdata=newtit))
 
 ybar = colMeans(actual)[1]
 SStot = sum((actual-ybar)^2)
-
-SSres = sum((actual-predictlmadjr2)^2)
+SSres = sum((actual-predictlmBtit)^2)
 rsq = 1-(SSres/SStot)
 rsq
+
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
+
+res<-cbind(actual, predictlmBtit)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
+act_cfu <- 10^(res$actual)
+pred_cfu <-  10^(res$predict)
+res_cfu<-as.data.frame(cbind(act_cfu, pred_cfu))
+names(res_cfu) <- c( "actual", "predict")
+plot(res_cfu$actual, res_cfu$predict, log="xy")
 
 ####################
 ##try leaving out OTU7 or OTU6 because they have the highest correlation with each other
