@@ -6,7 +6,7 @@ attach(td)
 ids<-names(td)
 ids = ids[-1]
 
-#this will make 50 models--the 5 best for each model with 1 to 10 variables
+#this will make 30 models--the 3 best for each model with 1 to 10 variables
 leaps<-regsubsets(nextDayCFU ~ Otu00002 + Otu00003 + Otu00006 + Otu00007 + Otu00011 + Otu00013 + Otu00015 + Otu00019 + Otu00020 + Otu00023 + Otu00027 + Otu00029 + Otu00039 + Otu00044 + Otu00065 + Otu00078 + Otu00120 + Otu00283 + Otu00431, data=td, nbest=3, nvmax=10)
 #shows the best models and which variables to include
 summary(leaps)
@@ -106,7 +106,7 @@ lm5<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020 + Otu00039 + Otu00283, data=
 summary(lm5)
 p <- 5  #number of parameters
 
-delay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.logtrans.filter16mintotal.19otus.csv", header=T)
+delay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.day0.logtrans.filter16mintotal.19otus.csv", header=T)
 delay2<-delay2[,-1] #remove sample names
 actual.2<-as.data.frame(delay2[,1])
 delay<-delay2[,-1]
@@ -129,6 +129,38 @@ adjr2
 res<-cbind(actual.2, predictlm5.2)
 names(res) <- c( "actual", "predict")
 plot(res$actual, res$predict)
+
+
+####################
+##testing the model with 3 OTUs against the delayed data
+lm3<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020, data=td)
+summary(lm3)
+p <- 3  #number of parameters
+
+delay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.day0.logtrans.filter16mintotal.19otus.csv", header=T)
+delay2<-delay2[,-1] #remove sample names
+actual<-as.data.frame(delay2[,1])
+delay<-delay2[,-1]
+n <- dim(delay)[1] #number of samples
+
+predictlm3delay <- as.data.frame(predict.lm(lm3, newdata=delay))
+
+ybar = colMeans(actual)[1]
+SStot = sum((actual-ybar)^2)
+SSres = sum((actual-predictlm3delay)^2)
+rsq = 1-(SSres/SStot)
+rsq
+
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
+
+res<-cbind(actual, predictlm3delay)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
 
 ####################
 ##testing the best model against the delay data
@@ -194,6 +226,69 @@ pred_cfu <-  10^(res$predict)
 res_cfu<-as.data.frame(cbind(act_cfu, pred_cfu))
 names(res_cfu) <- c( "actual", "predict")
 plot(res_cfu$actual, res_cfu$predict, log="xy")
+
+
+####################
+##testing the best model against the METRO delay
+lmB<-lm(nextDayCFU ~ Otu00002 + Otu00006 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00120 + Otu00283, data=td)
+p <- 10  #number of parameters
+
+mdelay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.metrodelay.logtrans.filter16mintotal.19otus.csv", header=T)
+mdelay2<-mdelay2[,-1] #remove sample names
+actual<-as.data.frame(mdelay2[,1])
+mdelay<-mdelay2[,-1]
+n <- dim(mdelay)[1] #number of samples
+
+predictlmBmdel <- as.data.frame(predict.lm(lmB, newdata=mdelay))
+
+ybar = colMeans(actual)[1]
+SStot = sum((actual-ybar)^2)
+SSres = sum((actual-predictlmBmdel)^2)
+rsq = 1-(SSres/SStot)
+rsq
+
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
+
+res<-cbind(actual, predictlmBmdel)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
+####################
+##testing the 5 OTU model against the METRO delay
+lm5<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020 + Otu00039 + Otu00283, data=td)
+summary(lm5)
+p <- 5  #number of parameters
+
+mdelay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.metrodelay.day0.logtrans.filter16mintotal.19otus.csv", header=T)
+mdelay2<-mdelay2[,-1] #remove sample names
+actual<-as.data.frame(mdelay2[,1])
+mdelay<-mdelay2[,-1]
+n <- dim(mdelay)[1] #number of samples
+
+predictlm5mdel <- as.data.frame(predict.lm(lm5, newdata=mdelay))
+
+ybar = colMeans(actual)[1]
+SStot = sum((actual-ybar)^2)
+SSres = sum((actual-predictlm5mdel)^2)
+rsq = 1-(SSres/SStot)
+rsq
+
+#adjusted r^2
+numer <- ((1-rsq)*(n-1))
+denom <- (n-p-1)
+adjr2 <- (1 - numer/denom)
+adjr2
+
+res<-cbind(actual, predictlm5mdel)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
+
+
 
 ####################
 ##try leaving out OTU7 or OTU6 because they have the highest correlation with each other
