@@ -17,12 +17,12 @@ This document was generated using mothur v.1.33 and R.
 ## First, get the required files.
 Sequence files can be found here _. 
 
-The following files can be found through the mothur wiki: 
+The following files can be found through the [mothur wiki](http://www.mothur.org/wiki/MiSeq_SOP): 
 silva.bacteria.fasta
 trainset9_032012.pds.tax
 trainset9_032012.pds.fasta
 
-The following files can be found on the github repository for this notebook:
+The following files can be found on the [github repository for this notebook](https://github.com/SchlossLab/abxD01):
 abxD01.files
 
 ## Now for the curation pipeline.
@@ -532,25 +532,16 @@ correl_matrix<-data.matrix(correl_matrix)
 my_palette <- colorRampPalette(c("blue", "white", "red"))(n = 299)
 breaks = c(seq(-1,-.33,length=100),seq(-.33,.33,length=100),seq(.33,1,length=100))#changed to equal numbers
 
-#par(mar=c(4, 6, 3, 4.5) +0.1) #default is 5.1 4.1 4.1 2.1
 
 side<-scan("~/Desktop/mothur/abxD01/correlation/correl_heatmapSIDE_0.01rel_topdose2_newtitr.csv", what=",", sep=",")
 side2<-read.csv("~/Desktop/mothur/abxD01/correlation/correl_heatmapSIDE_0.01rel_topdose2_newtitr.csv", header=T)
 side3<-as.matrix(side2)
-#lmat=rbind(c(4,3), c(2,1))
-#lmat=rbind(c(4,3), c(1,2))
 
-#lmat order: 1)row dendrogram, 2) heatmap, 3)col?, 4)key?--key disappeared
-lmat = rbind(3:4, 1:2)
-lmat = rbind(c(2,4), c(1,3))
-lmat = rbind(c(0,3), c(2,1))
-lmat=NULL
-lwid=NULL
-lhei=NULL
-lwid = c(.5, 2, 4)
-lhei = c(.7, 4)
-  
-correl_heatmap<-heatmap.2(correl_matrix, scale="none",  col=my_palette, breaks=breaks, density.info="none", lhei=lhei,lwid=lwid, RowSideColors=side3[,2], labRow=side3[,1], trace="none",margins=c(8, 25), dendrogram="none",  Rowv=FALSE, Colv=FALSE,  na.color="black", cexCol=1.5,  key=TRUE, keysize=1, cexRow=1) #then plot was 7x8in, portrait
+sig <- read.csv("~/Desktop/mothur/abxD01/correlation/correl_heatmap_0.01rel_topdose2_newtitr_significance.csv",header=T,stringsAsFactors=F)
+sig<-sig[,-1]
+
+par(mar=c(5, 4, 4, 2) +0.1) #default is 5.1 4.1 4.1 2.1
+correl_heatmap<-heatmap.2(correl_matrix, scale="none",  col=my_palette, breaks=breaks, density.info="none",  RowSideColors=side3[,2], labRow=side3[,1], trace="none",margins=c(8, 25), dendrogram="none",  Rowv=FALSE, Colv=FALSE,  na.color="black", cexCol=.9,  key=TRUE, keysize=1, cexRow=1, cellnote=as.matrix(sig), notecol="dark gray", notecex = 0.5) #then plot was 7x17in, portrait
 
 ```
 
