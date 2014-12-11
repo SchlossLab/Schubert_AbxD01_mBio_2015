@@ -132,7 +132,7 @@ summary.single(calc=nseqs-coverage-chao-sobs-invsimpson-simpsoneven-shannoneven-
 
 # Data Analysis and Paper Figures
 
-## Figure 1
+## Figure 1, bargraph
 
 This figure shows the differences in the communities' structures following different antibiotic treatments. The average *C. difficile* CFU/g Feces is also calculated in this code for each treatment group. 
 
