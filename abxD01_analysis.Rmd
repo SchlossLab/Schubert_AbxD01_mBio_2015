@@ -734,3 +734,6 @@ write.table(cbind(actual_logtrans, predicted_logtrans), file="~/Desktop/mothur/a
 The "plot(model_logtrans)" shows that setting ntree=5000 is enough to get a consistently low error. 
 
 We can also see from printing the results that the percent variation explained is 88.4%. 
+
+
+

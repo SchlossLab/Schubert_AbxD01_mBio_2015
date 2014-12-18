@@ -120,11 +120,31 @@ SSres = sum((actual.2-predictlm5.2)^2)
 rsq = 1-(SSres/SStot)
 rsq
 
+
+#use this! ALYXXXXXX
+#ybar <- apply(res, 2, mean)
+#num<-sum((res$actual-ybar["actual"])*(res$predict-ybar["predict"]))
+#denA <- sum((res$actual-ybar["actual"])^2)
+#denB <- sum((res$predict-ybar["predict"])^2)
+
+
+# ybar = colMeans(actual)[1]
+# SStot = sum((actual-ybar)^2)
+# SSres = sum((actual-predictlm3delay)^2)
+# rsq = 1-(SSres/SStot)
+# rsq
+
+
 #adjusted r^2
 numer <- ((1-rsq)*(n-1))
 denom <- (n-p-1)
 adjr2 <- (1 - numer/denom)
 adjr2
+
+
+
+
+
 
 res<-cbind(actual.2, predictlm5.2)
 names(res) <- c( "actual", "predict")
