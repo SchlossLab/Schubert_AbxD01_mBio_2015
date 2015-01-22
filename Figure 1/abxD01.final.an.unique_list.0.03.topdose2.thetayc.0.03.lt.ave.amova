@@ -1,0 +1,232 @@
+1untr-2cipro-3clinda-6cef.5-5strep5-4vanc.625-8metro1-7amp.5	Among	Within	Total
+SS	19.7815	8.21447	27.996
+df	7	91	98
+MS	2.82593	0.0902689
+
+Fs:	31.3057
+p-value: <1e-06*
+
+1untr-2cipro	Among	Within	Total
+SS	0.158117	4.04177	4.19989
+df	1	54	55
+MS	0.158117	0.0748476
+
+Fs:	2.11252
+p-value: 0.086927
+
+1untr-3clinda	Among	Within	Total
+SS	8.21161	3.88438	12.096
+df	1	60	61
+MS	8.21161	0.0647396
+
+Fs:	126.841
+p-value: <1e-06*
+
+1untr-6cef.5	Among	Within	Total
+SS	2.00966	4.4619	6.47155
+df	1	53	54
+MS	2.00966	0.0841868
+
+Fs:	23.8714
+p-value: 1e-06*
+
+1untr-5strep5	Among	Within	Total
+SS	2.02439	5.57003	7.59442
+df	1	57	58
+MS	2.02439	0.0977198
+
+Fs:	20.7162
+p-value: <1e-06*
+
+1untr-4vanc.625	Among	Within	Total
+SS	4.81542	4.35493	9.17035
+df	1	56	57
+MS	4.81542	0.0777666
+
+Fs:	61.9215
+p-value: <1e-06*
+
+1untr-8metro1	Among	Within	Total
+SS	5.24278	4.07893	9.3217
+df	1	56	57
+MS	5.24278	0.072838
+
+Fs:	71.9786
+p-value: <1e-06*
+
+1untr-7amp.5	Among	Within	Total
+SS	1.98661	5.05151	7.03812
+df	1	55	56
+MS	1.98661	0.0918456
+
+Fs:	21.6299
+p-value: 7e-06*
+
+2cipro-3clinda	Among	Within	Total
+SS	3.29407	0.183159	3.47722
+df	1	14	15
+MS	3.29407	0.0130828
+
+Fs:	251.787
+p-value: 0.000165*
+
+2cipro-6cef.5	Among	Within	Total
+SS	1.36597	0.760679	2.12665
+df	1	7	8
+MS	1.36597	0.108668
+
+Fs:	12.5701
+p-value: 0.003972
+
+2cipro-5strep5	Among	Within	Total
+SS	1.07745	1.86881	2.94626
+df	1	11	12
+MS	1.07745	0.169892
+
+Fs:	6.34199
+p-value: 0.005632
+
+2cipro-4vanc.625	Among	Within	Total
+SS	2.4133	0.65371	3.06701
+df	1	10	11
+MS	2.4133	0.065371
+
+Fs:	36.917
+p-value: 0.001225*
+
+2cipro-8metro1	Among	Within	Total
+SS	2.65244	0.377706	3.03015
+df	1	10	11
+MS	2.65244	0.0377706
+
+Fs:	70.225
+p-value: 0.000446*
+
+2cipro-7amp.5	Among	Within	Total
+SS	1.07343	1.35029	2.42371
+df	1	9	10
+MS	1.07343	0.150032
+
+Fs:	7.15464
+p-value: 0.027544
+
+3clinda-6cef.5	Among	Within	Total
+SS	1.15041	0.603288	1.7537
+df	1	13	14
+MS	1.15041	0.0464068
+
+Fs:	24.7897
+p-value: 0.000444*
+
+3clinda-5strep5	Among	Within	Total
+SS	3.61836	1.71142	5.32978
+df	1	17	18
+MS	3.61836	0.100672
+
+Fs:	35.9422
+p-value: <1e-06*
+
+3clinda-4vanc.625	Among	Within	Total
+SS	3.25784	0.496319	3.75416
+df	1	16	17
+MS	3.25784	0.0310199
+
+Fs:	105.024
+p-value: 3.1e-05*
+
+3clinda-8metro1	Among	Within	Total
+SS	0.0895826	0.220316	0.309898
+df	1	16	17
+MS	0.0895826	0.0137697
+
+Fs:	6.50576
+p-value: 0.000998*
+
+3clinda-7amp.5	Among	Within	Total
+SS	1.04985	1.1929	2.24274
+df	1	15	16
+MS	1.04985	0.0795264
+
+Fs:	13.2012
+p-value: 5.6e-05*
+
+6cef.5-5strep5	Among	Within	Total
+SS	1.27344	2.28894	3.56238
+df	1	10	11
+MS	1.27344	0.228894
+
+Fs:	5.56344
+p-value: 0.002697
+
+6cef.5-4vanc.625	Among	Within	Total
+SS	1.51092	1.07384	2.58476
+df	1	9	10
+MS	1.51092	0.119315
+
+Fs:	12.6632
+p-value: 0.002987
+
+6cef.5-8metro1	Among	Within	Total
+SS	0.6905	0.797836	1.48834
+df	1	9	10
+MS	0.6905	0.0886484
+
+Fs:	7.7892
+p-value: 0.00179
+
+6cef.5-7amp.5	Among	Within	Total
+SS	0.242348	1.77042	2.01276
+df	1	8	9
+MS	0.242348	0.221302
+
+Fs:	1.0951
+p-value: 0.364295
+
+5strep5-4vanc.625	Among	Within	Total
+SS	1.80018	2.18197	3.98215
+df	1	13	14
+MS	1.80018	0.167844
+
+Fs:	10.7253
+p-value: 0.000882*
+
+5strep5-8metro1	Among	Within	Total
+SS	2.69387	1.90597	4.59984
+df	1	13	14
+MS	2.69387	0.146613
+
+Fs:	18.374
+p-value: 3.4e-05*
+
+5strep5-7amp.5	Among	Within	Total
+SS	1.40572	2.87855	4.28427
+df	1	12	13
+MS	1.40572	0.239879
+
+Fs:	5.86011
+p-value: 0.002269
+
+4vanc.625-8metro1	Among	Within	Total
+SS	2.52406	0.690866	3.21492
+df	1	12	13
+MS	2.52406	0.0575722
+
+Fs:	43.8416
+p-value: 0.000568*
+
+4vanc.625-7amp.5	Among	Within	Total
+SS	1.91924	1.66345	3.58269
+df	1	11	12
+MS	1.91924	0.151222
+
+Fs:	12.6915
+p-value: 0.000396*
+
+8metro1-7amp.5	Among	Within	Total
+SS	0.677456	1.38744	2.0649
+df	1	11	12
+MS	0.677456	0.126131
+
+Fs:	5.37104
+p-value: 0.000387*
+

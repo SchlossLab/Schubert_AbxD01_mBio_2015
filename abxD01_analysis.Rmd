@@ -132,7 +132,7 @@ summary.single(calc=nseqs-coverage-chao-sobs-invsimpson-simpsoneven-shannoneven-
 
 # Data Analysis and Paper Figures
 
-## Figure 1, bargraph
+## Figure 1: Bargraph
 
 This figure shows the differences in the communities' structures following different antibiotic treatments. The average *C. difficile* CFU/g Feces is also calculated in this code for each treatment group. 
 
@@ -149,8 +149,8 @@ This figure was built using the following R code.  The input files are listed in
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Desktop/mothur/abxD01/barcharts/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
-fileIDS<-read.csv("~/Desktop/mothur/abxD01/barcharts/topdose_tx1_barchart_ids.csv", header=T)
+file<-read.csv("/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
+fileIDS<-read.csv("/Documents/Github/abxD01/Figure 1/topdose_tx1_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 
@@ -433,6 +433,46 @@ par(mfrow=c(1, 1))
 ```
 
 The graph can be sorted 2 ways either by the untreated's decreasing relabund, or by the most abundant within each phylum. For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. File saved as "topdose2_tx1_sorted_10x20.pdf"
+
+### Figure 1: Statistics
+
+To compare CFU levels: 
+```{r, eval=TRUE}
+
+file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
+
+data <- file[ which(file$expgroup != '1untr'), ] #choose experimental groups
+data$nextDayCFU<-log10(data$nextDayCFU+1) #log transform CFUs
+anova(lm(data$nextDayCFU ~ data$expgroup)) #perform anova across experimental groups for CFU
+
+#Which groups are different? Ciprofloxacin was clearly lower
+data <- data[ which(data$expgroup != '2cipro'), ] #remove ciprofloxacin to see now if there's a difference in remaining groups
+anova(lm(data$nextDayCFU ~ data$expgroup)) 
+              
+```
+Alternatively:
+```{r, eval=TRUE}
+data<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
+
+data <- file[ which(file$expgroup != '1untr'), ] #choose experimental groups
+data$nextDayCFU<-log10(data$nextDayCFU+1) #log transform CFUs
+CFU.anova <- aov(nextDayCFU ~ expgroup, data = data)
+CFU.tukey <- TukeyHSD(CFU.anova)
+
+library(multcomp)
+library(multcompView)
+multcompLetters4(CFU.anova, CFU.tukey)
+```
+The CFU levels were significantly different between the ciprofloxacin treated communities and all other treatments. 
+
+
+Amova calculation in mothur to determine the uniqueness of each community structure:
+```
+dist.shared(shared=abxD01.final.an.unique_list.0.03.topdose2.shared, calc=thetayc-jclass, subsample=1625)
+amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist, design=topdose_design_byABX.txt, iters=1000000)
+
+```
+This results in the file called "abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.amova" located in the github folder. The results of these are summarized in "amova8expgroups.xlsx".
 
 ## Figure 2
 
