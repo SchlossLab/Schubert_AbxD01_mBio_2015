@@ -8,8 +8,8 @@
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
-fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 1/topdose_tx1_barchart_ids.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subsample.relabund.topdose2.forlogscale.csv", header=T)
+fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 1/topdose_tx2_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 
@@ -265,7 +265,7 @@ if(sortbyphyl == FALSE){
 
 
 
-
+#######################################
 ###PLOT PARAMETERS
 if(graphbyphyl==FALSE){
   par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
@@ -295,7 +295,7 @@ if(graphbyphyl==FALSE){
       text(label[,1]+.13, .0005, label=ids[,2], xpd=NA, pos=2, srt=45, cex=1.2)
       #text(-3.9,.0001, label=expression(paste(italic("C.d."), " CFU/g Feces:")), xpd=NA, pos=2, srt=90, cex=1.1)
       abline(h=c(0.001,1), lwd=3) #min/max
-      abline(h=c(0.01, 0.01), col="black", lty="longdash", lwd=2)
+      abline(h=c(0.01, 0.1), col="black", lty="longdash", lwd=2)
       abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="black", lty="dashed") 
     }  
     
