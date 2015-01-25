@@ -8,10 +8,10 @@
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subsample.relabund.topdose2.forlogscale.csv", header=T)
-fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 1/topdose_tx2_barchart_ids.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
+fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 3/allstreptitr_tx2_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
-abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
+abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
 
 # If you want each OTU on the Y axis to be sorted by the most abundant phylum and then decreasing abundance within that phylum, change to TRUE
 # The default is false, which means sort be decreasing relative abundance in the top group (untreated/control)
@@ -19,7 +19,7 @@ sortbyphyl<-TRUE
 
 # If you want individual graphs as each group (FALSE) or as phylums with each OTU (TRUE)
 # If you choose TRUE, then set sortbyphyl as TRUE too... IF you forget to change this it changes automatically in the code.
-graphbyphyl<-FALSE
+graphbyphyl<-TRUE
 
 
 # Highlight all and run!
@@ -209,7 +209,7 @@ if(sortbyphyl == TRUE){
   
   leng<-dim(mavgs)[2]
   
-  numgr <- nlevels(file$expgroup)
+  numgr <- length(unique(file$expgroup))
 } ##end if(sortbyphyl == TRUE){
 
 
@@ -226,7 +226,7 @@ if(sortbyphyl == FALSE){
   mavgs<-as.matrix(ordered_avgs)
   leng<-dim(mavgs)[2]
   
-  numgr <- nlevels(file$expgroup)
+  numgr <- length(unique(file$expgroup))
   
   
   ids<-data.frame(1:(totalOTU))
