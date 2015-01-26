@@ -20,6 +20,7 @@ sortbyphyl<-TRUE
 # If you want individual graphs as each group (FALSE) or as phylums with each OTU (TRUE)
 # If you choose TRUE, then set sortbyphyl as TRUE too... IF you forget to change this it changes automatically in the code.
 graphbyphyl<-TRUE
+file<-file[file$expgroup!="1untrStrep",]
 
 
 # Highlight all and run!
@@ -270,6 +271,7 @@ if(sortbyphyl == FALSE){
 if(graphbyphyl==FALSE){
   par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
   par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+  color_transparent <- adjustcolor("black", alpha.f = 0.1) 
   
   for(j in 1:numgr){
     
@@ -281,8 +283,8 @@ if(graphbyphyl==FALSE){
       mtext(abx[j], side=2, line=6, cex=.8)
       mtext(avgCD[j], side=2, line=4.5, cex=.8)
       abline(h=c(0.001, 1), lwd=3) #min/max
-      abline(h=c(0.01, 0.1), col="black", lty="longdash", lwd=2)
-      abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="black", lty="dashed")
+      abline(h=c(0.01, 0.1), col=color_transparent, lty="longdash", lwd=2)
+      abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col=color_transparent, lty="dashed")
     }
     
     else{ #the last graph needs different margins    
@@ -295,8 +297,8 @@ if(graphbyphyl==FALSE){
       text(label[,1]+.13, .0005, label=ids[,2], xpd=NA, pos=2, srt=45, cex=1.2)
       #text(-3.9,.0001, label=expression(paste(italic("C.d."), " CFU/g Feces:")), xpd=NA, pos=2, srt=90, cex=1.1)
       abline(h=c(0.001,1), lwd=3) #min/max
-      abline(h=c(0.01, 0.1), col="black", lty="longdash", lwd=2)
-      abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="black", lty="dashed") 
+      abline(h=c(0.01, 0.1), col=color_transparent, lty="longdash", lwd=2)
+      abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col=color_transparent, lty="dashed") 
     }  
     
   }
@@ -306,7 +308,7 @@ if(graphbyphyl==FALSE){
 
 
 
-
+################################
 ###2nd PLOT PARAMETERS
 if(graphbyphyl==TRUE){  
   par(mfrow=c(numphyla+1, 1)) #+2 to give extra labeling space--numphyl doesn't include the Other group
@@ -331,13 +333,59 @@ if(graphbyphyl==TRUE){
       }
      
     label<-barplot(mavgs[,j:(leng+j-1)],, beside=TRUE, ylab=ids[j,3], col=colors, yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=5)
+  
+#CTR+SHIFT+C=comment block of code out    
+# 
+#     statLetter <- matrix(c(""),nrow=numgr, ncol=leng)
+#     statLetter[1,] <- "a"
+#     
+#     stat <- matrix(c(""),nrow=numgr-1, ncol=leng)
+# 
+#     otus <- dimnames(mavgs)[2][[1]][j:(leng+j-1)]
+#     m <- j
+#     for (i in 1:leng){
+#       
+# #       results.kruskal <- kruskal.test(file[,which(names(file)==otus[i])] ~ file$expgroup)
+# #       if(results.kruskal$p.value > 0.05){ #then no difference among any titration groups
+# #         segments(label[1,i], mavgs[which.max(mavgs[,m]),m], label[3,i], mavgs[which.max(mavgs[,m]),m], lwd=2)
+# #         text(label[2,i], mavgs[which.max(mavgs[,m]),m], labels="ns", pos=3, cex=2)
+# #       } else{ #If significant by kruskal, then perform the individual tests
+# #         if( results.kruskal$p.value[1] > 0.05 ){
+# #           stat[2 , i] <- paste0(stat[2 , i], "*")
+# #       }
+# #         
+#         
+#       results.wilcox <- pairwise.wilcox.test(file[,which(names(file)==otus[i])], file$expgroup, p.adj="BH")
+#       
+#       if( results.wilcox$p.value[1] > 0.05 ){
+#         statLetter[2 , i] <- paste0(statLetter[2 , i], "a")
+#       }else {statLetter[2 , i] <- paste0(statLetter[2 , i], "b")}
+#       
+#       if( results.wilcox$p.value[2] > 0.05 ){
+#         statLetter[3 , i] <- paste0(statLetter[3 , i], "a")
+#       } else if(results.wilcox$p.value[4] > 0.05 ){
+#         statLetter[3 , i] <- paste0(statLetter[3 , i], "b")
+#       } else {statLetter[3 , i] <- paste0(statLetter[3 , i], "c")}
+#       
+#     }
+#     
+#     
+#     #For labeling letters above each bar
+#     m <- j
+#     for(n in 1:leng){
+#       text( label[,n], mavgs[,m], labels=c("a","b","c"), cex=2, col="red", pos=3)
+#       m <- m+1
+#     }
+#     
     
     axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
    # mtext("Relative Abundance", side=2, line=6, cex=.8)
     #mtext(avgCD[j], side=2, line=4.5, cex=.8)
     abline(h=c(0.001, 1), lwd=3) #min/max
-    abline(h=c(0.01, 0.1), col="gray", lty="longdash", lwd=2)
-    abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col="gray", lty="dashed")
+   
+    color_transparent <- adjustcolor("black", alpha.f = 0.1) 
+    abline(h=c(0.01, 0.1), col=color_transparent, lty="longdash", lwd=2)
+    abline(h=c(0.005, 0.05, 0.25, 0.5, 0.75), col=color_transparent, lty="dashed")
 
     labelAVG=apply(label, 2, mean)
     axis(1, at=(labelAVG), labels=FALSE)

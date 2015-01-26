@@ -122,10 +122,33 @@ rsq
 
 
 #use this! ALYXXXXXX
-#ybar <- apply(res, 2, mean)
-#num<-sum((res$actual-ybar["actual"])*(res$predict-ybar["predict"]))
-#denA <- sum((res$actual-ybar["actual"])^2)
-#denB <- sum((res$predict-ybar["predict"])^2)
+ybar <- apply(res, 2, mean)
+num<-sum((res$actual-ybar["actual"])*(res$predict-ybar["predict"]))
+denA <- sum((res$actual-ybar["actual"])^2)
+denB <- sum((res$predict-ybar["predict"])^2)
+
+rsq <- 1-(num/(denA*denB))
+
+# 
+# 
+# #predict the outcome of the testing data
+# predicted_logtrans <- predict(model_logtrans, newdata=testing_logtrans[ ,-1])
+# predicted2_logtrans <- predict(model_logtrans, newdata=testing2_logtrans[ ,-1])
+# 
+# # what is the proportion variation explained in the outcome of the testing data?
+# # i.e., what is 1-(SSerror/SStotal)
+# actual_logtrans <- testing_logtrans$nextDayCFU
+# actual2_logtrans <- testing2_logtrans$nextDayCFU
+# 
+# ybar <- apply(res, 2, mean)
+# num<-sum((res$actual-ybar["actual"])*(res$predict-ybar["predict"]))
+# denA <- sum((res$actual-ybar["actual"])^2)
+# denB <- sum((res$predict-ybar["predict"])^2)
+# 
+# rsq <- 1-(num/(denA*denB))
+# 
+# print(rsq)
+# 
 
 
 # ybar = colMeans(actual)[1]
@@ -134,14 +157,14 @@ rsq
 # rsq = 1-(SSres/SStot)
 # rsq
 
-
-#adjusted r^2
-numer <- ((1-rsq)*(n-1))
-denom <- (n-p-1)
-adjr2 <- (1 - numer/denom)
-adjr2
-
-
+# 
+# #adjusted r^2
+# numer <- ((1-rsq)*(n-1))
+# denom <- (n-p-1)
+# adjr2 <- (1 - numer/denom)
+# adjr2
+# 
+# 
 
 
 

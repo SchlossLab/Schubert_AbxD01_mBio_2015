@@ -262,6 +262,8 @@ Figure saved as "corr_avgAbove0.001_topdose2_10x8.pdf".
 
 ## Figure 3
 
+### Figure 3: Barchart
+
 This figure shows the effect of titrating antibiotics on the community as well as the resulting *C. difficile* levels.  
 
 The code for this is the script "abxD01.barcharts.xOTU.test.r" in the paper's home Github directory. Opening this file, the parameters I changed in the top were:
@@ -286,6 +288,110 @@ For this graph I decided to take out the untreated communities to highlight the 
 file<-file[file$expgroup!="1untrStrep",]
 #alternatively for the other titrated antibiotics it's "1untrCef", or "1untrVanc"
 ```
+
+### Figure 3: Statistics
+
+```{r, eval=FALSE}
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
+file<-file[file$expgroup!="1untrStrep",]
+kruskal.test(file$Otu001 ~ file$expgroup)
+kruskal.test(file$Otu003 ~ file$expgroup)
+kruskal.test(file$Otu002 ~ file$expgroup)
+kruskal.test(file$Otu005 ~ file$expgroup)
+kruskal.test(file$Otu004 ~ file$expgroup)
+kruskal.test(file$Otu014 ~ file$expgroup)
+kruskal.test(file$Otu006 ~ file$expgroup)
+kruskal.test(file$Otu007 ~ file$expgroup)
+kruskal.test(file$Otu009 ~ file$expgroup)
+kruskal.test(file$Otu015 ~ file$expgroup)
+kruskal.test(file$Otu017 ~ file$expgroup)
+kruskal.test(file$Other ~ file$expgroup)
+
+test <- pairwise.wilcox.test(file$Otu001, file$expgroup, p.adj="BH")
+comparisons <- length(test$p.value[]) - sum(is.na(test$p.value))
+
+
+pairwise.wilcox.test(file$Otu003, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu005, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu002, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu004, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu014, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu006, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu007, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu009, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu015, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu017, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Other, file$expgroup, p.adj="BH")
+
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
+file<-file[file$expgroup!="1untrVanc",]
+kruskal.test(file$Otu001 ~ file$expgroup)
+kruskal.test(file$Otu002 ~ file$expgroup)
+kruskal.test(file$Otu003 ~ file$expgroup)
+kruskal.test(file$Otu005 ~ file$expgroup)
+kruskal.test(file$Otu004 ~ file$expgroup)
+kruskal.test(file$Otu014 ~ file$expgroup)
+kruskal.test(file$Otu006 ~ file$expgroup)
+kruskal.test(file$Otu007 ~ file$expgroup)
+kruskal.test(file$Otu008 ~ file$expgroup)
+kruskal.test(file$Otu019 ~ file$expgroup)
+kruskal.test(file$Otu018 ~ file$expgroup)
+kruskal.test(file$Otu017 ~ file$expgroup)
+kruskal.test(file$Other ~ file$expgroup)
+
+pairwise.wilcox.test(file$Otu001, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu003, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu005, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu002, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu004, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu014, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu006, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu007, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu008, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu019, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu018, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu017, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Other, file$expgroup, p.adj="BH")
+
+
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allceftitr.forlogscale.csv", header=T)
+file<-file[file$expgroup!="1untrCef",]
+kruskal.test(file$Otu001 ~ file$expgroup)
+kruskal.test(file$Otu002 ~ file$expgroup)
+kruskal.test(file$Otu003 ~ file$expgroup)
+kruskal.test(file$Otu005 ~ file$expgroup)
+kruskal.test(file$Otu004 ~ file$expgroup)
+kruskal.test(file$Otu014 ~ file$expgroup)
+kruskal.test(file$Otu006 ~ file$expgroup)
+kruskal.test(file$Otu007 ~ file$expgroup)
+kruskal.test(file$Otu008 ~ file$expgroup)
+kruskal.test(file$Otu009 ~ file$expgroup)
+kruskal.test(file$Otu019 ~ file$expgroup)
+kruskal.test(file$Otu018 ~ file$expgroup)
+kruskal.test(file$Otu016 ~ file$expgroup)
+kruskal.test(file$Otu024 ~ file$expgroup)
+kruskal.test(file$Otu011 ~ file$expgroup)
+kruskal.test(file$Other ~ file$expgroup)
+
+pairwise.wilcox.test(file$Otu001, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu003, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu005, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu002, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu004, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu014, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu006, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu007, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu008, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu009, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu011, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu019, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu018, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu016, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Otu024, file$expgroup, p.adj="BH")
+pairwise.wilcox.test(file$Other, file$expgroup, p.adj="BH")
+
+```
+
 
 ## Figure 4
 
@@ -324,48 +430,99 @@ Each row in this heatmap represents a single OTU. The side colors show broad tax
 
 ## Figure 5
 
+### Figure 5: Random Forest Analysis
+
+Performed RF analysis on family level phylotypes:
+```{r, eval=FALSE}
+topdose_tx2<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.2.shared.rf.topdose.regression.logtrans.csv", header=T)
+topdose_tx2<-topdose_tx2[,-1]
+
+library(randomForest)
+
+#fit the randomforest model
+model_tx2 <- randomForest(nextDayCFU~., 
+                      data = topdose_tx2,  outscale=TRUE,
+                      importance=TRUE, proximity=TRUE,
+                      keep.forest=TRUE, ntree=5000
+)
+plot(model_tx2)
+
+print(model_tx2)
+
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+par(mfrow=c(1, 1)) 
+varImpPlot(model_tx2, type=1)
+imp<-importance(model_tx2)
+most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
+```
+
+
+### Figure 5: Barchart
+
 This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole. The figure is shown as a pdf on github.
 
 Input files found on github:
-1. abxD01.final.tx.2.subsample.2.pick.metro.relabund.d0s.txt
+1. abxD01.final.tx.2.subsample.2.metro.relabund.D0s.csv
 
 ```{r, eval=FALSE}
 #First calculating:
-b<-read.delim("~/Desktop/mothur/abxD01/barcharts/abxD01.final.tx.2.subsample.2.pick.metro.relabund.d0s.txt", header=T)
+metroD0<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.2.metro.relabund.D0s.csv", header=T)
 
-avg1<-tapply(b$Otu001, b$order, mean)
-sd1<-tapply(b$Otu001, b$order, sd)
+avg01<-tapply(metroD0$Otu001, metroD0$order, mean)
+sd01<-tapply(metroD0$Otu001, metroD0$order, sd)
 
-avg11<-tapply(b$Otu011, b$order, mean)
-sd11<-tapply(b$Otu011, b$order, sd)
+avg14<-tapply(metroD0$Otu014, metroD0$order, mean)
+sd14<-tapply(metroD0$Otu014, metroD0$order, sd)
 
-avg02<-tapply(b$Otu002, b$order, mean)
-sd02<-tapply(b$Otu002, b$order, sd)
+avg7<-tapply(metroD0$Otu007, metroD0$order, mean)
+sd7<-tapply(metroD0$Otu007, metroD0$order, sd)
 
-avg03<-tapply(b$Otu003, b$order, mean)
-sd03<-tapply(b$Otu003, b$order, sd)
+avg09<-tapply(metroD0$Otu009, metroD0$order, mean)
+sd09<-tapply(metroD0$Otu009, metroD0$order, sd)
 
-avg7<-tapply(b$Otu007, b$order, mean)
-sd7<-tapply(b$Otu007, b$order, sd)
+avg02<-tapply(metroD0$Otu002, metroD0$order, mean)
+sd02<-tapply(metroD0$Otu002, metroD0$order, sd)
 
-avg05<-tapply(b$Otu005, b$order, mean)
-sd05<-tapply(b$Otu005, b$order, sd)
+avg13<-tapply(metroD0$Otu013, metroD0$order, mean)
+sd13<-tapply(metroD0$Otu013, metroD0$order, sd)
 
-avg16<-tapply(b$Otu016, b$order, mean)
-sd16<-tapply(b$Otu016, b$order, sd)
+avg03<-tapply(metroD0$Otu003, metroD0$order, mean)
+sd03<-tapply(metroD0$Otu003, metroD0$order, sd)
 
-avg06<-tapply(b$Otu006, b$order, mean)
-sd06<-tapply(b$Otu006, b$order, sd)
+avg05<-tapply(metroD0$Otu005, metroD0$order, mean)
+sd05<-tapply(metroD0$Otu005, metroD0$order, sd)
 
-avg04<-tapply(b$Otu004, b$order, mean)
-sd04<-tapply(b$Otu004, b$order, sd)
+avg08<-tapply(metroD0$Otu008, metroD0$order, mean)
+sd08<-tapply(metroD0$Otu008, metroD0$order, sd)
+
+avg06<-tapply(metroD0$Otu006, metroD0$order, mean)
+sd06<-tapply(metroD0$Otu006, metroD0$order, sd)
+
+avg04<-tapply(metroD0$Otu004, metroD0$order, mean)
+sd04<-tapply(metroD0$Otu004, metroD0$order, sd)
+
+avg12<-tapply(metroD0$Otu012, metroD0$order, mean)
+sd12<-tapply(metroD0$Otu012, metroD0$order, sd)
+
+
+# avg11<-tapply(metroD0$Otu011, metroD0$order, mean)
+# sd11<-tapply(metroD0$Otu011, metroD0$order, sd)
+# 
+# avg05<-tapply(metroD0$Otu005, metroD0$order, mean)
+# sd05<-tapply(metroD0$Otu005, metroD0$order, sd)
+# 
+# avg16<-tapply(metroD0$Otu016, metroD0$order, mean)
+# sd16<-tapply(metroD0$Otu016, metroD0$order, sd)
+
+
 
 #Now graphing:
 par(mfrow=c(4, 3)) 
 
 par(mar=c(2, 4, 2, 3) +0.1)
-plot1<-barplot(avg1, col="darkblue", cex.axis=1.3, xaxt="n") 
-error.bar(plot1, avg1, sd1) #plot SD
+plot01<-barplot(avg01, col="darkblue", cex.axis=1.3, xaxt="n") 
+error.bar(plot01, avg01, sd01) #plot SD
 
 par(mar=c(2, 3, 2, 3) +0.1)
 plot03<-barplot(avg03, col="steelblue", cex.axis=1.3, xaxt="n")
@@ -426,6 +583,8 @@ par(mfrow=c(1, 1))
 
 
 ```
+
+
 
 ## Figure 6
  
