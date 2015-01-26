@@ -472,14 +472,14 @@ metroD0<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsampl
 avg01<-tapply(metroD0$Otu001, metroD0$order, mean)
 sd01<-tapply(metroD0$Otu001, metroD0$order, sd)
 
-avg14<-tapply(metroD0$Otu014, metroD0$order, mean)
-sd14<-tapply(metroD0$Otu014, metroD0$order, sd)
+# avg14<-tapply(metroD0$Otu014, metroD0$order, mean)
+# sd14<-tapply(metroD0$Otu014, metroD0$order, sd)
 
-avg7<-tapply(metroD0$Otu007, metroD0$order, mean)
-sd7<-tapply(metroD0$Otu007, metroD0$order, sd)
+avg07<-tapply(metroD0$Otu007, metroD0$order, mean)
+sd07<-tapply(metroD0$Otu007, metroD0$order, sd)
 
-avg09<-tapply(metroD0$Otu009, metroD0$order, mean)
-sd09<-tapply(metroD0$Otu009, metroD0$order, sd)
+# avg09<-tapply(metroD0$Otu009, metroD0$order, mean)
+# sd09<-tapply(metroD0$Otu009, metroD0$order, sd)
 
 avg02<-tapply(metroD0$Otu002, metroD0$order, mean)
 sd02<-tapply(metroD0$Otu002, metroD0$order, sd)
@@ -502,8 +502,8 @@ sd06<-tapply(metroD0$Otu006, metroD0$order, sd)
 avg04<-tapply(metroD0$Otu004, metroD0$order, mean)
 sd04<-tapply(metroD0$Otu004, metroD0$order, sd)
 
-avg12<-tapply(metroD0$Otu012, metroD0$order, mean)
-sd12<-tapply(metroD0$Otu012, metroD0$order, sd)
+# avg12<-tapply(metroD0$Otu012, metroD0$order, mean)
+# sd12<-tapply(metroD0$Otu012, metroD0$order, sd)
 
 
 # avg11<-tapply(metroD0$Otu011, metroD0$order, mean)
@@ -516,45 +516,82 @@ sd12<-tapply(metroD0$Otu012, metroD0$order, sd)
 # sd16<-tapply(metroD0$Otu016, metroD0$order, sd)
 
 
-
 #Now graphing:
-par(mfrow=c(4, 3)) 
+par(mfrow=c(3, 3)) 
 
 par(mar=c(2, 4, 2, 3) +0.1)
-plot01<-barplot(avg01, col="darkblue", cex.axis=1.3, xaxt="n") 
-error.bar(plot01, avg01, sd01) #plot SD
+plot01<-barplot(avg01, col="black", cex.axis=1.3, xaxt="n") 
+#error.bar(plot01, avg01, sd01) #plot SD
+axis(1, at=plot01, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+# par(mar=c(2, 4, 2, 3) +0.1)
+# plot14<-barplot(avg14, col="black", cex.axis=1.3, xaxt="n") 
+# #error.bar(plot14, avg14, sd14) #plot SD
+# axis(1, at=plot14, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
 
 par(mar=c(2, 3, 2, 3) +0.1)
-plot03<-barplot(avg03, col="steelblue", cex.axis=1.3, xaxt="n")
-error.bar(plot03, avg03, sd03) #plot SD
+plot07<-barplot(avg07, col="black", cex.axis=1.3, xaxt="n")
+#error.bar(plot07, avg07, sd07) #plot SD
+axis(1, at=plot07, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
 
-plot11<-barplot(avg11, col="darkgreen", cex.axis=1.3, xaxt="n")
-error.bar(plot11, avg11, sd11) #plot SD
+# par(mar=c(2, 3, 2, 3) +0.1)
+# plot09<-barplot(avg09, col="black", cex.axis=1.3, xaxt="n")
+# #error.bar(plot09, avg09, sd09) #plot SD
+# axis(1, at=plot09, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
 
 par(mar=c(2, 4, 2, 3) +0.1)
-plot02<-barplot(avg02, col="darkred", cex.axis=1.3, xaxt="n")
-error.bar(plot02, avg02, sd02) #plot SD
-
-par(mar=c(2, 3, 2, 3) +0.1)
-plot05<-barplot(avg05, col="orange2", cex.axis=1.3, xaxt="n")
-error.bar(plot05, avg05, sd05) #plot SD
-
-plot04<-barplot(avg04, col="gold1", cex.axis=1.3, xaxt="n")
-error.bar(plot04, avg04, sd04) #plot SD
+plot02<-barplot(avg02, col="black", cex.axis=1.3, xaxt="n")
+#error.bar(plot02, avg02, sd02) #plot SD
+axis(1, at=plot02, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
 
 par(mar=c(2, 4, 2, 3) +0.1)
-plot16<-barplot(avg16, col="deeppink3", cex.axis=1.3, xaxt="n")
-error.bar(plot16, avg16, sd16) #plot SD
-axis(1, at=plot16, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+plot13<-barplot(avg13, col="black", cex.axis=1.3, xaxt="n")
+#error.bar(plot13, avg13, sd13) #plot SD
+axis(1, at=plot13, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
 
 par(mar=c(2, 3, 2, 3) +0.1)
-plot7<-barplot(avg7, col="blueviolet", cex.axis=1.3, xaxt="n")
-error.bar(plot7, avg7, sd7) #plot SD
-axis(1, at=plot7, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+plot03<-barplot(avg03, col="black", cex.axis=1.3, xaxt="n")
+#error.bar(plot03, avg03, sd03) #plot SD
+axis(1, at=plot03, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
 
+par(mar=c(2, 3, 2, 3) +0.1)
+plot05<-barplot(avg05, col="black", cex.axis=1.3, xaxt="n")
+#error.bar(plot05, avg05, sd05) #plot SD
+axis(1, at=plot05, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+par(mar=c(2, 3, 2, 3) +0.1)
+plot08<-barplot(avg08, col="black", cex.axis=1.3, xaxt="n")
+#error.bar(plot08, avg08, sd08) #plot SD
+axis(1, at=plot08, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+par(mar=c(2, 3, 2, 3) +0.1)
 plot06<-barplot(avg06, col="black", cex.axis=1.3, xaxt="n")
-error.bar(plot06, avg06, sd06) #plot SD
+#error.bar(plot06, avg06, sd06) #plot SD
 axis(1, at=plot06, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+par(mar=c(2, 3, 2, 3) +0.1)
+plot04<-barplot(avg04, col="black", cex.axis=1.3, xaxt="n")
+#error.bar(plot04, avg04, sd04) #plot SD
+axis(1, at=plot04, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+# par(mar=c(2, 3, 2, 3) +0.1)
+# plot12<-barplot(avg12, col="black", cex.axis=1.3, xaxt="n")
+# #error.bar(plot12, avg12, sd12) #plot SD
+# axis(1, at=plot12, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+# 
+
+# par(mar=c(2, 4, 2, 3) +0.1)
+# plot11<-barplot(avg11, col="black", cex.axis=1.3, xaxt="n")
+# error.bar(plot11, avg11, sd11) #plot SD
+# axis(1, at=plot11, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+# 
+# par(mar=c(2, 4, 2, 3) +0.1)
+# plot16<-barplot(avg16, col="balck", cex.axis=1.3, xaxt="n")
+# error.bar(plot16, avg16, sd16) #plot SD
+# axis(1, at=plot16, labels=c("D0", "D0 Recovered"), cex.axis=1.7)
+
+
+
 
 #Now figure legend:
 plot(1, type="n", axes=F, xlab="", ylab="")
