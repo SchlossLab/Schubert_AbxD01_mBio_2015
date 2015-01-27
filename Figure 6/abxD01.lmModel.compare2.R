@@ -39,13 +39,21 @@ lm3<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020, data=td)
 summary(lm3)
 p <- 3  #number of parameters
 
-newtit2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.csv", header=T)
+newtit2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.noUntr.csv", header=T)
 newtit2<-newtit2[,-1]
 actual<-as.data.frame(newtit2[,1])
 newtit<-newtit2[,-1]
 n <- dim(newtit)[1] #number of samples
 
-predictlm3 <- as.data.frame(predict.lm(lm3, newdata=newtit))
+predictlm3 <- as.data.frame(predict(lm3, newdata=newtit, se.fit=TRUE))
+predictlm3 <- predict(lm3, newdata=newtit, se.fit=TRUE)
+res<-residuals(lm3)
+plot(predict(lm3), res, xlab="fitted values", ylab="residuals", ylim=max(abs(res)) * c(-1, 1))
+
+pred.w.plim <-predict(lm3, newtit, interval = "prediction")
+pred.w.clim <-predict(lm3, newtit, interval = "confidence")
+matplot(actual, cbind(pred.w.clim, pred.w.plim[, -1]), lty = c(1, 2, 2, 3, 3), type="l", ylab = "predicted y")
+RsquareAdj(predictlm3)
 
 ybar = colMeans(actual)[1]
 SStot = sum((actual-ybar)^2)
@@ -64,19 +72,32 @@ names(res) <- c( "actual", "predict")
 plot(res$actual, res$predict)
 
 
-####################
+############################################################
+#***********************************************************
 ##testing the model with 5 OTUs against the new titration
 lm5<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020 + Otu00039 + Otu00283, data=td)
 summary(lm5)
 p <- 5  #number of parameters
 
-newtit2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.csv", header=T)
-newtit2<-newtit2[,-1]
-actual<-as.data.frame(newtit2[,1])
-newtit<-newtit2[,-1]
-n <- dim(newtit)[1] #number of samples
+titr<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.noUntr.csv", header=T)
+titr<-titr[,-1]
+actual<-as.data.frame(titr[,1])
+titr<-titr[,-1]
+n <- dim(titr)[1] #number of samples
 
-predictlm5 <- as.data.frame(predict.lm(lm5, newdata=newtit))
+predict.lm(lm5, newdata=titr, se.fit=TRUE )
+predictlm5 <- as.data.frame(predict.lm(lm5, newdata=titr, se.fit=TRUE))
+
+
+
+res<-residuals(lm5)
+plot(predict(lm5), res, xlab="fitted values", ylab="residuals", ylim=max(abs(res)) * c(-1, 1))
+
+pred.w.plim <-predict(lm5, newtit, interval = "prediction")
+pred.w.clim <-predict(lm5, newtit, interval = "confidence")
+matplot(actual, cbind(pred.w.clim, pred.w.plim[, -1]), lty = c(1, 2, 2, 3, 3), type="l", ylab = "predicted y")
+
+
 
 ybar = colMeans(actual)[1]
 SStot = sum((actual-ybar)^2)

@@ -8,8 +8,8 @@
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
-fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 3/allstreptitr_tx2_barchart_ids.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.allmetro.forlogscale.fig5.csv", header=T)
+fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 5/allmetro_tx2_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
 abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
 
@@ -20,7 +20,7 @@ sortbyphyl<-TRUE
 # If you want individual graphs as each group (FALSE) or as phylums with each OTU (TRUE)
 # If you choose TRUE, then set sortbyphyl as TRUE too... IF you forget to change this it changes automatically in the code.
 graphbyphyl<-TRUE
-file<-file[file$expgroup!="1untrStrep",]
+#file<-file[file$expgroup!="1untrStrep",]
 
 
 # Highlight all and run!
@@ -324,59 +324,99 @@ if(graphbyphyl==TRUE){
     leng <- 0
     
 
-      while(currphy==ids[k, 4])
-      {
-        leng <- leng+1
-        k <- k+1
-        if( k > idleng ){
-          break}
-      }
-     
+    while(currphy==ids[k, 4])
+    {
+      leng <- leng+1
+      k <- k+1
+      if( k > idleng ){
+        break}
+    }
+   
     label<-barplot(mavgs[,j:(leng+j-1)],, beside=TRUE, ylab=ids[j,3], col=colors, yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=5)
   
 #CTR+SHIFT+C=comment block of code out    
-# 
-#     statLetter <- matrix(c(""),nrow=numgr, ncol=leng)
-#     statLetter[1,] <- "a"
-#     
-#     stat <- matrix(c(""),nrow=numgr-1, ncol=leng)
-# 
-#     otus <- dimnames(mavgs)[2][[1]][j:(leng+j-1)]
-#     m <- j
-#     for (i in 1:leng){
-#       
-# #       results.kruskal <- kruskal.test(file[,which(names(file)==otus[i])] ~ file$expgroup)
-# #       if(results.kruskal$p.value > 0.05){ #then no difference among any titration groups
-# #         segments(label[1,i], mavgs[which.max(mavgs[,m]),m], label[3,i], mavgs[which.max(mavgs[,m]),m], lwd=2)
-# #         text(label[2,i], mavgs[which.max(mavgs[,m]),m], labels="ns", pos=3, cex=2)
-# #       } else{ #If significant by kruskal, then perform the individual tests
-# #         if( results.kruskal$p.value[1] > 0.05 ){
-# #           stat[2 , i] <- paste0(stat[2 , i], "*")
-# #       }
-# #         
-#         
-#       results.wilcox <- pairwise.wilcox.test(file[,which(names(file)==otus[i])], file$expgroup, p.adj="BH")
-#       
-#       if( results.wilcox$p.value[1] > 0.05 ){
-#         statLetter[2 , i] <- paste0(statLetter[2 , i], "a")
-#       }else {statLetter[2 , i] <- paste0(statLetter[2 , i], "b")}
-#       
-#       if( results.wilcox$p.value[2] > 0.05 ){
-#         statLetter[3 , i] <- paste0(statLetter[3 , i], "a")
-#       } else if(results.wilcox$p.value[4] > 0.05 ){
-#         statLetter[3 , i] <- paste0(statLetter[3 , i], "b")
-#       } else {statLetter[3 , i] <- paste0(statLetter[3 , i], "c")}
-#       
-#     }
-#     
-#     
-#     #For labeling letters above each bar
-#     m <- j
-#     for(n in 1:leng){
-#       text( label[,n], mavgs[,m], labels=c("a","b","c"), cex=2, col="red", pos=3)
-#       m <- m+1
-#     }
-#     
+
+    #Will perform the pairwise wilcox test for each OTU and fill "statLetter" with the lettering scheme for the graph to show statistical signifiance
+    #This will work for the titration which has 3 different comparisons
+    statLetter <- NULL
+    statLetter <- matrix(c("NA"),nrow=numgr, ncol=leng)
+    otus <- dimnames(mavgs)[2][[1]][j:(leng+j-1)]
+    m <- j
+    for (i in 1:leng){      
+      results.wilcox <- pairwise.wilcox.test(file[,which(names(file)==otus[i])], file$expgroup, p.adj="BH")
+      
+      #double check that all values were calculated, if not put as n.s.
+      if(results.wilcox$p.value[1] == "NaN"){
+        results.wilcox$p.value[1] <- 10 #a value greater than 0.05
+      }
+      if(results.wilcox$p.value[1] == "NaN"){
+        results.wilcox$p.value[1] <- 10
+      }
+      if(results.wilcox$p.value[1] == "NaN"){
+        results.wilcox$p.value[1] <- 10
+      }
+         
+      if( results.wilcox$p.value[1] >= 0.05 ){
+        if( results.wilcox$p.value[2] >= 0.05 ){
+          if( results.wilcox$p.value[4] >= 0.05 ){
+            statLetter[1, i] <- "a"
+            statLetter[2, i] <- "a"
+            statLetter[3, i] <- "a"
+          }
+          else{ 
+            statLetter[1, i] <- "ab"
+            statLetter[2, i] <- "a"
+            statLetter[3, i] <- "b"            
+          }
+        }  
+        else{
+          if( results.wilcox$p.value[4] >= 0.05 ){
+            statLetter[1, i] <- "a"
+            statLetter[2, i] <- "ab"
+            statLetter[3, i] <- "b"
+          }
+          else{
+            statLetter[1, i] <- "a"
+            statLetter[2, i] <- "a"
+            statLetter[3, i] <- "b"            
+          }
+        }
+      }  
+      else{
+        if( results.wilcox$p.value[2] >= 0.05 ){
+          if( results.wilcox$p.value[4] >= 0.05 ){
+            statLetter[1, i] <- "a"
+            statLetter[2, i] <- "b"
+            statLetter[3, i] <- "ab"
+          }
+          else{
+            statLetter[1, i] <- "a"
+            statLetter[2, i] <- "b"
+            statLetter[3, i] <- "a"
+          }
+        }
+        else{
+          if( results.wilcox$p.value[4] >= 0.05 ){
+            statLetter[1, i] <- "a"
+            statLetter[2, i] <- "b"
+            statLetter[3, i] <- "b"
+          }
+          else{
+            statLetter[1, i] <- "a"
+            statLetter[2, i] <- "b"
+            statLetter[3, i] <- "c"
+          }
+        }
+      }  
+    }
+    
+    #For labeling letters above each bar
+    m <- j
+    for(n in 1:leng){
+      text( label[,n], mavgs[,m], labels=statLetter[,n], cex=1, col="red", pos=3, offset=0.15, xpd=TRUE)
+      m <- m+1
+    }
+    
     
     axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
    # mtext("Relative Abundance", side=2, line=6, cex=.8)
