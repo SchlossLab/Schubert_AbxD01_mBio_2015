@@ -87,16 +87,18 @@ n <- dim(titr)[1] #number of samples
 
 predict.lm(lm5, newdata=titr, se.fit=TRUE )
 predictlm5 <- as.data.frame(predict.lm(lm5, newdata=titr, se.fit=TRUE))
+coef(predict.lm(lm5, newdata=titr, se.fit=TRUE ))
+anova(lm5)
 
 
 
 res<-residuals(lm5)
 plot(predict(lm5), res, xlab="fitted values", ylab="residuals", ylim=max(abs(res)) * c(-1, 1))
 
+
 pred.w.plim <-predict(lm5, newtit, interval = "prediction")
 pred.w.clim <-predict(lm5, newtit, interval = "confidence")
 matplot(actual, cbind(pred.w.clim, pred.w.plim[, -1]), lty = c(1, 2, 2, 3, 3), type="l", ylab = "predicted y")
-
 
 
 ybar = colMeans(actual)[1]
