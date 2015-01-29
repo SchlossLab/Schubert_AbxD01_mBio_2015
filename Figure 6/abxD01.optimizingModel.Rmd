@@ -37,6 +37,37 @@ most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
 The OTUs that overlapped included 6 and 39, which were in the 5 OTU model. OTU11 has most influence, followed by 1, 5, 23, 21, 3, 6, 39 before dropping off in %IncMSE.  I'm curious to see what inclusion of OTU11 (Ecoli) will have on the effect of the model. I like the idea of including that because it's the most positively correlated OTU with *C. difficile* CFU the next day.
 
 
+I wanted to use the information in the titration data set to improve the model. The original model was really good at predicting high levels of *C. difficile*, but not very good at lower levels. The titration data set includes groups with lower levels of *C. difficile*. So I'm running random forest with the titration data alone:
+
+``` {r, eval=TRUE}
+#################################
+###rf of the titration data
+rf.titr<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv", header=T)
+rf.titr<-rf.titr[,-1]
+
+library(randomForest)
+
+#fit the randomforest model
+rf.titr.model <- randomForest(nextDayCFU~., 
+                               data = rf.titr,  outscale=TRUE,
+                               importance=TRUE, proximity=TRUE,
+                               keep.forest=TRUE, ntree=5000
+)
+plot(rf.titr.model)
+print(rf.titr.model)
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+varImpPlot(rf.titr.model, type=1)
+imp<-importance(rf.titr.model)
+most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
+
+```
+
+The % variance explained was 90.95. Otu13, followed by 3 and 1 were the most obvious influences on the model. 
+
+I've also performed this same script to a file without the untreated titration groups. This yields 82.69% variance explained.  Otu3 is the most important OTU in this dataset, followed by 13, 1, 20, 42. In fact all the top OTUs are mostly porphyromonadaceae, a lachnospiraceae, and alistipes. It almost seems from this data like resistance is more about the loss of these protective bugs as opposed to growth of *C. difficile* promoting bacteria. 
+
+
 The next thing I was interested in was seeing which OTUs rf identified when building a model based on the titration and original data sets:
 
 ``` {r, eval=TRUE}

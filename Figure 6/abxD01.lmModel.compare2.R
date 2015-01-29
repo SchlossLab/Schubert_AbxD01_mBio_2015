@@ -80,8 +80,9 @@ summary(lm5)
 p <- 5  #number of parameters
 
 titr<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.noUntr.csv", header=T)
+actual<-as.data.frame(titr[,2])
+row.names(actual) <- titr[,1]
 titr<-titr[,-1]
-actual<-as.data.frame(titr[,1])
 titr<-titr[,-1]
 n <- dim(titr)[1] #number of samples
 
@@ -101,22 +102,28 @@ pred.w.clim <-predict(lm5, newtit, interval = "confidence")
 matplot(actual, cbind(pred.w.clim, pred.w.plim[, -1]), lty = c(1, 2, 2, 3, 3), type="l", ylab = "predicted y")
 
 
-ybar = colMeans(actual)[1]
-SStot = sum((actual-ybar)^2)
-SSres = sum((actual-predictlm5)^2)
-rsq = 1-(SSres/SStot)
-rsq
+results<-cbind(actual, predictlm5$fit)
+names(results) <- c( "actual", "predict")
+plot(results$actual, results$predict)
 
-#adjusted r^2
-numer <- ((1-rsq)*(n-1))
-denom <- (n-p-1)
-adjr2 <- (1 - numer/denom)
-adjr2
+ybar <- apply(results, 2, mean)
+num<-sum((results$actual-ybar["actual"])*(results$predict-ybar["predict"]))
+denA <- sum((results$actual-ybar["actual"])^2)
+denB <- sum((results$predict-ybar["predict"])^2)
 
-res<-cbind(actual, predictlm5)
-names(res) <- c( "actual", "predict")
-plot(res$actual, res$predict)
+rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
+print(rsq)
 
+results[(results$actual == 0 & results$predict < 4 & results$predict > 1.7),]
+resid <- (results$actual - results$predict)
+results <- cbind(results, resid)
+absResid <- abs(results$actual - results$predict)
+results <- cbind(results, absResid)
+ord_residuals <- order(-results$absResid)
+ord_residuals <- results[ord_residuals,]
+
+plot(results$predict, results$resid)
+write.table(ord_residuals, file="~/Desktop/mothur/abxD01/model/topdose5Model_on_newTitration.txt", row.names=TRUE, sep="\t")
 
 ######################
 ##Compare the lm3 to lm5, can use the anova() function because these two models are nested
@@ -129,28 +136,55 @@ lm5<-lm(nextDayCFU ~ Otu00006 + Otu00007 + Otu00020 + Otu00039 + Otu00283, data=
 summary(lm5)
 p <- 5  #number of parameters
 
-delay2<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.day0.logtrans.filter16mintotal.19otus.csv", header=T)
-delay2<-delay2[,-1] #remove sample names
-actual.2<-as.data.frame(delay2[,1])
-delay<-delay2[,-1]
+delay<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.day0.logtrans.filter16mintotal.19otus.csv", header=T)
+actual.delay<-as.data.frame(delay[,2])
+row.names(actual.delay) <- delay[,1]
+delay<-delay[,-1] #remove sample names
+delay<-delay[,-1]
 n <- dim(delay)[1] #number of samples
 
-predictlm5.2 <- as.data.frame(predict.lm(lm5, newdata=delay))
+predictlm5.delay <- as.data.frame(predict.lm(lm5, newdata=delay, se.fit=TRUE))
 
-ybar = colMeans(actual.2)[1]
-SStot = sum((actual.2-ybar)^2)
-SSres = sum((actual.2-predictlm5.2)^2)
-rsq = 1-(SSres/SStot)
-rsq
+results.delay<-cbind(actual.delay, predictlm5.delay$fit)
+names(results.delay) <- c( "actual", "predict")
+plot(results.delay$actual, results.delay$predict)
+
+
+ybar <- apply(results.delay, 2, mean)
+num<-sum((results.delay$actual-ybar["actual"])*(results.delay$predict-ybar["predict"]))
+denA <- sum((results.delay$actual-ybar["actual"])^2)
+denB <- sum((results.delay$predict-ybar["predict"])^2)
+
+rsq.delay <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
+print(rsq.delay)
+
+#results.delay[(results.delay$actual == 0 & results.delay$predict < 4 & results.delay$predict > 1.7),]
+resid <- (results.delay$actual - results.delay$predict)
+results.delay <- cbind(results.delay, resid)
+absResid <- abs(results.delay$actual - results.delay$predict)
+results.delay <- cbind(results.delay, absResid)
+ord_residuals.delay <- order(-results.delay$absResid)
+ord_residuals.delay <- results.delay[ord_residuals.delay,]
+
+plot(results.delay$predict, results.delay$resid)
+write.table(ord_residuals.delay, file="~/Desktop/mothur/abxD01/model/topdose5Model_on_delay.txt", row.names=TRUE, sep="\t")
+
+pred.w.plim <-predict(lm5, delay, interval = "prediction")
+pred.w.clim <-predict(lm5, delay, interval = "confidence")
+matplot(actual, cbind(pred.w.clim, pred.w.plim[, -1]), lty = c(1, 2, 2, 3, 3), type="l", ylab = "predicted y")
 
 
 #use this! ALYXXXXXX
+res<-cbind(actual, predictlm5)
+names(res) <- c( "actual", "predict")
+plot(res$actual, res$predict)
+
 ybar <- apply(res, 2, mean)
 num<-sum((res$actual-ybar["actual"])*(res$predict-ybar["predict"]))
 denA <- sum((res$actual-ybar["actual"])^2)
 denB <- sum((res$predict-ybar["predict"])^2)
 
-rsq <- 1-(num/(denA*denB))
+rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
 
 # 
 # 
