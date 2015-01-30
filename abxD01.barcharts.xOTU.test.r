@@ -8,8 +8,8 @@
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
-fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 3/allvanctitr_tx2_barchart_ids.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.allmetro.forlogscale.fig5.csv", header=T)
+fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 5/allmetro_tx2_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
 abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
 

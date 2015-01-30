@@ -675,7 +675,23 @@ par(mfrow=c(1, 1))
 
 ```
 
-
+Statistical comparison of delayed and on time CFU results:
+```{r, eval=FALSE}
+file<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.allmetro.forlogscale.fig5.csv", header=T)
+file<-file[file$expgroup!="1untr",]
+avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
+metro_avgCD<-format(avgCD, scientific=TRUE, digits=2)
+file$nextDayCFU <- log10(file$nextDayCFU+1)
+#kruskal.test(file$nextDayCFU ~ file$expgroup)
+# p < 0.0001
+#strep_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
+# all significantly different
+metro.aov<-aov(file$nextDayCFU ~ file$expgroup)
+anova(metr.aov)
+#TukeyHSD(strep.aov)
+metro_ttest <- t.test(file$nextDayCFU~file$expgroup)
+# both significantly different
+```
 
 ## Figure 6
  

@@ -14,12 +14,12 @@ ids = ids[-1] #ids of OTUs in topdose
 
 #Otu00002 + Otu00003 + Otu00006 + Otu00007 + Otu00011 + Otu00013 + Otu00015 + Otu00019 + Otu00020 + Otu00023 + Otu00027 + Otu00029 + Otu00039 + Otu00044 + Otu00065 + Otu00078 + Otu00120 + Otu00053 + Otu00431
 #this will make 30 models--the 3 best for each model with 1 to 10 variables
-which(ids == "Otu00003")
-inGroup <- c(which(ids == "Otu00003"), which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"))
-outGroup <- c(which(ids == "Otu00006"), which(ids == "Otu00015"))
-leaps.3_7_20_39_13.no6_15<-regsubsets(nextDayCFU ~ ., data=td, nbest=3, nvmax=10, force.in=inGroup, force.out=outGroup)
-plot(leaps.3_7_20_39_15.no6_13, scale="adjr2", main="leaps.3_7_20_39_15.no6_13")
-plot(leaps.3_7_20_39_15.no6_13, scale="bic", main="leaps.3_7_20_39_15.no6_13")
+#which(ids == "Otu00003")
+inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+outGroup <- c(which(ids == "Otu00006"))
+leaps.3_7_20_39_13_15_53.no6<-regsubsets(nextDayCFU ~ ., data=td, nbest=3, nvmax=10, force.in=inGroup, force.out=outGroup)
+plot(leaps.3_7_20_39_13_15_53.no6, scale="adjr2", main="leaps.3_7_20_39_13_15_53.no6")
+plot(leaps.3_7_20_39_13_15_53.no6, scale="bic", main="leaps.3_7_20_39_13_15_53.no6")
 #leaps.13, force in otu13
 #leaps.3 force in otu3
 #leaps.3.no6
@@ -31,6 +31,11 @@ plot(leaps.3_7_20_39_15.no6_13, scale="bic", main="leaps.3_7_20_39_15.no6_13")
 #leaps.3_7_20_39.no6
 #leaps.3_7_20_39_15.no6_13
 #leaps.3_7_20_39_13.no6_15
+#leaps.7_20_39_13_15.no6
+#leaps.3_7_20_39_13_15.no6
+#leaps.7_20_39_13.no6_15
+#leaps.7_20_39_13.no6
+#leaps.3_7_20_39_13_15_53.no6
 #shows the best models and which variables to include
 summary(leaps)
 #shows the value for each parameter in the model along with intercept
@@ -53,6 +58,36 @@ lm_7_3_20_39<-lm(nextDayCFU ~ Otu00007 + Otu00003 + Otu00020 + Otu00039, data=td
 lm_7_3_20_39.results <- lm_Analysis_Tests(lm_7_3_20_39, actual)
 lm_7_3_20_39.rsqs <- RSQcomparisons(lm_7_3_20_39.results, "lm_7_3_20_39")
 compiled_results <- rbind(compiled_results,lm_7_3_20_39.rsqs)
+
+leaps.7_20_39_13.no6_15<-lm(nextDayCFU ~ Otu00007 + Otu00013 + Otu00020 + Otu00039, data=td)
+leaps.7_20_39_13.no6_15.results <- lm_Analysis_Tests(leaps.7_20_39_13.no6_15, actual)
+leaps.3_7_20_39_13_15_53.no6_15.rsqs <- RSQcomparisons(leaps.7_20_39_13.no6_15.results, "leaps.7_20_39_13.no6_15")
+compiled_results <- rbind(compiled_results,leaps.7_20_39_13.no6_15.rsqs)
+
+leaps.7_20_39_13_15.no6<-lm(nextDayCFU ~ Otu00007 + Otu00013 + Otu00020 + Otu00039 + Otu00015, data=td)
+leaps.7_20_39_13_15.no6.results <- lm_Analysis_Tests(leaps.7_20_39_13_15.no6, actual)
+leaps.7_20_39_13_15.no6.rsqs <- RSQcomparisons(leaps.7_20_39_13_15.no6.results, "leaps.7_20_39_13_15.no6")
+compiled_results <- rbind(compiled_results,leaps.7_20_39_13_15.no6.rsqs)
+
+leaps.3_7_20_39_13_15.no6<-lm(nextDayCFU ~ Otu00007 + Otu00013 + Otu00020 + Otu00039 + Otu00015 + Otu00003, data=td)
+leaps.3_7_20_39_13_15.no6.results <- lm_Analysis_Tests(leaps.3_7_20_39_13_15.no6, actual)
+leaps.3_7_20_39_13_15.no6.rsqs <- RSQcomparisons(leaps.3_7_20_39_13_15.no6.results, "leaps.3_7_20_39_13_15.no6")
+compiled_results <- rbind(compiled_results,leaps.3_7_20_39_13_15.no6.rsqs)
+
+leaps.3_7_20_39_13_15_53.no6<-lm(nextDayCFU ~ Otu00007 + Otu00013 + Otu00020 + Otu00039 + Otu00015 + Otu00003 + Otu00053, data=td)
+#leaps.3_7_20_39_13_15_53.no6.results <- lm_Analysis_Tests(leaps.3_7_20_39_13_15_53.no6, actual)
+#leaps.3_7_20_39_13_15_53.no6.rsqs <- RSQcomparisons(leaps.3_7_20_39_13_15_53.no6.results, "leaps.3_7_20_39_13_15_53.no6")
+#compiled_results <- rbind(compiled_results,leaps.3_7_20_39_13_15_53.no6.rsqs)
+
+lm_3_7_13_15_20_39_11<-lm(nextDayCFU ~ Otu00007 + Otu00013 + Otu00020 + Otu00039 + Otu00015 + Otu00003 + Otu00011, data=td)
+lm_3_7_13_15_20_39_11.results <- lm_Analysis_Tests(lm_3_7_13_15_20_39_11, actual)
+lm_3_7_13_15_20_39_11.rsqs <- RSQcomparisons(lm_3_7_13_15_20_39_11.results, "lm_3_7_13_15_20_39_11")
+compiled_results <- rbind(compiled_results,lm_3_7_13_15_20_39_11.rsqs)
+
+lm_7_3_20_39_15_11<-lm(nextDayCFU ~ Otu00007 + Otu00020 + Otu00039 + Otu00015 + Otu00003 + Otu00011, data=td)
+lm_7_3_20_39_15_11.results <- lm_Analysis_Tests(lm_7_3_20_39_15_11, actual)
+lm_7_3_20_39_15_11.rsqs <- RSQcomparisons(lm_7_3_20_39_15_11.results, "lm_7_3_20_39_15_11")
+compiled_results <- rbind(compiled_results,lm_7_3_20_39_15_11.rsqs)
 
 compiled_results
 detach(td)

@@ -10,7 +10,7 @@ First I was curious what a random forest model would look like trained on the de
 ``` {r, eval=TRUE}
 #################################
 ###rf of the delay data
-delay<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.csv", header=T)
+delay<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv", header=T)
 delay<-delay[,-1]
 
 library(randomForest)
