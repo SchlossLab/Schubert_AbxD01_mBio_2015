@@ -648,7 +648,7 @@ The input file includes the Day 0 shared values for OTUs (whose relative abundan
 
 Then in r: 
 ```{r, eval=TRUE}
-topdose_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv", header=T)
+topdose_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.shared.rf.topdose2.regression.logtrans.filter16mintot.filter16mintot.csv", header=T)
 training_logtrans<-topdose_logtrans[,-1]
 newtit_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.csv", header=T)
 testing_logtrans<-newtit_logtrans[,-1] #new titration data only
@@ -671,8 +671,9 @@ print(model_logtrans)
 #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
 varImpPlot(model_logtrans, type=1)
 imp<-importance(model_logtrans)
-most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
+most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:20],])
 
+write.table(imp, file="~/Desktop/mothur/abxD01/rf/RF.regression.topdose2.filter.filter.txt", sep="\t", row.names=TRUE)
 
 #predict the outcome of the testing data
 predicted_logtrans <- predict(model_logtrans, newdata=testing_logtrans[ ,-1])
