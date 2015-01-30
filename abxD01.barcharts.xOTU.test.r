@@ -8,8 +8,8 @@
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.allmetro.forlogscale.fig5.csv", header=T)
-fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 5/allmetro_tx2_barchart_ids.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
+fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 3/allvanctitr_tx2_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
 abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
 
@@ -20,7 +20,7 @@ sortbyphyl<-TRUE
 # If you want individual graphs as each group (FALSE) or as phylums with each OTU (TRUE)
 # If you choose TRUE, then set sortbyphyl as TRUE too... IF you forget to change this it changes automatically in the code.
 graphbyphyl<-TRUE
-#file<-file[file$expgroup!="1untrStrep",]
+file<-file[file$expgroup!="1untrVanc",]
 
 
 # Highlight all and run!
@@ -343,7 +343,8 @@ if(graphbyphyl==TRUE){
     otus <- dimnames(mavgs)[2][[1]][j:(leng+j-1)]
     m <- j
     for (i in 1:leng){      
-      results.wilcox <- pairwise.wilcox.test(file[,which(names(file)==otus[i])], file$expgroup, p.adj="BH")
+      #results.wilcox <- pairwise.wilcox.test(file[,which(names(file)==otus[i])], file$expgroup, p.adj="BH")
+      results.wilcox <- pairwise.t.test(file[,which(names(file)==otus[i])], file$expgroup, p.adj="BH")
       
       #double check that all values were calculated, if not put as n.s.
       if(results.wilcox$p.value[1] == "NaN"){

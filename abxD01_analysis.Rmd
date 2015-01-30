@@ -291,6 +291,59 @@ file<-file[file$expgroup!="1untrStrep",]
 
 ### Figure 3: Statistics
 
+For comparison of the CFU's among titration groups: 
+```{r, eval=FALSE}
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
+file<-file[file$expgroup!="1untrStrep",]
+avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
+strep_avgCD<-format(avgCD, scientific=TRUE, digits=2)
+file$nextDayCFU <- log10(file$nextDayCFU+1)
+#kruskal.test(file$nextDayCFU ~ file$expgroup)
+# p < 0.0001
+#strep_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
+# all significantly different
+strep.aov<-aov(file$nextDayCFU ~ file$expgroup)
+anova(strep.aov)
+#TukeyHSD(strep.aov)
+strep_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
+# all significantly different
+
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allceftitr.forlogscale.csv", header=T)
+file<-file[file$expgroup!="1untrCef",]
+avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
+cef_avgCD<-format(avgCD, scientific=TRUE, digits=2)
+file$nextDayCFU <- log10(file$nextDayCFU+1)
+#kruskal.test(file$nextDayCFU ~ file$expgroup)
+# p = 0.003
+#cef_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
+# mid and low dose not different, but high different than mid and low
+#cef.aov<-aov(file$nextDayCFU ~ file$expgroup)
+anova(cef.aov)
+#TukeyHSD(cef.aov)
+cef_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
+# all significantly different
+
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
+file<-file[file$expgroup!="1untrVanc",]
+avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
+vanc_avgCD<-format(avgCD, scientific=TRUE, digits=2)
+file$nextDayCFU <- log10(file$nextDayCFU+1)
+#kruskal.test(file$nextDayCFU ~ file$expgroup)
+# p = 0.0016
+#vanc_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
+# mid and low dose not different, but high different than mid and low
+vanc.aov<-aov(file$nextDayCFU ~ file$expgroup)
+anova(vanc.aov)
+#TukeyHSD(vanc.aov)
+vanc_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
+# mid and low dose not different, but high different than mid and low
+
+```
+
+
+
+For comparisons between family-level phylotypes:
+Performed inside abxD01.barcharts.xOTU.test.r
 ```{r, eval=FALSE}
 file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
 file<-file[file$expgroup!="1untrStrep",]
@@ -322,6 +375,7 @@ pairwise.wilcox.test(file$Otu009, file$expgroup, p.adj="BH")
 pairwise.wilcox.test(file$Otu015, file$expgroup, p.adj="BH")
 pairwise.wilcox.test(file$Otu017, file$expgroup, p.adj="BH")
 pairwise.wilcox.test(file$Other, file$expgroup, p.adj="BH")
+
 
 file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
 file<-file[file$expgroup!="1untrVanc",]

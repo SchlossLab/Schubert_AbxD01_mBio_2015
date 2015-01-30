@@ -18,8 +18,8 @@ which(ids == "Otu00003")
 inGroup <- c(which(ids == "Otu00003"), which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"))
 outGroup <- c(which(ids == "Otu00006"), which(ids == "Otu00015"))
 leaps.3_7_20_39_13.no6_15<-regsubsets(nextDayCFU ~ ., data=td, nbest=3, nvmax=10, force.in=inGroup, force.out=outGroup)
-plot(leaps.3_7_20_39_13.no6_15, scale="adjr2", main="leaps.3_7_20_39_13.no6_15")
-plot(leaps.3_7_20_39_13.no6_15, scale="bic", main="leaps.3_7_20_39_13.no6_15")
+plot(leaps.3_7_20_39_15.no6_13, scale="adjr2", main="leaps.3_7_20_39_15.no6_13")
+plot(leaps.3_7_20_39_15.no6_13, scale="bic", main="leaps.3_7_20_39_15.no6_13")
 #leaps.13, force in otu13
 #leaps.3 force in otu3
 #leaps.3.no6
