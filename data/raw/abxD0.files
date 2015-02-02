@@ -162,7 +162,5 @@ mock1	mock2_S27_L001_R1_001.fastq	mock2_S27_L001_R2_001.fastq
 mock2	mock_S192_L001_R1_001.fastq	mock_S192_L001_R2_001.fastq
 mock3	Mock_S192_L001_R1_001.fastq	Mock_S192_L001_R2_001.fastq
 mock4	Mock_S287_L001_R1_001.fastq	Mock_S287_L001_R2_001.fastq
-mock5	Mock_S288_L001_R1_001.fastq	Mock_S288_L001_R2_001.fastq
 mock6	mock_S357_L001_R1_001.fastq	mock_S357_L001_R2_001.fastq
-mock7	Mock_S384_L001_R1_001.fastq	Mock_S384_L001_R2_001.fastq
 mock8	mock_S96_L001_R1_001.fastq	mock_S96_L001_R2_001.fastq
