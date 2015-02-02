@@ -139,3 +139,15 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).
 	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.thetayc.0.03.lt.dist;\
 	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.thetayc.0.03.lt.std.dist;\
 	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.*.rabund
+
+
+
+
+
+write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
+		$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
+		$(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.ave.dist\
+		$(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy\
+		$(BASIC_STEM).pick.v4.wang.pick.pick.tx.shared\
+		$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy\
+		$(BASIC_STEM).pick.pick.pick.error.summary
