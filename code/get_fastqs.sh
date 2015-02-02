@@ -22,7 +22,8 @@ FILES_FILE=$1
 
 
 # where are the raw fastqs?
-ORIG_LOCATION=/mnt/EXT/Schloss-data/zackular/WT-Nod1-analyses
+ORIG_LOCATION=/mnt/EXT/Schloss-data/alyx/abxD01/
+
 
 
 # where are we putting the fastqs?
