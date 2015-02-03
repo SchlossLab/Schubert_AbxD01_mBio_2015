@@ -2,7 +2,7 @@
 title: "AbxD01 Analysis"
 author: "Alyx Schubert"
 date: "September 29, 2014"
-output: word_document
+output: html_document
 ---
 
 # Introduction
@@ -292,7 +292,7 @@ file<-file[file$expgroup!="1untrStrep",]
 ### Figure 3: Statistics
 
 For comparison of the CFU's among titration groups: 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
 file<-file[file$expgroup!="1untrStrep",]
 avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
@@ -306,6 +306,7 @@ strep.aov<-aov(file$nextDayCFU ~ file$expgroup)
 anova(strep.aov)
 #TukeyHSD(strep.aov)
 strep_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
+print(strep_ttest)
 # all significantly different
 
 file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allceftitr.forlogscale.csv", header=T)
@@ -317,10 +318,11 @@ file$nextDayCFU <- log10(file$nextDayCFU+1)
 # p = 0.003
 #cef_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
 # mid and low dose not different, but high different than mid and low
-#cef.aov<-aov(file$nextDayCFU ~ file$expgroup)
+cef.aov<-aov(file$nextDayCFU ~ file$expgroup)
 anova(cef.aov)
 #TukeyHSD(cef.aov)
 cef_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
+print(cef_ttest)
 # all significantly different
 
 file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
@@ -336,6 +338,7 @@ vanc.aov<-aov(file$nextDayCFU ~ file$expgroup)
 anova(vanc.aov)
 #TukeyHSD(vanc.aov)
 vanc_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
+print(vanc_ttest)
 # mid and low dose not different, but high different than mid and low
 
 ```
@@ -676,7 +679,7 @@ par(mfrow=c(1, 1))
 ```
 
 Statistical comparison of delayed and on time CFU results:
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 file<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.allmetro.forlogscale.fig5.csv", header=T)
 file<-file[file$expgroup!="1untr",]
 avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
@@ -687,9 +690,10 @@ file$nextDayCFU <- log10(file$nextDayCFU+1)
 #strep_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
 # all significantly different
 metro.aov<-aov(file$nextDayCFU ~ file$expgroup)
-anova(metr.aov)
+anova(metro.aov)
 #TukeyHSD(strep.aov)
 metro_ttest <- t.test(file$nextDayCFU~file$expgroup)
+print(metro_ttest)
 # both significantly different
 ```
 
@@ -717,7 +721,7 @@ I found a program "leaps" in r which will calculate all subsets of a model for a
 The input file includes the Day 0 shared values for OTUs (whose relative abundance was equal to or greater than 1%) and the log transformed next day CFU values (log(CFU)).
 
 Then in r: 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 topdose_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.shared.rf.topdose2.regression.logtrans.filter16mintot.filter16mintot.csv", header=T)
 training_logtrans<-topdose_logtrans[,-1]
 newtit_logtrans<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.csv", header=T)
