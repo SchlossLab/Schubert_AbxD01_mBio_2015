@@ -758,22 +758,6 @@ predicted2_logtrans <- predict(model_logtrans, newdata=testing2_logtrans[ ,-1])
 actual_logtrans <- testing_logtrans$nextDayCFU
 actual2_logtrans <- testing2_logtrans$nextDayCFU
 
-ybar = mean(actual_logtrans)
-SSres = sum((actual_logtrans-predicted_logtrans)^2)
-SStot = sum((actual_logtrans-ybar)^2)
-rsq = 1-(SSres/SStot)
-
-#rsq_logtrans <- 1-sum((actual_logtrans-predicted_logtrans)^2)/sum((actual_logtrans-mean(actual_logtrans))^2)
-print(rsq)
-
-ybar2 = mean(actual2_logtrans)
-SSres2 = sum((actual2_logtrans-predicted2_logtrans)^2)
-SStot2 = sum((actual2_logtrans-ybar2)^2)
-rsq2 = 1-(SSres2/SStot2)
-
-print(rsq2)
-
-write.table(cbind(actual_logtrans, predicted_logtrans), file="~/Desktop/mothur/abxD01/rf/RF.regression.topTitr.txt", sep="\t", row.names=FALSE)
 
 ```
 

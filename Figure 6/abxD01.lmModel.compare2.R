@@ -1,19 +1,60 @@
 library(leaps)
 
-topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.19otus.rfnegpos.csv", header=T)
+#topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.18otus.rfnegpos.csv", header=T)
+#topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.delay.logtrans.filter16mintot.select.csv", header=T)
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal2X.topdose2.shared.no6.csv", header=T)
+
+
 actual<-as.data.frame(topdose[,2]) #save the actual results in new df
 row.names(actual) <- topdose[,1] #save the group names
 td<-topdose[,-1] 
 attach(td)
 ids<-names(td)
 ids = ids[-1] #ids of OTUs in topdose
+#names(td)[2:(length(td))] <- paste0("OTU", substr(ids, 6, 8))
+
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- NULL
+outGroup <- c(NULL)
+leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup, really.big=T)
+plot(leaps.build, scale="adjr2", main="leaps.build")
+plot(leaps.build, scale="bic", main="leaps.build")
+plot(leaps.build, scale="Cp", main="leaps.build")
+
+library(car)
+
+abbrNames <- substr(leaps.build$xnames, 6, 8)
+abbrNames <- abbrNames[-1]
+
+minSubsetSize <- 2
+subsets(leaps.build, names=abbrNames, statistic="adjr2", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12))
+subsets(leaps.build, names=abbrNames, statistic="bic", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12))
+subsets(leaps.build, names=abbrNames, statistic="cp", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12))
+abline(h=c(1:11), lwd=1)
+abline(v=c(5:11), lwd=1)
+abline(0, 1, col="red") #for mallow's Cp "good" is Cp <= p, parameters
+
+lm_3_7_13_15_20_39_120<-lm(nextDayCFU ~ Otu00007 + Otu00020 + Otu00039 + Otu00015 + Otu00003 + Otu00013 + Otu00120, data=td)
+lm_3_7_13_15_20_39_120.results <- lm_Analysis_Tests(lm_3_7_13_15_20_39_120, actual)
+lm_3_7_13_15_20_39_120.rsqs <- RSQcomparisons(lm_3_7_13_15_20_39_120.results, "lm_3_7_13_15_20_39_120")
+compiled_results <- rbind(compiled_results,lm_3_7_13_15_20_39_120.rsqs)
+
+# del_8_11_14_36_47<-lm(nextDayCFU ~ Otu00008 + Otu00011 + Otu00014 + Otu00036 + Otu00047, data=td)
+# del_8_11_14_36_47.results <- lm_Analysis_Tests(del_8_11_14_36_47, actual)
+# del_8_11_14_36_47.rsqs <- RSQcomparisons(del_8_11_14_36_47.results, "del_8_11_14_36_47")
+# compiled_results <- rbind(compiled_results,del_8_11_14_36_47.rsqs)
+
+
+compiled_results
+detach(td)
 
 
 
 
 
+
+###################################################################
 #Otu00002 + Otu00003 + Otu00006 + Otu00007 + Otu00011 + Otu00013 + Otu00015 + Otu00019 + Otu00020 + Otu00023 + Otu00027 + Otu00029 + Otu00039 + Otu00044 + Otu00065 + Otu00078 + Otu00120 + Otu00053 + Otu00431
-#this will make 30 models--the 3 best for each model with 1 to 10 variables
 #which(ids == "Otu00003")
 inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
 outGroup <- c(which(ids == "Otu00006"))
@@ -148,10 +189,10 @@ lmTests <- function(model){
   model.summary <- summary(model)
   rsq <- model.summary$adj.r.squared
 
-  model.results.titration <- modelNewData(model, "Titration Data", "~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.newtitration.logtrans.filter16mintotal.19otus.noUntr.csv")
+  model.results.titration <- modelNewData(model, "Titration Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv")
 #  colnames(model.results.titration) <- c(paste0(colnames(model.results.titration), "_titration"))
   
-  model.results.delay <- modelNewData(model, "Delay Data", "~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.lm.delay.day0.logtrans.filter16mintotal.19otus.csv")
+  model.results.delay <- modelNewData(model, "Delay Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv")
 #   colnames(model.results.delay) <- c(paste0(colnames(model.results.delay), "_delay"))
 # 
 #   all.results <- cbind(model.results.titration, model.results.delay, rsq)
