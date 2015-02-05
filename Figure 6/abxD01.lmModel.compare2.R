@@ -1,22 +1,54 @@
+
 library(leaps)
 
-#topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.18otus.rfnegpos.csv", header=T)
-#topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.delay.logtrans.filter16mintot.select.csv", header=T)
-topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal2X.topdose2.shared.no6.csv", header=T)
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.18otus.rfnegpos.csv", header=T)
 
-
+actual <-NULL
 actual<-as.data.frame(topdose[,2]) #save the actual results in new df
 row.names(actual) <- topdose[,1] #save the group names
 td<-topdose[,-1] 
 attach(td)
+#detach(td)
+ids<-names(td)
+ids = ids[-1] #ids of OTUs in topdose
+
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(NULL)
+leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup)
+leaps.plots(leaps.build, 4)
+
+poop<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00039, data=td)
+poop.results <- lm_Analysis_Tests(poop, actual)
+poop.rsqs <- RSQcomparisons(poop.results, "poop")
+retrained_results <- rbind(retrained_results, poop.rsqs)
+
+
+
+################################################################################################
+# An attempt to build - revise - revise model using topdose - titration - delay data sets. 
+# 2/5/15
+
+library(leaps)
+
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.18otus.rfnegpos.csv", header=T)
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.delay.logtrans.filter16mintot.select.csv", header=T)
+#topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal2X.topdose2.shared.no6.csv", header=T)
+
+actual <-NULL
+actual<-as.data.frame(topdose[,2]) #save the actual results in new df
+row.names(actual) <- topdose[,1] #save the group names
+td<-topdose[,-1] 
+attach(td)
+#detach(td)
 ids<-names(td)
 ids = ids[-1] #ids of OTUs in topdose
 #names(td)[2:(length(td))] <- paste0("OTU", substr(ids, 6, 8))
 
 #inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
-inGroup <- NULL
+inGroup <- c(NULL)
 outGroup <- c(NULL)
-leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup, really.big=T)
+leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup)
 plot(leaps.build, scale="adjr2", main="leaps.build")
 plot(leaps.build, scale="bic", main="leaps.build")
 plot(leaps.build, scale="Cp", main="leaps.build")
@@ -26,7 +58,7 @@ library(car)
 abbrNames <- substr(leaps.build$xnames, 6, 8)
 abbrNames <- abbrNames[-1]
 
-minSubsetSize <- 2
+minSubsetSize <- 4
 subsets(leaps.build, names=abbrNames, statistic="adjr2", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12))
 subsets(leaps.build, names=abbrNames, statistic="bic", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12))
 subsets(leaps.build, names=abbrNames, statistic="cp", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12))
@@ -34,15 +66,114 @@ abline(h=c(1:11), lwd=1)
 abline(v=c(5:11), lwd=1)
 abline(0, 1, col="red") #for mallow's Cp "good" is Cp <= p, parameters
 
+lm_3_7_13_15_20_39<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00039, data=td)
+lm_3_7_13_15_20_39.results <- lm_Analysis_Tests(lm_3_7_13_15_20_39, actual)
+lm_3_7_13_15_20_39.rsqs <- RSQcomparisons(lm_3_7_13_15_20_39.results, "lm_3_7_13_15_20_39")
+compiled_results <- rbind(compiled_results,lm_3_7_13_15_20_39.rsqs)
+
+lm_3_7_13_15_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00039 + Otu00042, data=td)
+lm_3_7_13_15_20_39_42.results <- lm_Analysis_Tests(lm_3_7_13_15_20_39_42, actual)
+lm_3_7_13_15_20_39_42.rsqs <- RSQcomparisons(lm_3_7_13_15_20_39_42.results, "lm_3_7_13_15_20_39_42")
+compiled_results <- rbind(compiled_results,lm_3_7_13_15_20_39_42.rsqs)
+
+lm_3_7_13_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=td)
+lm_3_7_13_20_23_39_42.results <- lm_Analysis_Tests(lm_3_7_13_20_23_39_42, actual)
+lm_3_7_13_20_23_39_42.rsqs <- RSQcomparisons(lm_3_7_13_20_23_39_42.results, "lm_3_7_13_20_23_39_42")
+compiled_results <- rbind(compiled_results,lm_3_7_13_20_23_39_42.rsqs)
+#adding 23 helped metro
+
+
+lm_3_7_13_20_21_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00042, data=td)
+lm_3_7_13_20_21_23_39_42.results <- lm_Analysis_Tests(lm_3_7_13_20_21_23_39_42, actual)
+lm_3_7_13_20_21_23_39_42.rsqs <- RSQcomparisons(lm_3_7_13_20_21_23_39_42.results, "lm_3_7_13_20_21_23_39_42")
+compiled_results <- rbind(compiled_results,lm_3_7_13_20_21_23_39_42.rsqs)
+#adding 21, barely helped metro
+
+lm_3_7_8_13_20_21_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00008 + Otu00013 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00042, data=td)
+lm_3_7_8_13_20_21_23_39_42.results <- lm_Analysis_Tests(lm_3_7_8_13_20_21_23_39_42, actual)
+lm_3_7_8_13_20_21_23_39_42.rsqs <- RSQcomparisons(lm_3_7_8_13_20_21_23_39_42.results, "lm_3_7_8_13_20_21_23_39_42")
+compiled_results <- rbind(compiled_results,lm_3_7_8_13_20_21_23_39_42.rsqs)
+#adding 8, barely increased
+
+
+lm_3_7_8_14_13_20_21_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00008  + Otu00014 + Otu00013 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00042, data=td)
+lm_3_7_8_14_13_20_21_23_39_42.results <- lm_Analysis_Tests(lm_3_7_8_14_13_20_21_23_39_42, actual)
+lm_3_7_8_14_13_20_21_23_39_42.rsqs <- RSQcomparisons(lm_3_7_8_14_13_20_21_23_39_42.results, "lm_3_7_8_14_13_20_21_23_39_42")
+compiled_results <- rbind(compiled_results,lm_3_7_8_14_13_20_21_23_39_42.rsqs)
+#add 14, helped
+
+lm_3_7_8_14_13_20_21_23_39_42_47<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00008  + Otu00014 + Otu00013 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00042  + Otu00047, data=td)
+lm_3_7_8_14_13_20_21_23_39_42_47.results <- lm_Analysis_Tests(lm_3_7_8_14_13_20_21_23_39_42_47, actual)
+lm_3_7_8_14_13_20_21_23_39_42_47.rsqs <- RSQcomparisons(lm_3_7_8_14_13_20_21_23_39_42_47.results, "lm_3_7_8_14_13_20_21_23_39_42_47")
+compiled_results <- rbind(compiled_results,lm_3_7_8_14_13_20_21_23_39_42_47.rsqs)
+#add 47
+
+
+lm_3_8_14_13_20_21_23_39_47<-lm(nextDayCFU ~ Otu00003 + Otu00008  + Otu00014 + Otu00013 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00047, data=td)
+lm_3_8_14_13_20_21_23_39_47.results <- lm_Analysis_Tests(lm_3_8_14_13_20_21_23_39_47, actual)
+lm_3_8_14_13_20_21_23_39_47.rsqs <- RSQcomparisons(lm_3_8_14_13_20_21_23_39_47.results, "lm_3_8_14_13_20_21_23_39_47")
+compiled_results <- rbind(compiled_results,lm_3_8_14_13_20_21_23_39_47.rsqs)
+#remove 42 
+
+lm_3_7_8_14_13_20_21_23_39_47<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00008  + Otu00014 + Otu00013 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00047, data=td)
+lm_3_7_8_14_13_20_21_23_39_47.results <- lm_Analysis_Tests(lm_3_7_8_14_13_20_21_23_39_47, actual)
+lm_3_7_8_14_13_20_21_23_39_47.rsqs <- RSQcomparisons(lm_3_7_8_14_13_20_21_23_39_47.results, "lm_3_7_8_14_13_20_21_23_39_47")
+compiled_results <- rbind(compiled_results,lm_3_7_8_14_13_20_21_23_39_47.rsqs)
+#add back 7
+
+lm_3_7_8_14_13_15_20_21_23_39_47<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00008  + Otu00014 + Otu00013 + Otu00015 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00047, data=td)
+lm_3_7_8_14_13_15_20_21_23_39_47.results <- lm_Analysis_Tests(lm_3_7_8_14_13_15_20_21_23_39_47, actual)
+lm_3_7_8_14_13_15_20_21_23_39_47.rsqs <- RSQcomparisons(lm_3_7_8_14_13_15_20_21_23_39_47.results, "lm_3_7_8_14_13_15_20_21_23_39_47")
+compiled_results <- rbind(compiled_results,lm_3_7_8_14_13_15_20_21_23_39_47.rsqs)
+#add back 15
+#STOPPED AT THIS POINT
+
+
+lm_3_7_8_11_14_13_20_21_23_39_42_47<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00008 + Otu00011 + Otu00014 + Otu00013 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00042 + Otu00047, data=td)
+lm_3_7_8_11_14_13_20_21_23_39_42_47.results <- lm_Analysis_Tests(lm_3_7_8_11_14_13_20_21_23_39_42_47, actual)
+lm_3_7_8_11_14_13_20_21_23_39_42_47.rsqs <- RSQcomparisons(lm_3_7_8_11_14_13_20_21_23_39_42_47.results, "lm_3_7_8_11_14_13_20_21_23_39_42_47")
+compiled_results <- rbind(compiled_results,lm_3_7_8_11_14_13_20_21_23_39_42_47.rsqs)
+#add 11
+
+
+# delay_results <- NULL
+# lm_8_11_14_36_39 <- lm(nextDayCFU ~ Otu00008 + Otu00011 + Otu00014 + Otu00036 + Otu00039, data=td)
+# lm_8_11_14_36_39.results <- lm_Analysis_Tests(lm_8_11_14_36_39, actual)
+# lm_8_11_14_36_39.rsqs <- RSQcomparisons(lm_8_11_14_36_39.results, "lm_8_11_14_36_39")
+# delay_results <- rbind(delay_results,lm_8_11_14_36_39.rsqs)
+# 
+# lm_8_11_14_36_39_47 <- lm(nextDayCFU ~ Otu00008 + Otu00011 + Otu00014 + Otu00036 + Otu00039 + Otu00047, data=td)
+# lm_8_11_14_36_39_47.results <- lm_Analysis_Tests(lm_8_11_14_36_39_47, actual)
+# lm_8_11_14_36_39_47.rsqs <- RSQcomparisons(lm_8_11_14_36_39_47.results, "lm_8_11_14_36_39_47")
+# delay_results <- rbind(delay_results,lm_8_11_14_36_39_47.rsqs)
+# 
+# lm_8_11_14_47 <- lm(nextDayCFU ~ Otu00008 + Otu00011 + Otu00014 + Otu00047, data=td)
+# lm_8_11_14_47.results <- lm_Analysis_Tests(lm_8_11_14_47, actual)
+# lm_8_11_14_47.rsqs <- RSQcomparisons(lm_8_11_14_47.results, "lm_8_11_14_47")
+# delay_results <- rbind(delay_results,lm_8_11_14_47.rsqs)
+
+
+lm_3_7_13_20_23_36_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00020 + Otu00023 + Otu00036 + Otu00039 + Otu00042, data=td)
+lm_3_7_13_20_23_36_39_42.results <- lm_Analysis_Tests(lm_3_7_13_20_23_36_39_42, actual)
+lm_3_7_13_20_23_36_39_42.rsqs <- RSQcomparisons(lm_3_7_13_20_23_36_39_42.results, "lm_3_7_13_20_23_36_39_42")
+compiled_results <- rbind(compiled_results,lm_3_7_13_20_23_36_39_42.rsqs)
+#added 36, dropped metro
+
+lm_3_7_13_11_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00011 + Otu00013 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=td)
+lm_3_7_13_11_20_23_39_42.results <- lm_Analysis_Tests(lm_3_7_13_11_20_23_39_42, actual)
+lm_3_7_13_11_20_23_39_42.rsqs <- RSQcomparisons(lm_3_7_13_11_20_23_39_42.results, "lm_3_7_13_11_20_23_39_42")
+compiled_results <- rbind(compiled_results,lm_3_7_13_11_20_23_39_42.rsqs)
+#adding 11 didn't help
+
 lm_3_7_13_15_20_39_120<-lm(nextDayCFU ~ Otu00007 + Otu00020 + Otu00039 + Otu00015 + Otu00003 + Otu00013 + Otu00120, data=td)
 lm_3_7_13_15_20_39_120.results <- lm_Analysis_Tests(lm_3_7_13_15_20_39_120, actual)
 lm_3_7_13_15_20_39_120.rsqs <- RSQcomparisons(lm_3_7_13_15_20_39_120.results, "lm_3_7_13_15_20_39_120")
 compiled_results <- rbind(compiled_results,lm_3_7_13_15_20_39_120.rsqs)
 
-# del_8_11_14_36_47<-lm(nextDayCFU ~ Otu00008 + Otu00011 + Otu00014 + Otu00036 + Otu00047, data=td)
-# del_8_11_14_36_47.results <- lm_Analysis_Tests(del_8_11_14_36_47, actual)
-# del_8_11_14_36_47.rsqs <- RSQcomparisons(del_8_11_14_36_47.results, "del_8_11_14_36_47")
-# compiled_results <- rbind(compiled_results,del_8_11_14_36_47.rsqs)
+del_8_11_14_36_47<-lm(nextDayCFU ~ Otu00008 + Otu00011 + Otu00014 + Otu00036 + Otu00047, data=td)
+del_8_11_14_36_47.results <- lm_Analysis_Tests(del_8_11_14_36_47, actual)
+del_8_11_14_36_47.rsqs <- RSQcomparisons(del_8_11_14_36_47.results, "del_8_11_14_36_47")
+compiled_results <- rbind(compiled_results,del_8_11_14_36_47.rsqs)
 
 
 compiled_results
@@ -133,123 +264,13 @@ compiled_results <- rbind(compiled_results,lm_7_3_20_39_15_11.rsqs)
 compiled_results
 detach(td)
 
-###########################################
-# Returns a list of results from fitting the linear model to the topdose data 
-# and predicting the titration and delay data
-# Creates plots of actual values vs fitted or predicted values
-# Input is a linear model and df of the actual values
-RSQcomparisons <- function(model.results, model.name){
-  
-  #model.results <- lm_Analysis_Tests(model, actual)
-  lm.adjR2 <- model.results[[2]][1, 5]
-  titr.r2 <- model.results[[3]][1, 5]
-  delay.r2 <- model.results[[4]][1, 5]
-  df <- cbind( model.name, lm.adjR2, titr.r2, delay.r2)
-  colnames(df) <- c("model", "lm.adjR2", "titr.r2", "delay.r2")
-  return(df)
-
-}
-
-###########################################
-# Returns a list of results from fitting the linear model to the topdose data 
-# and predicting the titration and delay data
-# Creates plots of actual values vs fitted or predicted values
-lm_Analysis_Tests <- function(model, actualVals){
-
-  #model <- lm_7_3_20_39_15
- # actualVals <- actual
-  
-  model.results <- lmTests(model) #returns a list
-  fitted <- cbind( model.results$lm_fitted_values )
-  residuals <- cbind( model.results$lm_residuals )
-  rsq <- model.results$rsq_lmTopdose
-  lm.results <- cbind(actualVals, fitted,  residuals, abs(residuals),  rsq)
-  colnames(lm.results) <- c("actual", "predict", "resid", "absResid", "rsq")
-  all.results <- list("lm_anova"=model.results$lm_anova, "results_linear"=lm.results, "results_titration"=model.results$results_titration, "results_delay"=model.results$results_delay)
-  
-  #plot results of linear model
-  fitted <- cbind( model.results[[2]] )
-  plot(actualVals[,1], fitted[,1], xlab="Actual Values", ylab="Fitted values", main=model$call)
-  mtext("Top Dose Data", side=3, line=0)
-  mtext(paste("Adj R^2 = ", signif(model.results[[1]], 3)), side=1, line=4)
-
-  return(all.results)
-}
-
-###########################################
-# Returns a list of results from fitting the linear model to the topdose data 
-# and predicting the ttitration and delay data
-# Creates plots for new data sets
-lmTests <- function(model){
-  
-  model.anova <- anova(model)
-  res<-residuals(model)
-  lm.fitVals <- predict(model)
-#  plot(lm.fitted, res, xlab="Fitted values", main=model$call, ylab="Residuals", ylim=max(abs(res)) * c(-1, 1))
-  model.summary <- summary(model)
-  rsq <- model.summary$adj.r.squared
-
-  model.results.titration <- modelNewData(model, "Titration Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv")
-#  colnames(model.results.titration) <- c(paste0(colnames(model.results.titration), "_titration"))
-  
-  model.results.delay <- modelNewData(model, "Delay Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv")
-#   colnames(model.results.delay) <- c(paste0(colnames(model.results.delay), "_delay"))
-# 
-#   all.results <- cbind(model.results.titration, model.results.delay, rsq)
-#   colnames(all.results)[11] <- "rsq_lmTopdose"
-#   all.results <- all.results[,c(11,1,2,3,4,5,6,7,8,9,10)]
-  results_list <- list("rsq_lmTopdose"=rsq, "lm_fitted_values"=lm.fitVals, "lm_anova"=model.anova,"lm_residuals"=res, "results_titration"=model.results.titration, "results_delay"=model.results.delay)
-  return(results_list)
-
-}
 
 
-#######################################################
-# newDataFile headings=Group, nextDayCFU, OtuX...etc; descr should be a description of the new data set the anlaysis is performed on
-# model should be a linear model, newDataFile = "~/Documents/blah/blah.csv", descr = "Titration Data"
-# Returns a results data frame, creates the plot of actual vs predicted values
-modelNewData <- function(model, descr, newDataFile ){
-  
-  titr<-read.csv(file=newDataFile, header=T)
-  actual<-as.data.frame(titr[,2]) #save the actual results in new df
-  row.names(actual) <- titr[,1] #save the group names
-  titr<-titr[,-1] 
-  titr<-titr[,-1]
-  n <- dim(titr)[1] #number of samples in n
-  
-  #predict C. difficile colonization using the model on the new (titration) data
-  predictions <- as.data.frame(predict.lm(model, newdata=titr, se.fit=TRUE))
-  
-  #create a results data frame and plots results
-  results<-cbind(actual, predictions$fit)
-  names(results) <- c( "actual", "predict")
-  
-  #Calculate the rsquared
-  ybar <- apply(results, 2, mean)
-  num<-sum((results$actual-ybar["actual"])*(results$predict-ybar["predict"]))
-  denA <- sum((results$actual-ybar["actual"])^2)
-  denB <- sum((results$predict-ybar["predict"])^2)
-  rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
-  
-  #plot results
-  plot(results$actual, results$predict, main=model$call, ylab="Predicted Values", xlab="Actual Values")
-  mtext(descr, side=3, line=0)
-  mtext(paste("r^2 = ", signif(rsq, 3)), side=1, line=4)
-  
-  #Calculate the residuals and add them to the results df, ordering them by the magnitude of the residual
-  resid <- (results$actual - results$predict)
-  results <- cbind(results, resid)
-  absResid <- abs(results$actual - results$predict)
-  results <- cbind(results, absResid)
-  ord_residuals <- order(-results$absResid)
-  ord_residuals <- results[ord_residuals,]
-  results<-cbind(ord_residuals, rsq) #add rsq column, which will all be one number--the rsq value
-  
-#  plot(results$predict, results$resid, main=model$call, xlab="Predicted Values", ylab="Residuals")
-#  mtext(descr, side=3, line=0)
-  
-  return(results)
-}
+
+
+
+
+
 
 
 ############################################################
