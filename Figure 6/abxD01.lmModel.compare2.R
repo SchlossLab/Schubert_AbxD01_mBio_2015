@@ -49,6 +49,7 @@ leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inG
 #leaps.build.no6
 leaps.plots(leaps.build, 4, 10)
 sum.leaps.topdose <- summary(leaps.build)
+models7<- getModels(leaps.build, 7)
 
 #Test the best model based on the leaps analysis in a linear model trained on the topdose data.
 # This model is close to the best by BIC, but 13 is more commonly found in top models
@@ -70,6 +71,26 @@ lm_3_7_13_15_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015
 lm_3_7_13_15_20_39_42.results <- lm_Analysis_Tests(lm_3_7_13_15_20_39_42, actual)
 lm_3_7_13_15_20_39_42.rsqs <- RSQcomparisons(lm_3_7_13_15_20_39_42.results, "lm_3_7_13_15_20_39_42")
 topdose_results <- rbind(topdose_results, lm_3_7_13_15_20_39_42.rsqs)
+# 
+# lm7.3_7_9_20_39_42_86<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00039 + Otu00042 + Otu00086, data=td)
+# lm7.3_7_9_20_39_42_86.results <- lm_Analysis_Tests(lm7.3_7_9_20_39_42_86, actual)
+# lm7.3_7_9_20_39_42_86.rsqs <- RSQcomparisons(lm7.3_7_9_20_39_42_86.results, "lm7.3_7_9_20_39_42_86")
+# topdose_results <- rbind(topdose_results, lm7.3_7_9_20_39_42_86.rsqs)
+# 
+# lm7.3_7_9_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=td)
+# lm7.3_7_9_20_23_39_42.results <- lm_Analysis_Tests(lm7.3_7_9_20_23_39_42, actual)
+# lm7.3_7_9_20_23_39_42.rsqs <- RSQcomparisons(lm7.3_7_9_20_23_39_42.results, "lm7.3_7_9_20_23_39_42")
+# topdose_results <- rbind(topdose_results, lm7.3_7_9_20_23_39_42.rsqs)
+# 
+# lm7.3_7_9_13_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00013 + Otu00039 + Otu00042, data=td)
+# lm7.3_7_9_13_20_39_42.results <- lm_Analysis_Tests(lm7.3_7_9_13_20_39_42, actual)
+# lm7.3_7_9_13_20_39_42.rsqs <- RSQcomparisons(lm7.3_7_9_13_20_39_42.results, "lm7.3_7_9_13_20_39_42")
+# topdose_results <- rbind(topdose_results, lm7.3_7_9_13_20_39_42.rsqs)
+# 
+# lm7.3_7_9_12_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00012 + Otu00039 + Otu00042, data=td)
+# lm7.3_7_9_12_20_39_42.results <- lm_Analysis_Tests(lm7.3_7_9_12_20_39_42, actual)
+# lm7.3_7_9_12_20_39_42.rsqs <- RSQcomparisons(lm7.3_7_9_12_20_39_42.results, "lm7.3_7_9_12_20_39_42")
+# topdose_results <- rbind(topdose_results, lm7.3_7_9_12_20_39_42.rsqs)
 
 
 detach(td)
@@ -95,7 +116,7 @@ par(mfrow=c(1, 1))
 varImpPlot(rf.toptit, type=1)
 imp<-importance(rf.toptit)
 write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.001.txt", sep="\t", row.names=T, col.names=T)
-partialPlot(rf.toptit, td, Otu00013)
+#partialPlot(rf.toptit, toptit, Otu00013)
 
 ############ Then used these values in combination with their correlation values with subsequent C. difficile CFU. 
 ############ Put those in the following candidatePool.csv:
@@ -139,12 +160,91 @@ lm10.3_7_11_13_15_18_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_7_11_13_15_
 lm10.3_7_11_13_15_18_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_7_11_13_15_18_20_23_39_42.results, "lm10.3_7_11_13_15_18_20_23_39_42")
 toptit_results <- rbind(toptit_results, lm10.3_7_11_13_15_18_20_23_39_42.rsqs)
 
-#By Cp
+# lm10.3_4_7_13_15_20_23_39_42_76<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076, data=toptit)
+# lm10.3_4_7_13_15_20_23_39_42_76.results <- lm_Analysis_Tests(lm10.3_4_7_13_15_20_23_39_42_76, actual)
+# lm10.3_4_7_13_15_20_23_39_42_76.rsqs <- RSQcomparisons(lm10.3_4_7_13_15_20_23_39_42_76.results, "lm10.3_4_7_13_15_20_23_39_42_76")
+# toptit_results <- rbind(toptit_results, lm10.3_4_7_13_15_20_23_39_42_76.rsqs)
 
-#By BIC
+lm10.3_7_13_15_18_20_21_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00042, data=toptit)
+lm10.3_7_13_15_18_20_21_23_39_42.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_20_21_23_39_42, actual)
+lm10.3_7_13_15_18_20_21_23_39_42.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_20_21_23_39_42.results, "lm10.3_7_13_15_18_20_21_23_39_42")
+toptit_results <- rbind(toptit_results, lm10.3_7_13_15_18_20_21_23_39_42.rsqs)
 
-#By
+detach(toptit)
 
+############### Now want to revise the model to incorporate information from the delay data. 
+############### Combined the topdose, titration, and delay samples. 
+
+toptitdel <- read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.toptitdel.noNewUntr.regression.logtrans.filterAvg0.001.csv", header=T)
+toptitdel <- toptitdel[,-1]
+
+#fit the randomforest model
+rf.toptitdel <- randomForest(nextDayCFU~., 
+                          data = toptitdel,  outscale=TRUE,
+                          importance=TRUE, proximity=TRUE,
+                          keep.forest=TRUE, ntree=5000
+)
+plot(rf.toptitdel)
+print(rf.toptitdel)
+# % Var explained: 85.91
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+par(mfrow=c(1, 1)) 
+varImpPlot(rf.toptitdel, type=1)
+imp<-importance(rf.toptitdel)
+write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.avg0.001.txt", sep="\t", row.names=T, col.names=T)
+
+############ Then used these values in combination with their correlation values with subsequent C. difficile CFU. 
+############ Put those in the following candidatePool.csv:
+
+library(leaps)
+
+toptitdel<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptitdel.avg0.001.candidatePool.csv", header=T)
+
+actual <-NULL
+actual<-as.data.frame(toptitdel[,2]) #save the actual results in new df
+row.names(actual) <- toptitdel[,1] #save the group names
+toptitdel<-toptitdel[,-1] 
+attach(toptitdel)
+#detach(toptitdel)
+ids<-names(toptitdel)
+ids = ids[-1] #ids of OTUs in topdose
+
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(NULL)
+leaps.toptitdel<-regsubsets(nextDayCFU ~ ., data=toptitdel, nbest=5, nvmax=13, force.in=inGroup, force.out=outGroup)
+leaps.plots(leaps.toptitdel, 6, 13)
+models10 <- getModels(leaps.toptitdel, 10)
+
+toptitdel_results <- NULL
+lm10.3_4_7_8_13_17_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00008 + Otu00013 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
+lm10.3_4_7_8_13_17_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_4_7_8_13_17_20_23_39_42, actual)
+lm10.3_4_7_8_13_17_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_4_7_8_13_17_20_23_39_42.results, "lm10.3_4_7_8_13_17_20_23_39_42")
+toptitdel_results <- rbind(toptitdel_results, lm10.3_4_7_8_13_17_20_23_39_42.rsqs)
+
+# lm10.3_4_8_13_15_17_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
+# lm10.3_4_8_13_15_17_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_4_8_13_15_17_20_23_39_42, actual)
+# lm10.3_4_8_13_15_17_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_4_8_13_15_17_20_23_39_42.results, "lm10.3_4_8_13_15_17_20_23_39_42")
+# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_8_13_15_17_20_23_39_42.rsqs)
+# 
+# lm10.3_4_13_15_17_20_23_39_42_65<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00065, data=toptitdel)
+# lm10.3_4_13_15_17_20_23_39_42_65.results <- lm_Analysis_Tests(lm10.3_4_13_15_17_20_23_39_42_65, actual)
+# lm10.3_4_13_15_17_20_23_39_42_65.rsqs <- RSQcomparisons(lm10.3_4_13_15_17_20_23_39_42_65.results, "lm10.3_4_13_15_17_20_23_39_42_65")
+# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_13_15_17_20_23_39_42_65.rsqs)
+# 
+# lm10.3_4_13_15_17_20_23_39_42_78<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00078, data=toptitdel)
+# lm10.3_4_13_15_17_20_23_39_42_78.results <- lm_Analysis_Tests(lm10.3_4_13_15_17_20_23_39_42_78, actual)
+# lm10.3_4_13_15_17_20_23_39_42_78.rsqs <- RSQcomparisons(lm10.3_4_13_15_17_20_23_39_42_78.results, "lm10.3_4_13_15_17_20_23_39_42_78")
+# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_13_15_17_20_23_39_42_78.rsqs)
+# 
+# lm10.3_4_8_13_17_18_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00017 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
+# lm10.3_4_8_13_17_18_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_4_8_13_17_18_20_23_39_42, actual)
+# lm10.3_4_8_13_17_18_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_4_8_13_17_18_20_23_39_42.results, "lm10.3_4_8_13_17_18_20_23_39_42")
+# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_8_13_17_18_20_23_39_42.rsqs)
+
+detach(toptitdel)
 
 
 ################################################################################################
