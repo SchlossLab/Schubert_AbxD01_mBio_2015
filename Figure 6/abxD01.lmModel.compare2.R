@@ -1,7 +1,35 @@
+############################
+#Curated Approach 2/5/15
+############################
+
+library(randomForest)
+
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/shared.topdose.avg0.001.csv", header=T)
+td<-topdose[,-1] 
+
+#fit the randomforest model
+rf.model <- randomForest(nextDayCFU~., 
+                         data = td,  outscale=TRUE,
+                         importance=TRUE, proximity=TRUE,
+                         keep.forest=TRUE, ntree=5000
+)
+plot(rf.model)
+print(rf.model) # % Var explained: 87.73
+
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+par(mfrow=c(1, 1)) 
+varImpPlot(rf.model, type=1)
+imp<-importance(rf.model)
+write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.topdose.avg0.001.txt", sep="\t", row.names=T, col.names=T)
+#partialPlot(rf.model, td, Otu00013)
+
+############ Then used these values in combination with their correlation values with subsequent C. difficile CFU. 
+############ Put those in the following candidatePool.csv:
 
 library(leaps)
 
-topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.18otus.rfnegpos.csv", header=T)
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.candidatePool.csv", header=T)
 
 actual <-NULL
 actual<-as.data.frame(topdose[,2]) #save the actual results in new df
@@ -12,16 +40,110 @@ attach(td)
 ids<-names(td)
 ids = ids[-1] #ids of OTUs in topdose
 
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
 #inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
 inGroup <- c(NULL)
 outGroup <- c(NULL)
 leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup)
-leaps.plots(leaps.build, 4)
+#leaps.build
+#leaps.build.no6
+leaps.plots(leaps.build, 4, 10)
+sum.leaps.topdose <- summary(leaps.build)
 
-poop<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00039, data=td)
-poop.results <- lm_Analysis_Tests(poop, actual)
-poop.rsqs <- RSQcomparisons(poop.results, "poop")
-retrained_results <- rbind(retrained_results, poop.rsqs)
+#Test the best model based on the leaps analysis in a linear model trained on the topdose data.
+# This model is close to the best by BIC, but 13 is more commonly found in top models
+topdose_results <- NULL
+# lm_3_7_13_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00020 + Otu00039 + Otu00042, data=td)
+# lm_3_7_13_20_39_42.results <- lm_Analysis_Tests(lm_3_7_13_20_39_42, actual)
+# lm_3_7_13_20_39_42.rsqs <- RSQcomparisons(lm_3_7_13_20_39_42.results, "lm_3_7_13_20_39_42")
+# topdose_results <- rbind(topdose_results, lm_3_7_13_20_39_42.rsqs)
+
+
+# #This one is the best by BIC, limiting parameter size
+# lm_3_7_9_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00039 + Otu00042, data=td)
+# lm_3_7_9_20_39_42.results <- lm_Analysis_Tests(lm_3_7_9_20_39_42, actual)
+# lm_3_7_9_20_39_42.rsqs <- RSQcomparisons(lm_3_7_9_20_39_42.results, "lm_3_7_9_20_39_42")
+# topdose_results <- rbind(topdose_results, lm_3_7_9_20_39_42.rsqs)
+
+# This model is also good by BIC and Cp
+lm_3_7_13_15_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00039 + Otu00042, data=td)
+lm_3_7_13_15_20_39_42.results <- lm_Analysis_Tests(lm_3_7_13_15_20_39_42, actual)
+lm_3_7_13_15_20_39_42.rsqs <- RSQcomparisons(lm_3_7_13_15_20_39_42.results, "lm_3_7_13_15_20_39_42")
+topdose_results <- rbind(topdose_results, lm_3_7_13_15_20_39_42.rsqs)
+
+
+detach(td)
+
+############### Now want to revise the model to incorporate information from the titration data. 
+############### Combined the topdose and titration samples. 
+
+toptit <- read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.001.csv", header=T)
+toptit <- toptit[,-1]
+
+#fit the randomforest model
+rf.toptit <- randomForest(nextDayCFU~., 
+                         data = toptit,  outscale=TRUE,
+                         importance=TRUE, proximity=TRUE,
+                         keep.forest=TRUE, ntree=5000
+)
+plot(rf.toptit)
+print(rf.toptit)
+# % Var explained: 87.85
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+par(mfrow=c(1, 1)) 
+varImpPlot(rf.toptit, type=1)
+imp<-importance(rf.toptit)
+write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.001.txt", sep="\t", row.names=T, col.names=T)
+partialPlot(rf.toptit, td, Otu00013)
+
+############ Then used these values in combination with their correlation values with subsequent C. difficile CFU. 
+############ Put those in the following candidatePool.csv:
+
+library(leaps)
+
+toptit<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.001.candidatePool.csv", header=T)
+
+actual <-NULL
+actual<-as.data.frame(toptit[,2]) #save the actual results in new df
+row.names(actual) <- toptit[,1] #save the group names
+toptit<-toptit[,-1] 
+attach(toptit)
+#detach(toptit)
+ids<-names(toptit)
+ids = ids[-1] #ids of OTUs in topdose
+
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(NULL)
+leaps.toptit<-regsubsets(nextDayCFU ~ ., data=toptit, nbest=5, nvmax=15, force.in=inGroup, force.out=outGroup)
+leaps.plots(leaps.toptit, 6, 12)
+models10 <- getModels(leaps.toptit, 10)
+
+# I'M WORKING ON THIS SECTION:
+#Test the best model based on the leaps analysis in a linear model trained on the topdose data.
+toptit_results <- NULL
+lm10.3_7_13_15_18_20_23_39_42_76<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076, data=toptit)
+lm10.3_7_13_15_18_20_23_39_42_76.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_20_23_39_42_76, actual)
+lm10.3_7_13_15_18_20_23_39_42_76.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_20_23_39_42_76.results, "lm10.3_7_13_15_18_20_23_39_42_76")
+toptit_results <- rbind(toptit_results, lm10.3_7_13_15_18_20_23_39_42_76.rsqs)
+
+lm10.3_7_13_15_18_19_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00019 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptit)
+lm10.3_7_13_15_18_19_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_19_20_23_39_42, actual)
+lm10.3_7_13_15_18_19_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_19_20_23_39_42.results, "lm10.3_7_13_15_18_19_20_23_39_42")
+toptit_results <- rbind(toptit_results, lm10.3_7_13_15_18_19_20_23_39_42.rsqs)
+
+lm10.3_7_11_13_15_18_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00011 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptit)
+lm10.3_7_11_13_15_18_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_7_11_13_15_18_20_23_39_42, actual)
+lm10.3_7_11_13_15_18_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_7_11_13_15_18_20_23_39_42.results, "lm10.3_7_11_13_15_18_20_23_39_42")
+toptit_results <- rbind(toptit_results, lm10.3_7_11_13_15_18_20_23_39_42.rsqs)
+
+#By Cp
+
+#By BIC
+
+#By
 
 
 

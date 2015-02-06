@@ -1,12 +1,85 @@
 #Functions for modeling
 
+
+
+##########################################################################
+# Inputs a regsubsets object and an integer for the number of 
+#   variables in the models you're searching for.
+# Returns logic matrix showing which OTUs included in the models
+# 
+#  
+getModels <- function(regsubsetsObj, paramNum){
+  
+  sum.regsubsetsObj <- summary(regsubsetsObj)
+  topmodels.regsubsetsObj <- sum.regsubsetsObj$which #matrix of the parameters in each top model for every parameter size
+  params <- which(row.names(topmodels.regsubsetsObj) == paramNum) #looking for all the models with 10 variables
+  results <- topmodels.regsubsetsObj[params,]
+  adjr2 <- sum.regsubsetsObj$adjr2[which(row.names(topmodels.regsubsetsObj) == paramNum)]
+  bic <- sum.regsubsetsObj$bic[which(row.names(topmodels.regsubsetsObj) == paramNum)]
+  cp <- sum.regsubsetsObj$cp[which(row.names(topmodels.regsubsetsObj) == paramNum)]
+  results <- cbind(results, adjr2, bic, cp)
+  return(results)
+    
+}
+
+
+
+##########################################################################
+# Returns a subset of a matrix
+# 
+# 
+# Input is a file containing the matrix to be searched and a file of ids making up subset
+#  
+getMatrixSubset <- function(file, ids){
+  
+  #read in files
+  matrix <- read.delim(file=file, header=T, sep="\t", row.names=1)
+  ids <- read.delim(file=ids, header=F, sep="\t")
+  
+  #initialize subset to be filled
+  matrixSub <- data.frame(matrix(ncol=dim(ids)[1], nrow=dim(ids)[1]))
+  row.names(matrixSub) <- ids[,1]
+  colnames(matrixSub) <- ids[,1]
+  
+  #go through each id in ids file and find 
+  for(i in 1:dim(ids)[1]){
+    rowIndex <- which(row.names(matrix)==ids[i,1])
+    k <- i +1
+    #test <- ids[k,1] #see if reached the end of the file
+    #stopifnot(!is.na(test))
+
+    for(k in k:dim(ids)[1])
+    {
+      colIndex <- which(colnames(matrix)==ids[k,1])
+      cellValue <- matrix[rowIndex, colIndex]
+      
+      if(any(is.na(colIndex), is.na(rowIndex))){
+        cellValue <- NA
+      }
+      
+      subIndex <- which(colnames(matrixSub) == ids[k,1])
+      matrixSub[i, subIndex] <- cellValue
+            
+    }
+    
+  }
+  
+  write.table(matrixSub, file=paste0(file, "_subset.txt"), sep="\t", row.names=T, col.names=T)
+  return(matrixSub)
+  
+}
+
+
+
+
+
 ##########################################################################
 # Returns nothing. Plots ranks of models by AdjR^2, BIC, and Mallow's Cp.
 # Also plots these models by subset size according to AdjR^2, BIC, and Mallow's Cp.
 # 
 # Input is a regsubset object from the leaps package and number for the
 #   minimum number of parameters in the models to be plotted for the latter 3 plots.
-leaps.plots <- function(regsubsetObj, minNumberParameters) {
+leaps.plots <- function(regsubsetObj, minNumberParameters, maxNumberParameters) {
   
   
   plot(regsubsetObj, scale="adjr2", main=regsubsetObj$call)
@@ -19,13 +92,13 @@ leaps.plots <- function(regsubsetObj, minNumberParameters) {
   abbrNames <- abbrNames[-1]
   
   minSubsetSize <- minNumberParameters
-  #maxSubsetSize <- 
-  subsets(regsubsetObj, names=abbrNames, statistic="adjr2", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12), main=regsubsetObj$call)
-  subsets(regsubsetObj, names=abbrNames, statistic="bic", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12), main=regsubsetObj$call)
-  subsets(regsubsetObj, names=abbrNames, statistic="cp", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, 12), main=regsubsetObj$call)
-  abline(h=c(1:11), lwd=1)
+  maxSubsetSize <- maxNumberParameters
+  subsets(regsubsetObj, names=abbrNames, statistic="adjr2", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, maxSubsetSize), main=regsubsetObj$call)
+  subsets(regsubsetObj, names=abbrNames, statistic="bic", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, maxSubsetSize), main=regsubsetObj$call)
+  subsets(regsubsetObj, names=abbrNames, statistic="cp", legend=FALSE, min.size=minSubsetSize, abbrev=6, cex.subsets=.5, las=1, xlim=c(minSubsetSize, maxSubsetSize), main=regsubsetObj$call)
+  abline(h=c(1:20), lwd=1)
   abline(v=c(minSubsetSize:11), lwd=1)
-  abline(0, 1, col="red") #for mallow's Cp "good" is Cp <= p, parameters
+  abline(1, 1, col="red") #for mallow's Cp "good" is Cp <= p, parameters
   
   return(" You're awesome! :D ")
 
