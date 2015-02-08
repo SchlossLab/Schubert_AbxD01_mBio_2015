@@ -1,4 +1,194 @@
 ############################
+#Uncurated Approach 2/6/15
+############################
+library(leaps)
+
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/shared.topdose.avg0.001.csv", header=T)
+
+actual <-NULL
+actual<-as.data.frame(topdose[,2]) #save the actual results in new df
+row.names(actual) <- topdose[,1] #save the group names
+td<-topdose[,-1] 
+attach(td)
+#detach(td)
+ids<-names(td)
+ids = ids[-1] #ids of OTUs in topdose
+
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(which(ids == "Otu00006"))
+leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup, really.big=T)
+
+leaps.topdose.uncurated.20150208 <- leaps.build
+
+leaps.plots(leaps.build, 4, 10)
+models8<- getModels(leaps.build, 8)
+models9<- getModels(leaps.build, 9)
+
+#Test the best model based on the leaps analysis in a linear model trained on the topdose data.
+# This model is close to the best by BIC
+topdose_results <- NULL
+lm8.3_7_17_20_39_42_134_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00017 + Otu00020 + Otu00039 + Otu00042 + Otu00134 + Otu00181, data=td)
+lm8.3_7_17_20_39_42_134_181.results <- lm_Analysis_Tests(lm8.3_7_17_20_39_42_134_181, actual)
+lm8.3_7_17_20_39_42_134_181.rsqs <- RSQcomparisons(lm8.3_7_17_20_39_42_134_181.results, "lm8.3_7_17_20_39_42_134_181")
+topdose_results <- rbind(topdose_results, lm8.3_7_17_20_39_42_134_181.rsqs)
+
+lm8.3_7_17_20_39_42_147_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00017 + Otu00020 + Otu00039 + Otu00042 + Otu00147 + Otu00181, data=td)
+lm8.3_7_17_20_39_42_147_181.results <- lm_Analysis_Tests(lm8.3_7_17_20_39_42_147_181, actual)
+lm8.3_7_17_20_39_42_147_181.rsqs <- RSQcomparisons(lm8.3_7_17_20_39_42_147_181.results, "lm8.3_7_17_20_39_42_147_181")
+topdose_results <- rbind(topdose_results, lm8.3_7_17_20_39_42_147_181.rsqs)
+
+lm8.3_7_13_20_39_42_134_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00020 + Otu00039 + Otu00042 + Otu00134 + Otu00181, data=td)
+lm8.3_7_13_20_39_42_134_181.results <- lm_Analysis_Tests(lm8.3_7_13_20_39_42_134_181, actual)
+lm8.3_7_13_20_39_42_134_181.rsqs <- RSQcomparisons(lm8.3_7_13_20_39_42_134_181.results, "lm8.3_7_13_20_39_42_134_181")
+topdose_results <- rbind(topdose_results, lm8.3_7_13_20_39_42_134_181.rsqs)
+
+topdose_results_uncurated_20150208 <- topdose_results
+
+detach(td)
+
+####################### now try to use toptit data
+####################### 
+
+toptit<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.001.csv", header=T)
+
+actual <-NULL
+actual<-as.data.frame(toptit[,2]) #save the actual results in new df
+row.names(actual) <- toptit[,1] #save the group names
+toptit<-toptit[,-1] 
+attach(toptit)
+#detach(toptit)
+ids<-names(toptit)
+ids = ids[-1] #ids of OTUs in toptit
+
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(which(ids == "Otu00006"))
+leaps.build<-regsubsets(nextDayCFU ~ ., data=toptit, nbest=5, nvmax=15, force.in=inGroup, force.out=outGroup, really.big=T)
+
+leaps.toptit.uncurated.20150208 <- leaps.build
+
+leaps.plots(leaps.build, 6, 15)
+models10<- getModels(leaps.build, 10)
+models9<- getModels(leaps.build, 9)
+
+
+#Test the best model based on the leaps analysis in a linear model trained on the toptit data.
+# This model is close to the best by BIC
+toptit_results <- NULL
+# lm10.3_4_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptit)
+# lm10.3_4_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.3_4_7_13_15_20_23_39_42_181, actual)
+# lm10.3_4_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.3_4_7_13_15_20_23_39_42_181.results, "lm10.3_4_7_13_15_20_23_39_42_181")
+# toptit_results <- rbind(toptit_results, lm10.3_4_7_13_15_20_23_39_42_181.rsqs)
+# 
+# lm10.3_7_13_15_20_23_39_42_108_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00108 + Otu00181, data=toptit)
+# lm10.3_7_13_15_20_23_39_42_108_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_20_23_39_42_108_181, actual)
+# lm10.3_7_13_15_20_23_39_42_108_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_20_23_39_42_108_181.results, "lm10.3_7_13_15_20_23_39_42_108_181")
+# toptit_results <- rbind(toptit_results, lm10.3_7_13_15_20_23_39_42_108_181.rsqs)
+# 
+# lm10.3_7_13_15_18_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptit)
+# lm10.3_7_13_15_18_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_20_23_39_42_181, actual)
+# lm10.3_7_13_15_18_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_20_23_39_42_181.results, "lm10.3_7_13_15_18_20_23_39_42_181")
+# toptit_results <- rbind(toptit_results, lm10.3_7_13_15_18_20_23_39_42_181.rsqs)
+# 
+# # lm10.3_7_13_15_20_23_39_42_76_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076 + Otu00181, data=toptit)
+# # lm10.3_7_13_15_20_23_39_42_76_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_20_23_39_42_76_181, actual)
+# # lm10.3_7_13_15_20_23_39_42_76_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_20_23_39_42_76_181.results, "lm10.3_7_13_15_20_23_39_42_76_181")
+# # toptit_results <- rbind(toptit_results, lm10.3_7_13_15_20_23_39_42_76_181.rsqs)
+# #gave some crazy error: t 0x10e728b50. This is a serious error. This application, or a library it uses, is using an invalid context  and is thereby contributing to an overall degradation of system stability and reliability. This notice is a courtesy: please fix this problem. It will become a fatal error in an upcoming update.
+# #s: invalid context 0x10e728b50. This is a serious error. This application, or a library it uses, is using an invalid context  and is thereby contributing to an overall degradation of system stability and reliability. This notice is a courtesy: please fix this problem. It will become a fatal error in an upcoming update.
+# 
+# lm10.2_3_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00002 + Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptit)
+# lm10.2_3_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.2_3_7_13_15_20_23_39_42_181, actual)
+# lm10.2_3_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.2_3_7_13_15_20_23_39_42_181.results, "lm10.2_3_7_13_15_20_23_39_42_181")
+# toptit_results <- rbind(toptit_results, lm10.2_3_7_13_15_20_23_39_42_181.rsqs)
+
+
+#All of the models with 10 variables included these core 9:
+lm9.3_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptit)
+lm9.3_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm9.3_7_13_15_20_23_39_42_181, actual)
+lm9.3_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm9.3_7_13_15_20_23_39_42_181.results, "lm9.3_7_13_15_20_23_39_42_181")
+toptit_results <- rbind(toptit_results, lm9.3_7_13_15_20_23_39_42_181.rsqs)
+
+toptit_results_uncurated_2015028 <- toptit_results
+
+detach(toptit)
+
+####################### now try to use toptitdel data
+####################### 
+
+toptitdel<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.toptitdel.noNewUntr.regression.logtrans.filter16mintot.csv", header=T)
+
+actual <-NULL
+actual<-as.data.frame(toptitdel[,2]) #save the actual results in new df
+row.names(actual) <- toptitdel[,1] #save the group names
+toptitdel<-toptitdel[,-1] 
+attach(toptitdel)
+#detach(toptitdel)
+ids<-names(toptitdel)
+ids = ids[-1] #ids of OTUs in toptitdel
+
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(which(ids == "Otu00006"))
+leaps.toptitdel.uncurated <- regsubsets(nextDayCFU ~ ., data=toptitdel, nbest=5, nvmax=18, force.in=inGroup, force.out=outGroup, really.big=T)
+
+leaps.toptitdel.uncurated.20150208 <- leaps.toptitdel.uncurated
+
+leaps.plots(leaps.build, 6, 15)
+models10<- getModels(leaps.build, 10)
+models9<- getModels(leaps.build, 9)
+
+
+#Test the best model based on the leaps analysis in a linear model trained on the toptitdel data.
+# This model is close to the best by BIC
+toptitdel_results <- NULL
+# lm10.3_4_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
+# lm10.3_4_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.3_4_7_13_15_20_23_39_42_181, actual)
+# lm10.3_4_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.3_4_7_13_15_20_23_39_42_181.results, "lm10.3_4_7_13_15_20_23_39_42_181")
+# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_7_13_15_20_23_39_42_181.rsqs)
+# 
+# lm10.3_7_13_15_20_23_39_42_108_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00108 + Otu00181, data=toptitdel)
+# lm10.3_7_13_15_20_23_39_42_108_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_20_23_39_42_108_181, actual)
+# lm10.3_7_13_15_20_23_39_42_108_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_20_23_39_42_108_181.results, "lm10.3_7_13_15_20_23_39_42_108_181")
+# toptitdel_results <- rbind(toptitdel_results, lm10.3_7_13_15_20_23_39_42_108_181.rsqs)
+# 
+# lm10.3_7_13_15_18_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
+# lm10.3_7_13_15_18_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_20_23_39_42_181, actual)
+# lm10.3_7_13_15_18_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_20_23_39_42_181.results, "lm10.3_7_13_15_18_20_23_39_42_181")
+# toptitdel_results <- rbind(toptitdel_results, lm10.3_7_13_15_18_20_23_39_42_181.rsqs)
+# 
+# # lm10.3_7_13_15_20_23_39_42_76_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076 + Otu00181, data=toptitdel)
+# # lm10.3_7_13_15_20_23_39_42_76_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_20_23_39_42_76_181, actual)
+# # lm10.3_7_13_15_20_23_39_42_76_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_20_23_39_42_76_181.results, "lm10.3_7_13_15_20_23_39_42_76_181")
+# # toptitdel_results <- rbind(toptitdel_results, lm10.3_7_13_15_20_23_39_42_76_181.rsqs)
+# #gave some crazy error: t 0x10e728b50. This is a serious error. This application, or a library it uses, is using an invalid context  and is thereby contributing to an overall degradation of system stability and reliability. This notice is a courtesy: please fix this problem. It will become a fatal error in an upcoming update.
+# #s: invalid context 0x10e728b50. This is a serious error. This application, or a library it uses, is using an invalid context  and is thereby contributing to an overall degradation of system stability and reliability. This notice is a courtesy: please fix this problem. It will become a fatal error in an upcoming update.
+# 
+# lm10.2_3_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00002 + Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
+# lm10.2_3_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.2_3_7_13_15_20_23_39_42_181, actual)
+# lm10.2_3_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.2_3_7_13_15_20_23_39_42_181.results, "lm10.2_3_7_13_15_20_23_39_42_181")
+# toptitdel_results <- rbind(toptitdel_results, lm10.2_3_7_13_15_20_23_39_42_181.rsqs)
+
+
+#All of the models with 10 variables included these core 9:
+lm9.3_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
+lm9.3_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm9.3_7_13_15_20_23_39_42_181, actual)
+lm9.3_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm9.3_7_13_15_20_23_39_42_181.results, "lm9.3_7_13_15_20_23_39_42_181")
+toptitdel_results <- rbind(toptitdel_results, lm9.3_7_13_15_20_23_39_42_181.rsqs)
+
+toptitdel_results_uncurated_2015028 <- toptitdel_results
+
+detach(toptitdel)
+
+
+
+
+
+############################
 #Curated Approach 2/5/15
 ############################
 

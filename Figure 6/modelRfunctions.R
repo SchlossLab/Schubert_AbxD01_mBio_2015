@@ -23,9 +23,8 @@ getModels <- function(regsubsetsObj, paramNum){
 }
 
 
-
 ##########################################################################
-# Returns a subset of a matrix
+# Returns a subset of a matrix, saved to a file
 # 
 # 
 # Input is a file containing the matrix to be searched and a file of ids making up subset
@@ -127,9 +126,6 @@ RSQcomparisons <- function(model.results, model.name){
 # and predicting the titration and delay data
 # Creates plots of actual values vs fitted or predicted values
 lm_Analysis_Tests <- function(model, actualVals){
-  
-  #model <- lm_7_3_20_39_15
-  # actualVals <- actual
   
   model.results <- lmTests(model) #returns a list
   fitted <- cbind( model.results$lm_fitted_values )
