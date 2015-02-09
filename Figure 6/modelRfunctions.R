@@ -1,5 +1,68 @@
 #Functions for modeling
 
+##########################################################################
+# Inputs 
+#  
+# Returns 
+# 
+#  
+#getModels <- function(regsubsetsObj, paramNum){}
+
+
+
+
+
+##########################################################################
+# Inputs 
+#  
+# Returns 
+# 
+#  
+
+rf.modelNewData <- function(RFmodel, descr, newDataFile ){
+  
+  newData<-read.csv(file=newDataFile, header=T)
+  actual<-as.data.frame(newData[,2]) #save the actual results in new df
+  row.names(actual) <- newData[,1] #save the group names
+  newData<-newData[,-1] 
+  newData<-newData[,-1]
+  n <- dim(newData)[1] #number of samples in n
+  
+  #predict C. difficile colonization using the model on the new (titration) data
+  RFmodel.newData.pred <- as.data.frame(predict(RFmodel, newdata=newData))
+  
+  #create a results data frame and plots results
+  results<-cbind(actual, RFmodel.newData.pred)
+  names(results) <- c( "actual", "predict")
+  
+  #Calculate the rsquared
+  ybar <- apply(results, 2, mean)
+  num<-sum((results$actual-ybar["actual"])*(results$predict-ybar["predict"]))
+  denA <- sum((results$actual-ybar["actual"])^2)
+  denB <- sum((results$predict-ybar["predict"])^2)
+  rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
+  
+  #plot results
+  plot(results$actual, results$predict, main=RFmodel$call, ylab="Predicted Values", xlab="Actual Values")
+  mtext(descr, side=3, line=0)
+  mtext(paste("r^2 = ", signif(rsq, 3)), side=1, line=4)
+  
+  #Calculate the residuals and add them to the results df, ordering them by the magnitude of the residual
+  resid <- (results$actual - results$predict)
+  results <- cbind(results, resid)
+  absResid <- abs(results$actual - results$predict)
+  results <- cbind(results, absResid)
+  ord_residuals <- order(-results$absResid)
+  ord_residuals <- results[ord_residuals,]
+  results<-cbind(ord_residuals, rsq) #add rsq column, which will all be one number--the rsq value
+  
+  #  plot(results$predict, results$resid, main=model$call, xlab="Predicted Values", ylab="Residuals")
+  #  mtext(descr, side=3, line=0)
+  
+  return(results)
+}
+
+
 
 
 ##########################################################################
