@@ -132,11 +132,11 @@ getMatrixSubset <- function(file, ids){
 }
 
 
-
+#getMatrixSubset("~/Desktop/mothur/abxD01/sparCC/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.all.0.03.filter16mintotal.0.03.sparcc_correlation", "~/Desktop/mothur/abxD01/ids.txt")
 
 
 ##########################################################################
-# Returns nothing. Plots ranks of models by AdjR^2, BIC, and Mallow's Cp.
+# Returns compliments! Plots ranks of models by AdjR^2, BIC, and Mallow's Cp.
 # Also plots these models by subset size according to AdjR^2, BIC, and Mallow's Cp.
 # 
 # Input is a regsubset object from the leaps package and number for the
@@ -162,7 +162,10 @@ leaps.plots <- function(regsubsetObj, minNumberParameters, maxNumberParameters) 
   abline(v=c(minSubsetSize:11), lwd=1)
   abline(1, 1, col="red") #for mallow's Cp "good" is Cp <= p, parameters
   
-  return(" You're awesome! :D ")
+  num <- sample(1:10, 1)
+  compliments <- cbind( " You're awesome! :D ", " Keep up the amazing work :) ", " Nice analysis ;) ", " You want a PhD? You better work bitch. ", " Just keep writing, just keep writing. ", " OWN IT! ", " Home stretch!!!! You can do it! ", " Be proud of yourself! You are kicking ass! ", " Smart AND beautiful :P ", " Don't let the dragon DRAG ON. ")
+  
+  return(compliments[num])
 
 }
 
@@ -176,10 +179,11 @@ RSQcomparisons <- function(model.results, model.name){
   
   #model.results <- lm_Analysis_Tests(model, actual)
   lm.adjR2 <- model.results[[2]][1, 5]
-  titr.r2 <- model.results[[3]][1, 5]
-  delay.r2 <- model.results[[4]][1, 5]
-  df <- cbind( model.name, lm.adjR2, titr.r2, delay.r2)
-  colnames(df) <- c("model", "lm.adjR2", "titr.r2", "delay.r2")
+  td.r2 <- model.results[[3]][1, 5]
+  titr.r2 <- model.results[[4]][1, 5]
+  delay.r2 <- model.results[[5]][1, 5]
+  df <- cbind( model.name, lm.adjR2, td.r2, titr.r2, delay.r2)
+  colnames(df) <- c("model", "lm.adjR2", "td.r2", "titr.r2", "delay.r2")
   return(df)
   
 }
@@ -193,10 +197,10 @@ lm_Analysis_Tests <- function(model, actualVals){
   model.results <- lmTests(model) #returns a list
   fitted <- cbind( model.results$lm_fitted_values )
   residuals <- cbind( model.results$lm_residuals )
-  rsq <- model.results$rsq_lmTopdose
+  rsq <- model.results$rsq_lm
   lm.results <- cbind(actualVals, fitted,  residuals, abs(residuals),  rsq)
   colnames(lm.results) <- c("actual", "predict", "resid", "absResid", "rsq")
-  all.results <- list("lm_anova"=model.results$lm_anova, "results_linear"=lm.results, "results_titration"=model.results$results_titration, "results_delay"=model.results$results_delay)
+  all.results <- list("lm_anova"=model.results$lm_anova, "results_linear"=lm.results, "results_topdose"=model.results$results_topdose, "results_titration"=model.results$results_titration, "results_delay"=model.results$results_delay)
   
   #plot results of linear model
   fitted <- cbind( model.results[[2]] )
@@ -220,6 +224,8 @@ lmTests <- function(model){
   model.summary <- summary(model)
   rsq <- model.summary$adj.r.squared
   
+  model.results.td <- modelNewData(model, "Topdose Data", "~/Desktop/mothur/abxD01/model/shared.topdose.avg0.01.logtrans.csv")
+  
   model.results.titration <- modelNewData(model, "Titration Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv")
   #  colnames(model.results.titration) <- c(paste0(colnames(model.results.titration), "_titration"))
   
@@ -229,7 +235,8 @@ lmTests <- function(model){
   #   all.results <- cbind(model.results.titration, model.results.delay, rsq)
   #   colnames(all.results)[11] <- "rsq_lmTopdose"
   #   all.results <- all.results[,c(11,1,2,3,4,5,6,7,8,9,10)]
-  results_list <- list("rsq_lmTopdose"=rsq, "lm_fitted_values"=lm.fitVals, "lm_anova"=model.anova,"lm_residuals"=res, "results_titration"=model.results.titration, "results_delay"=model.results.delay)
+  results_list <- list("rsq_lm"=rsq, "lm_fitted_values"=lm.fitVals, "lm_anova"=model.anova,"lm_residuals"=res, "results_topdose"=model.results.td,
+                       "results_titration"=model.results.titration, "results_delay"=model.results.delay)
   return(results_list)
   
 }

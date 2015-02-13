@@ -1,5 +1,5 @@
 #######################
-# 2/19/15
+# 2/9/15
 # Looked for OTUs above different threshold cutoffs. 
 # If at least 1 in 16 experimental groups had it at this cutoff avg abundance,
 # then it was included. 
@@ -38,7 +38,7 @@ for(k in 1:length(means)){
 meanOTU <- means[,-1] #remove the nextDayCFU column
 
 set <- NULL
-set <- seq(0,1, by=0.01)
+set <- seq(0,3, by=0.01)
 numOTUxThreshold <- NULL
 numOTUxThreshold <- as.data.frame(cbind(numOTUxThreshold, set))
 names(numOTUxThreshold)[1] <- "threshold"
@@ -53,12 +53,12 @@ for( i in 1:(length(set)) ) {
 }
 
 plot(numOTUxThreshold$numOTU ~ numOTUxThreshold$threshold, xlab="Avg % RelAbund Threshold", ylab="# OTUs included")
-abline(v=seq(0,1, by=.1), col="light gray")
-abline(h=seq(50,300, by=50), col="light gray")
+abline(v=seq(0,3, by=.1), col="light gray")
+abline(h=seq(1,300, by=10), col="light gray")
 
-perc.5 <- meanOTU[ , meanOTU[19,] >= .5 ]
+perc1 <- meanOTU[ , meanOTU[19,] >= 1 ]
 
-write.table(perc.5, file="~/Desktop/mothur/abxD01/model/otusAbove0.5p.byGroup.txt", sep="\t")
+write.table(perc1, file="~/Desktop/mothur/abxD01/model/otusAbove1p.byGroup.txt", sep="\t")
 
 
 
