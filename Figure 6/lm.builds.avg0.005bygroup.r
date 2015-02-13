@@ -149,7 +149,9 @@ detach(toptit)
 ####################### now try to use toptitdel data
 ####################### 
 
-toptitdel<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.toptitdel.noNewUntr.regression.logtrans.filter16mintot.csv", header=T)
+toptitdel<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptitdel.noNewUntr.logtrans.avg0.01bygroup.csv", header=T)
+toptitdel<- toptitdel[,-2]
+
 
 actual <-NULL
 actual<-as.data.frame(toptitdel[,2]) #save the actual results in new df
@@ -166,51 +168,112 @@ inGroup <- c(NULL)
 outGroup <- c(which(ids == "Otu00006"))
 leaps.toptitdel.uncurated <- regsubsets(nextDayCFU ~ ., data=toptitdel, nbest=5, nvmax=18, force.in=inGroup, force.out=outGroup, really.big=T)
 
-leaps.toptitdel.uncurated.20150208 <- leaps.toptitdel.uncurated
+leaps.toptitdel.uncurated.20150213 <- leaps.toptitdel.uncurated
 
-leaps.plots(leaps.build, 6, 15)
-models10<- getModels(leaps.build, 10)
-models9<- getModels(leaps.build, 9)
+leaps.plots(leaps.toptitdel.uncurated, 8, 15)
+models8<- getModels(leaps.toptitdel.uncurated, 8)
+# lm8.3_4_13_15_17_20_23_39
 
+models9<- getModels(leaps.toptitdel.uncurated, 9)
+# lm9.3_4_8_13_15_17_20_23_39
 
-#Test the best model based on the leaps analysis in a linear model trained on the toptitdel data.
-# This model is close to the best by BIC
+models10<- getModels(leaps.toptitdel.uncurated, 10)
+# 3, 4, 13, 15, 17, 20, 23, 39
+
+models11<- getModels(leaps.toptitdel.uncurated, 11)
+# 3, 4, 8, 13, 15, 17, 20, 23, 33(4/5), 39
+
+models12<- getModels(leaps.toptitdel.uncurated, 12)
+# 3, 4, 8, 13, 15, 17, 20, 23, 33(4/5), 39
+
+models13<- getModels(leaps.toptitdel.uncurated, 13)
+models14<- getModels(leaps.toptitdel.uncurated, 14)
+
 toptitdel_results <- NULL
-# lm10.3_4_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
-# lm10.3_4_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.3_4_7_13_15_20_23_39_42_181, actual)
-# lm10.3_4_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.3_4_7_13_15_20_23_39_42_181.results, "lm10.3_4_7_13_15_20_23_39_42_181")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_7_13_15_20_23_39_42_181.rsqs)
-# 
-# lm10.3_7_13_15_20_23_39_42_108_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00108 + Otu00181, data=toptitdel)
-# lm10.3_7_13_15_20_23_39_42_108_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_20_23_39_42_108_181, actual)
-# lm10.3_7_13_15_20_23_39_42_108_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_20_23_39_42_108_181.results, "lm10.3_7_13_15_20_23_39_42_108_181")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_7_13_15_20_23_39_42_108_181.rsqs)
-# 
-# lm10.3_7_13_15_18_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
-# lm10.3_7_13_15_18_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_20_23_39_42_181, actual)
-# lm10.3_7_13_15_18_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_20_23_39_42_181.results, "lm10.3_7_13_15_18_20_23_39_42_181")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_7_13_15_18_20_23_39_42_181.rsqs)
-# 
-# # lm10.3_7_13_15_20_23_39_42_76_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076 + Otu00181, data=toptitdel)
-# # lm10.3_7_13_15_20_23_39_42_76_181.results <- lm_Analysis_Tests(lm10.3_7_13_15_20_23_39_42_76_181, actual)
-# # lm10.3_7_13_15_20_23_39_42_76_181.rsqs <- RSQcomparisons(lm10.3_7_13_15_20_23_39_42_76_181.results, "lm10.3_7_13_15_20_23_39_42_76_181")
-# # toptitdel_results <- rbind(toptitdel_results, lm10.3_7_13_15_20_23_39_42_76_181.rsqs)
-# #gave some crazy error: t 0x10e728b50. This is a serious error. This application, or a library it uses, is using an invalid context  and is thereby contributing to an overall degradation of system stability and reliability. This notice is a courtesy: please fix this problem. It will become a fatal error in an upcoming update.
-# #s: invalid context 0x10e728b50. This is a serious error. This application, or a library it uses, is using an invalid context  and is thereby contributing to an overall degradation of system stability and reliability. This notice is a courtesy: please fix this problem. It will become a fatal error in an upcoming update.
-# 
-# lm10.2_3_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00002 + Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
-# lm10.2_3_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm10.2_3_7_13_15_20_23_39_42_181, actual)
-# lm10.2_3_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm10.2_3_7_13_15_20_23_39_42_181.results, "lm10.2_3_7_13_15_20_23_39_42_181")
-# toptitdel_results <- rbind(toptitdel_results, lm10.2_3_7_13_15_20_23_39_42_181.rsqs)
+#Test the best model based on the leaps analysis in a linear model trained on the toptitdel data.
+# This model is close to the best by BIC--11 and 12
+lm11.3_4_8_13_15_17_20_23_25_33_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00025 + Otu00033 + Otu00039, data=toptitdel)
+lm11.3_4_8_13_15_17_20_23_25_33_39.results <- lm_Analysis_Tests(lm11.3_4_8_13_15_17_20_23_25_33_39, actual)
+lm11.3_4_8_13_15_17_20_23_25_33_39.rsqs <- RSQcomparisons(lm11.3_4_8_13_15_17_20_23_25_33_39.results, "lm11.3_4_8_13_15_17_20_23_25_33_39")
+toptitdel_results <- rbind(toptitdel_results, lm11.3_4_8_13_15_17_20_23_25_33_39.rsqs)
+
+lm11.3_4_8_13_15_17_20_23_33_39_40<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00033 + Otu00039 + Otu00040, data=toptitdel)
+lm11.3_4_8_13_15_17_20_23_33_39_40.results <- lm_Analysis_Tests(lm11.3_4_8_13_15_17_20_23_33_39_40, actual)
+lm11.3_4_8_13_15_17_20_23_33_39_40.rsqs <- RSQcomparisons(lm11.3_4_8_13_15_17_20_23_33_39_40.results, "lm11.3_4_8_13_15_17_20_23_33_39_40")
+toptitdel_results <- rbind(toptitdel_results, lm11.3_4_8_13_15_17_20_23_33_39_40.rsqs)
+
+lm12.3_4_8_13_15_17_18_20_23_25_33_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00018 + Otu00020 + Otu00023 + Otu00025 + Otu00033 + Otu00039, data=toptitdel)
+lm12.3_4_8_13_15_17_18_20_23_25_33_39.results <- lm_Analysis_Tests(lm12.3_4_8_13_15_17_18_20_23_25_33_39, actual)
+lm12.3_4_8_13_15_17_18_20_23_25_33_39.rsqs <- RSQcomparisons(lm12.3_4_8_13_15_17_18_20_23_25_33_39.results, "lm12.3_4_8_13_15_17_18_20_23_25_33_39")
+toptitdel_results <- rbind(toptitdel_results, lm12.3_4_8_13_15_17_18_20_23_25_33_39.rsqs)
+
+lm12.3_4_8_13_15_16_17_20_23_25_33_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00016 + Otu00020 + Otu00023 + Otu00025 + Otu00033 + Otu00039, data=toptitdel)
+lm12.3_4_8_13_15_16_17_20_23_25_33_39.results <- lm_Analysis_Tests(lm12.3_4_8_13_15_16_17_20_23_25_33_39, actual)
+lm12.3_4_8_13_15_16_17_20_23_25_33_39.rsqs <- RSQcomparisons(lm12.3_4_8_13_15_16_17_20_23_25_33_39.results, "lm12.3_4_8_13_15_16_17_20_23_25_33_39")
+toptitdel_results <- rbind(toptitdel_results, lm12.3_4_8_13_15_16_17_20_23_25_33_39.rsqs)
+
+lm11.3_4_8_13_15_17_20_23_33_39_45<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00033 + Otu00039 + Otu00045, data=toptitdel)
+lm11.3_4_8_13_15_17_20_23_33_39_45.results <- lm_Analysis_Tests(lm11.3_4_8_13_15_17_20_23_33_39_45, actual)
+lm11.3_4_8_13_15_17_20_23_33_39_45.rsqs <- RSQcomparisons(lm11.3_4_8_13_15_17_20_23_33_39_45.results, "lm11.3_4_8_13_15_17_20_23_33_39_45")
+toptitdel_results <- rbind(toptitdel_results, lm11.3_4_8_13_15_17_20_23_33_39_45.rsqs)
+
+lm11.3_4_7_8_13_15_16_17_20_23_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00008 + Otu00013 + Otu00015 + Otu00016 + Otu00017 + Otu00020 + Otu00023 + Otu00039, data=toptitdel)
+lm11.3_4_7_8_13_15_16_17_20_23_39.results <- lm_Analysis_Tests(lm11.3_4_7_8_13_15_16_17_20_23_39, actual)
+lm11.3_4_7_8_13_15_16_17_20_23_39.rsqs <- RSQcomparisons(lm11.3_4_7_8_13_15_16_17_20_23_39.results, "lm11.3_4_7_8_13_15_16_17_20_23_39")
+toptitdel_results <- rbind(toptitdel_results, lm11.3_4_7_8_13_15_16_17_20_23_39.rsqs)
+
+lm11.3_4_8_13_15_17_20_23_33_39_74<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00033 + Otu00039 + Otu00074, data=toptitdel)
+lm11.3_4_8_13_15_17_20_23_33_39_74.results <- lm_Analysis_Tests(lm11.3_4_8_13_15_17_20_23_33_39_74, actual)
+lm11.3_4_8_13_15_17_20_23_33_39_74.rsqs <- RSQcomparisons(lm11.3_4_8_13_15_17_20_23_33_39_74.results, "lm11.3_4_8_13_15_17_20_23_33_39_74")
+toptitdel_results <- rbind(toptitdel_results, lm11.3_4_8_13_15_17_20_23_33_39_74.rsqs)
+
+# This model is close to the best by cp--13 and 14
+lm13.3_4_8_13_15_16_17_18_20_23_25_33_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00016 + Otu00017 + Otu00018 + Otu00020 + Otu00023 + Otu00025 + Otu00033 + Otu00039, data=toptitdel)
+lm13.3_4_8_13_15_16_17_18_20_23_25_33_39.results <- lm_Analysis_Tests(lm13.3_4_8_13_15_16_17_18_20_23_25_33_39, actual)
+lm13.3_4_8_13_15_16_17_18_20_23_25_33_39.rsqs <- RSQcomparisons(lm13.3_4_8_13_15_16_17_18_20_23_25_33_39.results, "lm13.3_4_8_13_15_16_17_18_20_23_25_33_39")
+toptitdel_results <- rbind(toptitdel_results, lm13.3_4_8_13_15_16_17_18_20_23_25_33_39.rsqs)
+
+lm13.3_4_8_13_15_17_18_19_20_23_25_33_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00019 + Otu00017 + Otu00018 + Otu00020 + Otu00023 + Otu00025 + Otu00033 + Otu00039, data=toptitdel)
+lm13.3_4_8_13_15_17_18_19_20_23_25_33_39.results <- lm_Analysis_Tests(lm13.3_4_8_13_15_17_18_19_20_23_25_33_39, actual)
+lm13.3_4_8_13_15_17_18_19_20_23_25_33_39.rsqs <- RSQcomparisons(lm13.3_4_8_13_15_17_18_19_20_23_25_33_39.results, "lm13.3_4_8_13_15_17_18_19_20_23_25_33_39")
+toptitdel_results <- rbind(toptitdel_results, lm13.3_4_8_13_15_17_18_19_20_23_25_33_39.rsqs)
+
+lm13.3_4_7_8_13_15_16_17_20_23_25_33_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00008 + Otu00013 + Otu00015 + Otu00016 + Otu00017 + Otu00020 + Otu00023 + Otu00025 + Otu00033 + Otu00039, data=toptitdel)
+lm13.3_4_7_8_13_15_16_17_20_23_25_33_39.results <- lm_Analysis_Tests(lm13.3_4_7_8_13_15_16_17_20_23_25_33_39, actual)
+lm13.3_4_7_8_13_15_16_17_20_23_25_33_39.rsqs <- RSQcomparisons(lm13.3_4_7_8_13_15_16_17_20_23_25_33_39.results, "lm13.3_4_7_8_13_15_16_17_20_23_25_33_39")
+toptitdel_results <- rbind(toptitdel_results, lm13.3_4_7_8_13_15_16_17_20_23_25_33_39.rsqs)
+
+lm14.3_4_8_13_15_16_17_18_19_20_23_25_33_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00016 + Otu00017 + Otu00018 + Otu00019 + Otu00020 + Otu00023 + Otu00025 + Otu00033 + Otu00039, data=toptitdel)
+lm14.3_4_8_13_15_16_17_18_19_20_23_25_33_39.results <- lm_Analysis_Tests(lm14.3_4_8_13_15_16_17_18_19_20_23_25_33_39, actual)
+lm14.3_4_8_13_15_16_17_18_19_20_23_25_33_39.rsqs <- RSQcomparisons(lm14.3_4_8_13_15_16_17_18_19_20_23_25_33_39.results, "lm14.3_4_8_13_15_16_17_18_19_20_23_25_33_39")
+toptitdel_results <- rbind(toptitdel_results, lm14.3_4_8_13_15_16_17_18_19_20_23_25_33_39.rsqs)
+
+lm14.3_4_8_13_15_16_17_18_19_20_23_33_39_40<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00016 + Otu00017 + Otu00018 + Otu00019 + Otu00020 + Otu00023 + Otu00033 + Otu00039 + Otu00040, data=toptitdel)
+lm14.3_4_8_13_15_16_17_18_19_20_23_33_39_40.results <- lm_Analysis_Tests(lm14.3_4_8_13_15_16_17_18_19_20_23_33_39_40, actual)
+lm14.3_4_8_13_15_16_17_18_19_20_23_33_39_40.rsqs <- RSQcomparisons(lm14.3_4_8_13_15_16_17_18_19_20_23_33_39_40.results, "lm14.3_4_8_13_15_16_17_18_19_20_23_33_39_40")
+toptitdel_results <- rbind(toptitdel_results, lm14.3_4_8_13_15_16_17_18_19_20_23_33_39_40.rsqs)
+
+# Models with lower parameters but high
+lm8.3_4_13_15_17_20_23_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039, data=toptitdel)
+lm8.3_4_13_15_17_20_23_39.results <- lm_Analysis_Tests(lm8.3_4_13_15_17_20_23_39, actual)
+lm8.3_4_13_15_17_20_23_39.rsqs <- RSQcomparisons(lm8.3_4_13_15_17_20_23_39.results, "lm8.3_4_13_15_17_20_23_39")
+toptitdel_results <- rbind(toptitdel_results, lm8.3_4_13_15_17_20_23_39.rsqs)
+
+lm9.3_4_8_13_15_17_20_23_39<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039, data=toptitdel)
+lm9.3_4_8_13_15_17_20_23_39.results <- lm_Analysis_Tests(lm9.3_4_8_13_15_17_20_23_39, actual)
+lm9.3_4_8_13_15_17_20_23_39.rsqs <- RSQcomparisons(lm9.3_4_8_13_15_17_20_23_39.results, "lm9.3_4_8_13_15_17_20_23_39")
+toptitdel_results <- rbind(toptitdel_results, lm9.3_4_8_13_15_17_20_23_39.rsqs)
+
+toptitdel_results_uncurated_20150212 <- toptitdel_results
 
 
-#All of the models with 10 variables included these core 9:
-lm9.3_7_13_15_20_23_39_42_181<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00181, data=toptitdel)
-lm9.3_7_13_15_20_23_39_42_181.results <- lm_Analysis_Tests(lm9.3_7_13_15_20_23_39_42_181, actual)
-lm9.3_7_13_15_20_23_39_42_181.rsqs <- RSQcomparisons(lm9.3_7_13_15_20_23_39_42_181.results, "lm9.3_7_13_15_20_23_39_42_181")
-toptitdel_results <- rbind(toptitdel_results, lm9.3_7_13_15_20_23_39_42_181.rsqs)
+library(plotrix)
+abbrNames <- substr(leaps.toptitdel.uncurated$xnames, 6, 8)
+abbrNames <- abbrNames[-1]
+subsets(leaps.toptitdel.uncurated, names=abbrNames, statistic="bic", legend=FALSE, min.size=5, abbrev=6, cex.subsets=.5, las=1, xlim=c(7, 15), main=leaps.toptitdel.uncurated$call)
+addtable2plot(x = 8, y = -220, table = toptitdel_results_uncurated_20150212, cex=.5, xpad=.3)
+mtext("toptitdel.uncrurated.avg0.01")
 
-toptitdel_results_uncurated_2015028 <- toptitdel_results
 
 detach(toptitdel)
 
