@@ -142,7 +142,7 @@ sortbyphyl<-TRUE
 graphbyphyl<-FALSE
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 
-File saved as "topdose2_tx1_sorted_10x20.pdf" and "topdose2_tx2_sorted_10x20.pdf"."
+File saved as "topdose2_tx1_sorted_10x20.pdf" and "topdose2_tx2_sorted_10x20.pdf".
 
 
 

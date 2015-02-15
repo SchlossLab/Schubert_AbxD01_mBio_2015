@@ -8,10 +8,12 @@
 #################################################
 # Parameters to change:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.allmetro.forlogscale.fig5.csv", header=T)
-fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 5/allmetro_tx2_barchart_ids.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subsample.relabund.topdose2.forlogscale.csv", header=T)
+fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 1/topdose_tx2_barchart_ids.csv", header=T)
 # Y Labels for each graph: 
-abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
+# abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
+abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
+
 
 # If you want each OTU on the Y axis to be sorted by the most abundant phylum and then decreasing abundance within that phylum, change to TRUE
 # The default is false, which means sort be decreasing relative abundance in the top group (untreated/control)
@@ -19,25 +21,31 @@ sortbyphyl<-TRUE
 
 # If you want individual graphs as each group (FALSE) or as phylums with each OTU (TRUE)
 # If you choose TRUE, then set sortbyphyl as TRUE too... IF you forget to change this it changes automatically in the code.
-graphbyphyl<-TRUE
-file<-file[file$expgroup!="1untrVanc",]
+graphbyphyl<-FALSE
+# file<-file[file$expgroup!="1untrVanc",]
 
 
 # Highlight all and run!
 #################################################
 
+
+if(graphbyphyl==TRUE)
+{
+  sortbyphyl=TRUE
+}
 file<-file[,-1] #delete the first col of group names
+
+
+
 avgs=NULL
 avgs <-data.frame(levels(file$expgroup))
 colnames(avgs) <- c("expgroup")
 stds=NULL
 stds <-data.frame(levels(file$expgroup))
 colnames(stds) <- c("expgroup")
-
-if(graphbyphyl==TRUE)
-{
-  sortbyphyl=TRUE
-}
+SEs=NULL
+SEs <-data.frame(levels(file$expgroup))
+colnames(SEs) <- c("expgroup")
 
 #Calculate average cdiff
 avgCD=NULL
@@ -47,6 +55,7 @@ avgCD<-format(avgCD, scientific=TRUE, digits=2)
 sdCD<-tapply(file$nextDayCFU, file$expgroup, sd)
 file<-file[,-2] #delete the nexDayCFU column
 
+library(plotrix)
 
 for(i in 1:ncol(file)){
   
@@ -68,8 +77,18 @@ for(i in 1:ncol(file)){
     colnames(poop2) <- c(ids[1], ids[i])
     
     stds<- merge(stds, poop2, by ="expgroup")
+    
+    
+    #calculates lengthfor each column in file by expgroup and stores it in lengths data frame
+    poop3<- aggregate(columni$columndata~file$expgroup, FUN=std.error) #poop stores the aggregated means for each group for this specific column
+    colnames(poop3) <- c(ids[1], ids[i])
+    
+    SEs<- merge(SEs, poop3, by ="expgroup")
   }
+  
 }
+
+
 
 ordIDS <- fileIDS[order(fileIDS[,2]), ] #sort by the phyla
 totalOTU <- dim(ordIDS)[1]
@@ -98,7 +117,7 @@ if(sortbyphyl == TRUE){
   ### WILL GIVE AN ERROR MESSAGEWarning message:
   #In `[<-.factor`(`*tmp*`, ri, value = 0) :
   #  invalid factor level, NA generated
-  avgs<-rbind(0,avgs) #this is hard coded for the top doses... also dont rerun this multiple times!!! might need to change,
+  avgs<-rbind(0,avgs) 
   
   numphyla<-max(ordIDS[,4])
   
@@ -150,7 +169,8 @@ if(sortbyphyl == TRUE){
   sort_avgs<-data.frame(avgs$expgroup)
   names(sort_avgs)[1]<-c("expgroup")
   
-  for(i in 1:numphyla){ #loop is to sort by decreasing phyla and perform internal sort within phylum, return the new sorted avgs to go into mavgs
+  #loop is to sort by decreasing phyla and perform internal sort within phylum, return the new sorted avgs to go into mavgs
+  for(i in 1:numphyla){ 
     val<-NULL
     phy<-which(x %in% c(ord_physums[i,1])) #phy returns the indices for where that phyNum is
     for(j in 1:length(phy)){ #using locations of phylum i to find in avgs
@@ -168,6 +188,15 @@ if(sortbyphyl == TRUE){
   sort_avgs<-cbind(sort_avgs, Other)
   detach(avgs)
   
+  
+  #hi<-avgs[, order(names(sort_avgs))]
+  col <- c(1)
+  for( i in 2:(length(SEs)) ) {
+    col <- c(col, which(names(SEs)==names(sort_avgs)[i]))
+  }
+  
+  sort_stderr <- SEs[,col]
+  
   sort_phy <- sort_avgs[1,]
   sort_phy<-sort_phy[, -1]
   sort_avgs <- sort_avgs[-1,] #get rid of phylum first row from earlier sorting
@@ -177,6 +206,9 @@ if(sortbyphyl == TRUE){
   
   row.names(sort_avgs)<-sort_avgs$expgroup
   sort_avgs<-sort_avgs[,-1]
+  
+  row.names(sort_stderr)<-sort_stderr$expgroup
+  sort_stderr<-sort_stderr[,-1]
   
   
   for (i in 1:(length(sort_avgs)-1)){
@@ -261,24 +293,48 @@ if(sortbyphyl == FALSE){
 
 
 ###started to do the stds table... didnt complete
-#stds<-stds[,-1]
-#mstds<-as.matrix(stds)
+matrix.se<-as.matrix(sort_stderr)
 
 
 
-#######################################
+
+
+#####################################################################################################################
 ###PLOT PARAMETERS
 if(graphbyphyl==FALSE){
   par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
   par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
   color_transparent <- adjustcolor("black", alpha.f = 0.1) 
+  color <- gray.colors((numphyla+1), start=0, end=1, alpha=NULL)
+  
+  count <- NULL
+  for (n in 1:(numphyla)){
+    count[n] <- length(which(ids$phynum==n))
+  }
+  
+  colors <- NULL
+  for( n in 1:(length(color)-1) ) {
+    phyNumOrder <- unique(ids$phynum)
+    times <- count[phyNumOrder[n]] 
+    temp <- rep( color[n], times )
+    colors <- c(colors, temp)
+  }
+  colors <- c(colors, "#FFFFFF")
   
   for(j in 1:numgr){
     
     if(j != numgr){
-      barplot(mavgs[j, 1:leng], ylab=NULL, col="black", yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=3)
+      bp <- barplot(mavgs[j, 1:leng], ylab=NULL, col=colors,  yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=3)
       #error.bar(bp[k], mavgs[j, 1:leng[2]], mstds[j, 1:leng[2]])  #the bp[k] was for storing the barplot locations to use for these errors
       # k <- k+1
+      d <- as.data.frame( cbind(bp, mavgs[j,], matrix.se[j,] ))
+      names(d) <- c("x", "y", "se")
+      
+      with (
+        data = d
+        , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
+      )
+      
       axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
       mtext(abx[j], side=2, line=6, cex=.8)
       mtext(avgCD[j], side=2, line=4.5, cex=.8)
@@ -288,7 +344,16 @@ if(graphbyphyl==FALSE){
     }
     
     else{ #the last graph needs different margins    
-      label<-barplot(mavgs[j, 1:leng], col="black",ylab=NULL,  yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=3)
+      label<-barplot(mavgs[j, 1:leng], col=colors,ylab=NULL,  yaxt="n", xaxt="n", ylim=c(0.001, 1), log="y", cex.names=3)
+      
+      d <- as.data.frame( cbind(label, mavgs[j,], matrix.se[j,] ))
+      names(d) <- c("x", "y", "se")
+      
+      with (
+        data = d
+        , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
+      )
+      
       #error.bar(bp[k], mavgs[j, 1:leng[2]], mstds[j, 1:leng[2]])  #the bp[k] was for storing the barplot locations to use for these errors
       axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
       mtext(abx[j], side=2, line=6, cex=.8)
