@@ -1,6 +1,58 @@
 
 
+# ############################
+# # Random forest models 2/16/15, using OTUs above the 1% cutoff 
+# ############################
+#
 
+library(randomForest)
+
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/shared.topdose.avg0.01.logtrans.csv", header=T)
+td<-topdose[,-1] 
+
+#fit the randomforest model
+rf.model <- randomForest(nextDayCFU~., 
+                         data = td,  outscale=TRUE,
+                         importance=TRUE, proximity=TRUE,
+                         keep.forest=TRUE, ntree=5000
+)
+plot(rf.model)
+print(rf.model) # % Var explained: 87.68
+
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+par(mfrow=c(1, 1)) 
+varImpPlot(rf.model, type=1)
+imp<-importance(rf.model)
+# not sure if I made this file earlier and added to it or not:
+write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.topdose.avg0.01.txt", sep="\t", row.names=T, col.names=T)
+partialPlot(rf.model, td, Otu00003) 
+
+# function to give me the prediction results on each data set
+
+######## Now with the toptit data
+
+toptit <- read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.01.logtrans.csv", header=T)
+toptit <- toptit[,-1]
+
+#fit the randomforest model
+rf.toptit <- randomForest(nextDayCFU~., 
+                          data = toptit,  outscale=TRUE,
+                          importance=TRUE, proximity=TRUE,
+                          keep.forest=TRUE, ntree=5000
+)
+plot(rf.toptit)
+print(rf.toptit)
+# % Var explained: 87.69
+
+#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+par(mfrow=c(1, 1)) 
+varImpPlot(rf.toptit, type=1)
+imp<-importance(rf.toptit)
+write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.01.txt", sep="\t", row.names=T, col.names=T)
+#partialPlot(rf.toptit, toptit, Otu00013)
+
+######## Now with the toptitdel data
 
 
 
