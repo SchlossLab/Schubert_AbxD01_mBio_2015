@@ -9,6 +9,34 @@
 #getModels <- function(regsubsetsObj, paramNum){}
 
 
+rf.predict <- function(file, descr, rf.model) {
+  file<-read.csv(file=file, header=T)
+  file<-file[,-1] #new titration data only
+  
+  #predict the outcome of the testing data
+  predictions <- predict(rf.model, newdata=file[ ,-1])
+  
+  # what is the proportion variation explained in the outcome of the testing data?
+  # i.e., what is 1-(SSerror/SStotal)
+  actual <- file$nextDayCFU
+  
+  results<-as.data.frame(cbind(actual, predictions))
+  colnames(results) <- c( "actual", "predict")
+  
+  #Calculate the rsquared
+  ybar <- apply(results, 2, mean)
+  num<-sum((results$actual-ybar["actual"])*(results$predict-ybar["predict"]))
+  denA <- sum((results$actual-ybar["actual"])^2)
+  denB <- sum((results$predict-ybar["predict"])^2)
+  rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
+  
+  #plot results
+  plot(results$actual, results$predict, main="RF, 1% relabund cutoff", ylab="Predicted Values", xlab="Actual Values")
+  mtext(paste(descr, "r^2 = ", signif(rsq, 3)), side=3, line=0)
+  
+  return(rsq)
+  
+}
 
 
 
