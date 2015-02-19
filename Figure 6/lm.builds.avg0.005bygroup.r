@@ -1,539 +1,130 @@
 
-# ############################
-# # Random forest models 2/18/15, using OTUs with filter16mintot
-# ############################
-#
 
-library(randomForest)
+############################
+# Uncurated Approach 2/18/15, using new shared file with top 20 OTUs by toptitdelrf
+############################
+library(leaps)
 
-topdose<-read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv", header=T)
-topdose<-topdose[,-1] 
+topdose<-read.csv("~/Desktop/mothur/abxD01/model/shared.topdose.noNewUntr.logtrans.20OTUs.csv", header=T)
 
-#fit the randomforest model
-td.rf <- randomForest(nextDayCFU~., 
-                      data = topdose,  outscale=TRUE,
-                      importance=TRUE, proximity=TRUE,
-                      keep.forest=TRUE, ntree=5000
-)
-plot(td.rf)
-print(td.rf) # % Var explained: 88.4
+actual <-NULL
+actual<-as.data.frame(topdose[,2]) #save the actual results in new df
+row.names(actual) <- topdose[,1] #save the group names
+td<-topdose[,-1] 
+attach(td)
+#detach(td)
+ids<-names(td)
+ids = ids[-1] #ids of OTUs in topdose
 
-#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-varImpPlot(td.rf, type=1)
-imp<-importance(td.rf)
-#write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.topdose.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-#partialPlot(rf.model, td, Otu00003) 
-
-
-# function to give me the prediction results on each data set
-td <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv"
-titr <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv"
-delay <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv"
-
-rf.predict(file=td, descr="td.rf on Topdose Data", rf.model=td.rf)
-rf.predict(file=titr, descr="td.rf on Titration Data", rf.model=td.rf)
-rf.predict(file=delay, descr="td.rf on Delay Data", rf.model=td.rf)
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(which(ids == "Otu00006"))
+leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup)
+td.models <- buildAllLM(all.leaps.models = summary(leaps.build)$which, data = toptitdel, actual=actual)
 
 
 
-######## Now with the toptit data
-
-toptit <- read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv", header=T)
-toptit <- toptit[,-1]
-
-#fit the randomforest model
-rf.toptit <- randomForest(nextDayCFU~., 
-                          data = toptit,  outscale=TRUE,
-                          importance=TRUE, proximity=TRUE,
-                          keep.forest=TRUE, ntree=5000
-)
-plot(rf.toptit)
-print(rf.toptit)
-# % Var explained: 87.69
-
-#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-par(mfrow=c(1, 1)) 
-varImpPlot(rf.toptit, type=1)
-imp<-importance(rf.toptit)
-write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-#partialPlot(rf.toptit, toptit, Otu00013)
-
-rf.predict(file=td, descr="rf.toptit on Topdose Data", rf.model=rf.toptit)
-rf.predict(file=titr, descr="rf.toptit on Titration Data", rf.model=rf.toptit)
-rf.predict(file=delay, descr="rf.toptit on Delay Data", rf.model=rf.toptit)
+leaps.plots(leaps.build, 5, 11)
+models6<-buildLM(leaps.models = (getModels(leaps.build, 6)), data = td, actual=actual)
 
 
+library(plotrix)
+abbrNames <- substr(leaps.build$xnames, 6, 8)
+abbrNames <- abbrNames[-1]
+subsets(leaps.build, names=abbrNames, statistic="bic", legend=FALSE, min.size=5, abbrev=6, cex.subsets=.5, las=1, xlim=c(5, 11), main=leaps.build$call)
+addtable2plot(x = 6, y = -150, table = lms, cex=.5, xpad=.5)
+#mtext("topdose.uncrurated.avg0.01")
 
-######## Now with the toptitdel data
+detach(td)
 
+####################### now try to use toptit data
+####################### 
 
-toptitdel <- read.csv("~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv", header=T)
-toptitdel <- toptitdel[,-1]
+toptit<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.noNewUntr.logtrans.20OTUs.csv", header=T)
 
-#fit the randomforest model
-rf.toptitdel <- randomForest(nextDayCFU~., 
-                             data = toptitdel,  outscale=TRUE,
-                             importance=TRUE, proximity=TRUE,
-                             keep.forest=TRUE, ntree=5000
-)
-plot(rf.toptitdel)
-print(rf.toptitdel)
-# % Var explained: 87.84
+actual <-NULL
+actual<-as.data.frame(toptit[,2]) #save the actual results in new df
+row.names(actual) <- toptit[,1] #save the group names
+toptit<-toptit[,-1] 
+attach(toptit)
+#detach(toptit)
+ids<-names(toptit)
+ids = ids[-1] #ids of OTUs in toptit
 
-#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-par(mfrow=c(1, 1)) 
-varImpPlot(rf.toptitdel, type=1)
-imp<-importance(rf.toptitdel)
-write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-#partialPlot(rf.toptit, toptit, Otu00013)
-
-rf.predict(file=td, descr="rf.toptitdel on Topdose Data", rf.model=rf.toptitdel)
-rf.predict(file=titr, descr="rf.toptitdel on Titration Data", rf.model=rf.toptitdel)
-rf.predict(file=delay, descr="rf.toptitdel on Delay Data", rf.model=rf.toptitdel)
-
-
-# ############################
-# # Random forest models 2/16/15, using OTUs above the 1% cutoff 
-# ############################
-#
-
-library(randomForest)
-
-topdose<-read.csv("~/Desktop/mothur/abxD01/model/shared.topdose.avg0.01.logtrans.csv", header=T)
-topdose<-topdose[,-1] 
-
-#fit the randomforest model
-td.rf <- randomForest(nextDayCFU~., 
-                         data = topdose,  outscale=TRUE,
-                         importance=TRUE, proximity=TRUE,
-                         keep.forest=TRUE, ntree=5000
-)
-plot(td.rf)
-print(td.rf) # % Var explained: 87.68
-
-#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-varImpPlot(td.rf, type=1)
-imp<-importance(td.rf)
-#write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.topdose.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-#partialPlot(rf.model, td, Otu00003) 
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(which(ids == "Otu00006"))
+leaps.build<-regsubsets(nextDayCFU ~ ., data=toptit, nbest=5, nvmax=15, force.in=inGroup, force.out=outGroup)
 
 
-# function to give me the prediction results on each data set
-td <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv"
-titr <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv"
-delay <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv"
-
-rf.predict(file=td, descr="td.rf on Topdose Data", rf.model=td.rf)
-rf.predict(file=titr, descr="td.rf on Titration Data", rf.model=td.rf)
-rf.predict(file=delay, descr="td.rf on Delay Data", rf.model=td.rf)
+toptit <- buildAllLM(all.leaps.models = summary(leaps.build)$which, data = toptit, actual=actual)
 
 
+leaps.toptit.uncurated.20150212 <- leaps.build
 
-######## Now with the toptit data
+leaps.plots(leaps.build, 6, 15)
+models8<-buildLM(leaps.models = (getModels(leaps.build, 8)), data = toptit, actual=actual)
 
-toptit <- read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.01.logtrans.csv", header=T)
-toptit <- toptit[,-1]
+models10<- buildLM(leaps.models = (getModels(leaps.build, 10)), data = toptit, actual=actual)
 
-#fit the randomforest model
-rf.toptit <- randomForest(nextDayCFU~., 
-                          data = toptit,  outscale=TRUE,
-                          importance=TRUE, proximity=TRUE,
-                          keep.forest=TRUE, ntree=5000
-)
-plot(rf.toptit)
-print(rf.toptit)
-# % Var explained: 87.69
-
-#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-par(mfrow=c(1, 1)) 
-varImpPlot(rf.toptit, type=1)
-imp<-importance(rf.toptit)
-write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-#partialPlot(rf.toptit, toptit, Otu00013)
-
-rf.predict(file=td, descr="rf.toptit on Topdose Data", rf.model=rf.toptit)
-rf.predict(file=titr, descr="rf.toptit on Titration Data", rf.model=rf.toptit)
-rf.predict(file=delay, descr="rf.toptit on Delay Data", rf.model=rf.toptit)
+models9<- buildLM(leaps.models = (getModels(leaps.build, 9)), data = toptit, actual=actual)
 
 
+# library(plotrix)
+# abbrNames <- substr(leaps.build$xnames, 6, 8)
+# abbrNames <- abbrNames[-1]
+# subsets(leaps.build, names=abbrNames, statistic="bic", legend=FALSE, min.size=5, abbrev=6, cex.subsets=.5, las=1, xlim=c(7, 13), main=leaps.build$call)
+# addtable2plot(x = 7, y = -232, table = toptit_results_uncurated_20150212, cex=.5, xpad=.1)
+# mtext("toptit.uncrurated.avg0.01")
 
-######## Now with the toptitdel data
+detach(toptit)
 
+####################### now try to use toptitdel data
+####################### 
 
-toptitdel <- read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.01.logtrans.csv", header=T)
-toptitdel <- toptitdel[,-1]
-
-#fit the randomforest model
-rf.toptitdel <- randomForest(nextDayCFU~., 
-                          data = toptitdel,  outscale=TRUE,
-                          importance=TRUE, proximity=TRUE,
-                          keep.forest=TRUE, ntree=5000
-)
-plot(rf.toptitdel)
-print(rf.toptitdel)
-# % Var explained: 87.84
-
-#what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-par(mfrow=c(1, 1)) 
-varImpPlot(rf.toptitdel, type=1)
-imp<-importance(rf.toptitdel)
-write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-#partialPlot(rf.toptit, toptit, Otu00013)
-
-rf.predict(file=td, descr="rf.toptitdel on Topdose Data", rf.model=rf.toptitdel)
-rf.predict(file=titr, descr="rf.toptitdel on Titration Data", rf.model=rf.toptitdel)
-rf.predict(file=delay, descr="rf.toptitdel on Delay Data", rf.model=rf.toptitdel)
+toptitdel<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptitdel.noNewUntr.logtrans.20OTUs.csv", header=T)
+t#optitdel<- toptitdel[,-2]
 
 
+actual <-NULL
+actual<-as.data.frame(toptitdel[,2]) #save the actual results in new df
+row.names(actual) <- toptitdel[,1] #save the group names
+toptitdel<-toptitdel[,-1] 
+attach(toptitdel)
+#detach(toptitdel)
+ids<-names(toptitdel)
+ids <- ids[-1] #ids of OTUs in toptitdel
+
+#Perform an exhaustive search for the best linear models with different numbers of parameters.
+#inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
+inGroup <- c(NULL)
+outGroup <- c(which(ids == "Otu00006"))
+leaps.toptitdel.uncurated <- regsubsets(nextDayCFU ~ ., data=toptitdel, nbest=5, nvmax=16, force.in=inGroup, force.out=outGroup)
+
+summary <- summary(leaps.toptitdel.uncurated)
+
+leaps.plots(leaps.toptitdel.uncurated, 8, 15)
+models8<- getModels(leaps.toptitdel.uncurated, 8)
+models9<- getModels(leaps.toptitdel.uncurated, 9)
+models10<- getModels(leaps.toptitdel.uncurated, 10)
+results <- rbind(models9, models10, "8"=models8[1,])
+
+toptitdellm <- buildAllLM(all.leaps.models = summary$which, data = toptitdel, actual=actual)
 
 
+library(plotrix)
+abbrNames <- substr(leaps.toptitdel.uncurated$xnames, 6, 8)
+abbrNames <- abbrNames[-1]
+subsets(leaps.toptitdel.uncurated, names=abbrNames, statistic="bic", legend=FALSE, min.size=5, abbrev=6, cex.subsets=.5, las=1, xlim=c(7, 15), main=leaps.toptitdel.uncurated$call)
+addtable2plot(x = 8, y = -220, table = toptitdel_results_uncurated_20150212, cex=.5, xpad=.3)
+mtext("toptitdel.uncrurated.avg0.01")
 
-# ############################
-# #Curated Approach 2/13/15, using OTUs above the 1% cutoff, attempted to start.. but decided that the relabund cutoff is fairly reasonable. 
-# ############################
-# 
-# library(randomForest)
-# 
-# topdose<-read.csv("~/Desktop/mothur/abxD01/model/shared.topdose.avg0.01.logtrans.csv", header=T)
-# td<-topdose[,-1] 
-# 
-# #fit the randomforest model
-# rf.model <- randomForest(nextDayCFU~., 
-#                          data = td,  outscale=TRUE,
-#                          importance=TRUE, proximity=TRUE,
-#                          keep.forest=TRUE, ntree=5000
-# )
-# plot(rf.model)
-# print(rf.model) # % Var explained: 87.81
-# 
-# 
-# #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-# par(mfrow=c(1, 1)) 
-# varImpPlot(rf.model, type=1)
-# imp<-importance(rf.model)
-# write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.topdose.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-# partialPlot(rf.model, td, Otu00003)
-# 
-# ############ Then used these values in combination with their correlation values with subsequent C. difficile CFU. 
-# ############ Put those in the following candidatePool.csv:
-# 
-# library(leaps)
-# 
-# topdose<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.topdose2.logtrans.candidatePool.csv", header=T)
-# 
-# actual <-NULL
-# actual<-as.data.frame(topdose[,2]) #save the actual results in new df
-# row.names(actual) <- topdose[,1] #save the group names
-# td<-topdose[,-1] 
-# attach(td)
-# #detach(td)
-# ids<-names(td)
-# ids = ids[-1] #ids of OTUs in topdose
-# 
-# #Perform an exhaustive search for the best linear models with different numbers of parameters.
-# #inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
-# inGroup <- c(NULL)
-# outGroup <- c(NULL)
-# leaps.build<-regsubsets(nextDayCFU ~ ., data=td, nbest=5, nvmax=10, force.in=inGroup, force.out=outGroup)
-# #leaps.build
-# #leaps.build.no6
-# 
-# leaps.topdose.curated.20150208 <- leaps.build
-# 
-# leaps.plots(leaps.topdose.curated.20150208, 4, 10)
-# models7<- getModels(leaps.build, 7)
-# 
-# #Test the best model based on the leaps analysis in a linear model trained on the topdose data.
-# # This model is close to the best by BIC, but 13 is more commonly found in top models
-# topdose_results <- NULL
-# # lm_3_7_13_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00020 + Otu00039 + Otu00042, data=td)
-# # lm_3_7_13_20_39_42.results <- lm_Analysis_Tests(lm_3_7_13_20_39_42, actual)
-# # lm_3_7_13_20_39_42.rsqs <- RSQcomparisons(lm_3_7_13_20_39_42.results, "lm_3_7_13_20_39_42")
-# # topdose_results <- rbind(topdose_results, lm_3_7_13_20_39_42.rsqs)
-# # 
-# # #This one is the best by BIC, limiting parameter size
-# # lm_3_7_9_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00039 + Otu00042, data=td)
-# # lm_3_7_9_20_39_42.results <- lm_Analysis_Tests(lm_3_7_9_20_39_42, actual)
-# # lm_3_7_9_20_39_42.rsqs <- RSQcomparisons(lm_3_7_9_20_39_42.results, "lm_3_7_9_20_39_42")
-# # topdose_results <- rbind(topdose_results, lm_3_7_9_20_39_42.rsqs)
-# 
-# # This model is also good by BIC and Cp
-# lm7.3_7_13_15_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00039 + Otu00042, data=td)
-# lm7.3_7_13_15_20_39_42.results <- lm_Analysis_Tests(lm7.3_7_13_15_20_39_42, actual)
-# lm7.3_7_13_15_20_39_42.rsqs <- RSQcomparisons(lm7.3_7_13_15_20_39_42.results, "lm7.3_7_13_15_20_39_42")
-# topdose_results <- rbind(topdose_results, lm7.3_7_13_15_20_39_42.rsqs)
-# 
-# # lm7.3_7_9_20_39_42_86<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00039 + Otu00042 + Otu00086, data=td)
-# # lm7.3_7_9_20_39_42_86.results <- lm_Analysis_Tests(lm7.3_7_9_20_39_42_86, actual)
-# # lm7.3_7_9_20_39_42_86.rsqs <- RSQcomparisons(lm7.3_7_9_20_39_42_86.results, "lm7.3_7_9_20_39_42_86")
-# # topdose_results <- rbind(topdose_results, lm7.3_7_9_20_39_42_86.rsqs)
-# # 
-# # lm7.3_7_9_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=td)
-# # lm7.3_7_9_20_23_39_42.results <- lm_Analysis_Tests(lm7.3_7_9_20_23_39_42, actual)
-# # lm7.3_7_9_20_23_39_42.rsqs <- RSQcomparisons(lm7.3_7_9_20_23_39_42.results, "lm7.3_7_9_20_23_39_42")
-# # topdose_results <- rbind(topdose_results, lm7.3_7_9_20_23_39_42.rsqs)
-# # 
-# # lm7.3_7_9_13_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00013 + Otu00039 + Otu00042, data=td)
-# # lm7.3_7_9_13_20_39_42.results <- lm_Analysis_Tests(lm7.3_7_9_13_20_39_42, actual)
-# # lm7.3_7_9_13_20_39_42.rsqs <- RSQcomparisons(lm7.3_7_9_13_20_39_42.results, "lm7.3_7_9_13_20_39_42")
-# # topdose_results <- rbind(topdose_results, lm7.3_7_9_13_20_39_42.rsqs)
-# # 
-# # lm7.3_7_9_12_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00009 + Otu00020 + Otu00012 + Otu00039 + Otu00042, data=td)
-# # lm7.3_7_9_12_20_39_42.results <- lm_Analysis_Tests(lm7.3_7_9_12_20_39_42, actual)
-# # lm7.3_7_9_12_20_39_42.rsqs <- RSQcomparisons(lm7.3_7_9_12_20_39_42.results, "lm7.3_7_9_12_20_39_42")
-# # topdose_results <- rbind(topdose_results, lm7.3_7_9_12_20_39_42.rsqs)
-# 
-# lm5.3_7_20_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00020 + Otu00039 + Otu00042, data=td)
-# lm5.3_7_20_39_42.results <- lm_Analysis_Tests(lm5.3_7_20_39_42, actual)
-# lm5.3_7_20_39_42.rsqs <- RSQcomparisons(lm5.3_7_20_39_42.results, "lm5.3_7_20_39_42")
-# topdose_results <- rbind(topdose_results, lm5.3_7_20_39_42.rsqs)
-# 
-# topdose_results_curated_20150208 <- topdose_results
-# 
-# anova(lm5.3_7_20_39_42, lm_3_7_13_20_39_42) # 0.0006315 ***
-# anova(lm5.3_7_20_39_42, lm_3_7_9_20_39_42) # 0.0004592 ***
-# 
-# anova(lm5.3_7_20_39_42, lm7.3_7_13_15_20_39_42) # 0.0003349 ***
-# anova(lm5.3_7_20_39_42, lm7.3_7_9_20_39_42_86) # 0.0003624 ***
-# anova(lm5.3_7_20_39_42, lm7.3_7_9_20_23_39_42) # 0.0004339 ***
-# anova(lm5.3_7_20_39_42, lm7.3_7_9_13_20_39_42) # 0.0004527 ***
-# anova(lm5.3_7_20_39_42, lm7.3_7_9_12_20_39_42) # 0.0006398 ***
-# 
-# anova(lm_3_7_13_20_39_42, lm7.3_7_13_15_20_39_42) # 0.03673 *
-# 
-# 
-# detach(td)
-# 
-# ############### Now want to revise the model to incorporate information from the titration data. 
-# ############### Combined the topdose and titration samples. 
-# 
-# toptit <- read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.001.csv", header=T)
-# toptit <- toptit[,-1]
-# 
-# #fit the randomforest model
-# rf.toptit <- randomForest(nextDayCFU~., 
-#                           data = toptit,  outscale=TRUE,
-#                           importance=TRUE, proximity=TRUE,
-#                           keep.forest=TRUE, ntree=5000
-# )
-# plot(rf.toptit)
-# print(rf.toptit)
-# # % Var explained: 87.85
-# 
-# #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-# par(mfrow=c(1, 1)) 
-# varImpPlot(rf.toptit, type=1)
-# imp<-importance(rf.toptit)
-# write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.001.txt", sep="\t", row.names=T, col.names=T)
-# #partialPlot(rf.toptit, toptit, Otu00013)
-# 
-# ############ Then used these values in combination with their correlation values with subsequent C. difficile CFU. 
-# ############ Put those in the following candidatePool.csv:
-# 
-# library(leaps)
-# 
-# toptit<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptit.avg0.001.candidatePool.csv", header=T)
-# 
-# actual <-NULL
-# actual<-as.data.frame(toptit[,2]) #save the actual results in new df
-# row.names(actual) <- toptit[,1] #save the group names
-# toptit<-toptit[,-1] 
-# attach(toptit)
-# #detach(toptit)
-# ids<-names(toptit)
-# ids = ids[-1] #ids of OTUs in topdose
-# 
-# #Perform an exhaustive search for the best linear models with different numbers of parameters.
-# #inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
-# inGroup <- c(NULL)
-# outGroup <- c(NULL)
-# leaps.toptit<-regsubsets(nextDayCFU ~ ., data=toptit, nbest=5, nvmax=15, force.in=inGroup, force.out=outGroup)
-# 
-# leaps.toptit.curated.20150208 <- leaps.toptit
-# 
-# leaps.plots(leaps.toptit, 6, 12)
-# models10 <- getModels(leaps.toptit, 10)
-# models9 <- getModels(leaps.toptit, 9)
-# models8 <- getModels(leaps.toptit, 8)
-# 
-# 
-# #Test the best model based on the leaps analysis in a linear model trained on the topdose data.
-# toptit_results <- NULL
-# lm10.3_7_13_15_18_20_23_39_42_76<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076, data=toptit)
-# lm10.3_7_13_15_18_20_23_39_42_76.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_20_23_39_42_76, actual)
-# lm10.3_7_13_15_18_20_23_39_42_76.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_20_23_39_42_76.results, "lm10.3_7_13_15_18_20_23_39_42_76")
-# toptit_results <- rbind(toptit_results, lm10.3_7_13_15_18_20_23_39_42_76.rsqs)
-# 
-# lm10.3_7_13_15_18_19_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00019 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptit)
-# lm10.3_7_13_15_18_19_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_19_20_23_39_42, actual)
-# lm10.3_7_13_15_18_19_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_19_20_23_39_42.results, "lm10.3_7_13_15_18_19_20_23_39_42")
-# toptit_results <- rbind(toptit_results, lm10.3_7_13_15_18_19_20_23_39_42.rsqs)
-# 
-# lm10.3_7_11_13_15_18_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00011 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptit)
-# lm10.3_7_11_13_15_18_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_7_11_13_15_18_20_23_39_42, actual)
-# lm10.3_7_11_13_15_18_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_7_11_13_15_18_20_23_39_42.results, "lm10.3_7_11_13_15_18_20_23_39_42")
-# toptit_results <- rbind(toptit_results, lm10.3_7_11_13_15_18_20_23_39_42.rsqs)
-# 
-# # lm10.3_4_7_13_15_20_23_39_42_76<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076, data=toptit)
-# # lm10.3_4_7_13_15_20_23_39_42_76.results <- lm_Analysis_Tests(lm10.3_4_7_13_15_20_23_39_42_76, actual)
-# # lm10.3_4_7_13_15_20_23_39_42_76.rsqs <- RSQcomparisons(lm10.3_4_7_13_15_20_23_39_42_76.results, "lm10.3_4_7_13_15_20_23_39_42_76")
-# # toptit_results <- rbind(toptit_results, lm10.3_4_7_13_15_20_23_39_42_76.rsqs)
-# 
-# lm10.3_7_13_15_18_20_21_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00021 + Otu00023 + Otu00039 + Otu00042, data=toptit)
-# lm10.3_7_13_15_18_20_21_23_39_42.results <- lm_Analysis_Tests(lm10.3_7_13_15_18_20_21_23_39_42, actual)
-# lm10.3_7_13_15_18_20_21_23_39_42.rsqs <- RSQcomparisons(lm10.3_7_13_15_18_20_21_23_39_42.results, "lm10.3_7_13_15_18_20_21_23_39_42")
-# toptit_results <- rbind(toptit_results, lm10.3_7_13_15_18_20_21_23_39_42.rsqs)
-# 
-# lm9.3_7_13_15_18_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptit)
-# lm9.3_7_13_15_18_20_23_39_42.results <- lm_Analysis_Tests(lm9.3_7_13_15_18_20_23_39_42, actual)
-# lm9.3_7_13_15_18_20_23_39_42.rsqs <- RSQcomparisons(lm9.3_7_13_15_18_20_23_39_42.results, "lm9.3_7_13_15_18_20_23_39_42")
-# toptit_results <- rbind(toptit_results, lm9.3_7_13_15_18_20_23_39_42.rsqs)
-# 
-# lm9.3_4_7_13_15_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptit)
-# lm9.3_4_7_13_15_20_23_39_42.results <- lm_Analysis_Tests(lm9.3_4_7_13_15_20_23_39_42, actual)
-# lm9.3_4_7_13_15_20_23_39_42.rsqs <- RSQcomparisons(lm9.3_4_7_13_15_20_23_39_42.results, "lm9.3_4_7_13_15_20_23_39_42")
-# toptit_results <- rbind(toptit_results, lm9.3_4_7_13_15_20_23_39_42.rsqs)
-# 
-# lm9.3_7_13_15_20_23_39_42_76<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00076, data=toptit)
-# lm9.3_7_13_15_20_23_39_42_76.results <- lm_Analysis_Tests(lm9.3_7_13_15_20_23_39_42_76, actual)
-# lm9.3_7_13_15_20_23_39_42_76.rsqs <- RSQcomparisons(lm9.3_7_13_15_20_23_39_42_76.results, "lm9.3_7_13_15_20_23_39_42_76")
-# toptit_results <- rbind(toptit_results, lm9.3_7_13_15_20_23_39_42_76.rsqs)
-# 
-# lm8.3_7_13_15_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00007 + Otu00013 + Otu00015 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptit)
-# lm8.3_7_13_15_20_23_39_42.results <- lm_Analysis_Tests(lm8.3_7_13_15_20_23_39_42, actual)
-# lm8.3_7_13_15_20_23_39_42.rsqs <- RSQcomparisons(lm8.3_7_13_15_20_23_39_42.results, "lm8.3_7_13_15_20_23_39_42")
-# toptit_results <- rbind(toptit_results, lm8.3_7_13_15_20_23_39_42.rsqs)
-# 
-# 
-# anova(lm8.3_7_13_15_20_23_39_42, lm9.3_7_13_15_18_20_23_39_42) # 0.03106 *
-# anova(lm8.3_7_13_15_20_23_39_42, lm9.3_4_7_13_15_20_23_39_42) # 0.05798 .
-# anova(lm8.3_7_13_15_20_23_39_42, lm9.3_7_13_15_20_23_39_42_76) # 0.06302 .
-# 
-# 
-# anova(lm8.3_7_13_15_20_23_39_42, lm10.3_7_13_15_18_20_23_39_42_76) # 0.007971 **
-# anova(lm8.3_7_13_15_20_23_39_42, lm10.3_7_13_15_18_19_20_23_39_42) # 0.02669 *
-# anova(lm8.3_7_13_15_20_23_39_42, lm10.3_7_11_13_15_18_20_23_39_42) # 0.02709 *
-# anova(lm8.3_7_13_15_20_23_39_42, lm10.3_4_7_13_15_20_23_39_42_76) # 0.03208 *
-# anova(lm8.3_7_13_15_20_23_39_42, lm10.3_7_13_15_18_20_21_23_39_42) # 0.03775 *
-# 
-# toptit_results_curated_20150208 <- toptit_results
-# 
-# detach(toptit)
-# 
-# ############### Now want to revise the model to incorporate information from the delay data. 
-# ############### Combined the topdose, titration, and delay samples. 
-# 
-# toptitdel <- read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.toptitdel.noNewUntr.regression.logtrans.filterAvg0.001.csv", header=T)
-# toptitdel <- toptitdel[,-1]
-# 
-# #fit the randomforest model
-# rf.toptitdel <- randomForest(nextDayCFU~., 
-#                              data = toptitdel,  outscale=TRUE,
-#                              importance=TRUE, proximity=TRUE,
-#                              keep.forest=TRUE, ntree=5000
-# )
-# plot(rf.toptitdel)
-# print(rf.toptitdel)
-# # % Var explained: 85.91
-# 
-# #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-# par(mfrow=c(1, 1)) 
-# varImpPlot(rf.toptitdel, type=1)
-# imp<-importance(rf.toptitdel)
-# write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.avg0.001.txt", sep="\t", row.names=T, col.names=T)
-# 
-# ############ Then used these values in combination with their correlation values with subsequent C. difficile CFU. 
-# ############ Put those in the following candidatePool.csv:
-# 
-# library(leaps)
-# 
-# toptitdel<-read.csv("~/Desktop/mothur/abxD01/model/shared.toptitdel.avg0.001.candidatePool.csv", header=T)
-# 
-# actual <-NULL
-# actual<-as.data.frame(toptitdel[,2]) #save the actual results in new df
-# row.names(actual) <- toptitdel[,1] #save the group names
-# toptitdel<-toptitdel[,-1] 
-# attach(toptitdel)
-# #detach(toptitdel)
-# ids<-names(toptitdel)
-# ids = ids[-1] #ids of OTUs in topdose
-# 
-# #Perform an exhaustive search for the best linear models with different numbers of parameters.
-# #inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
-# inGroup <- c(NULL)
-# outGroup <- c(NULL)
-# leaps.toptitdel<-regsubsets(nextDayCFU ~ ., data=toptitdel, nbest=5, nvmax=13, force.in=inGroup, force.out=outGroup)
-# 
-# leaps.toptitdel.curated.20150208 <- leaps.toptitdel
-# 
-# leaps.plots(leaps.toptitdel, 6, 13)
-# models10 <- getModels(leaps.toptitdel, 10)
-# models9 <- getModels(leaps.toptitdel, 9)
-# 
-# 
-# toptitdel_results <- NULL
-# lm10.3_4_7_8_13_17_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00007 + Otu00008 + Otu00013 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
-# lm10.3_4_7_8_13_17_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_4_7_8_13_17_20_23_39_42, actual)
-# lm10.3_4_7_8_13_17_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_4_7_8_13_17_20_23_39_42.results, "lm10.3_4_7_8_13_17_20_23_39_42")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_7_8_13_17_20_23_39_42.rsqs)
-# 
-# lm10.3_4_8_13_15_17_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
-# lm10.3_4_8_13_15_17_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_4_8_13_15_17_20_23_39_42, actual)
-# lm10.3_4_8_13_15_17_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_4_8_13_15_17_20_23_39_42.results, "lm10.3_4_8_13_15_17_20_23_39_42")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_8_13_15_17_20_23_39_42.rsqs)
-# 
-# lm10.3_4_13_15_17_20_23_39_42_65<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00065, data=toptitdel)
-# lm10.3_4_13_15_17_20_23_39_42_65.results <- lm_Analysis_Tests(lm10.3_4_13_15_17_20_23_39_42_65, actual)
-# lm10.3_4_13_15_17_20_23_39_42_65.rsqs <- RSQcomparisons(lm10.3_4_13_15_17_20_23_39_42_65.results, "lm10.3_4_13_15_17_20_23_39_42_65")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_13_15_17_20_23_39_42_65.rsqs)
-# 
-# lm10.3_4_13_15_17_20_23_39_42_78<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042 + Otu00078, data=toptitdel)
-# lm10.3_4_13_15_17_20_23_39_42_78.results <- lm_Analysis_Tests(lm10.3_4_13_15_17_20_23_39_42_78, actual)
-# lm10.3_4_13_15_17_20_23_39_42_78.rsqs <- RSQcomparisons(lm10.3_4_13_15_17_20_23_39_42_78.results, "lm10.3_4_13_15_17_20_23_39_42_78")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_13_15_17_20_23_39_42_78.rsqs)
-# 
-# lm10.3_4_8_13_17_18_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00017 + Otu00018 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
-# lm10.3_4_8_13_17_18_20_23_39_42.results <- lm_Analysis_Tests(lm10.3_4_8_13_17_18_20_23_39_42, actual)
-# lm10.3_4_8_13_17_18_20_23_39_42.rsqs <- RSQcomparisons(lm10.3_4_8_13_17_18_20_23_39_42.results, "lm10.3_4_8_13_17_18_20_23_39_42")
-# toptitdel_results <- rbind(toptitdel_results, lm10.3_4_8_13_17_18_20_23_39_42.rsqs)
-# 
-# lm9.3_4_8_13_17_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00008 + Otu00013 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
-# lm9.3_4_8_13_17_20_23_39_42.results <- lm_Analysis_Tests(lm9.3_4_8_13_17_20_23_39_42, actual)
-# lm9.3_4_8_13_17_20_23_39_42.rsqs <- RSQcomparisons(lm9.3_4_8_13_17_20_23_39_42.results, "lm9.3_4_8_13_17_20_23_39_42")
-# toptitdel_results <- rbind(toptitdel_results, lm9.3_4_8_13_17_20_23_39_42.rsqs)
-# 
-# lm9.3_4_13_15_17_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00013 + Otu00015 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
-# lm9.3_4_13_15_17_20_23_39_42.results <- lm_Analysis_Tests(lm9.3_4_13_15_17_20_23_39_42, actual)
-# lm9.3_4_13_15_17_20_23_39_42.rsqs <- RSQcomparisons(lm9.3_4_13_15_17_20_23_39_42.results, "lm9.3_4_13_15_17_20_23_39_42")
-# toptitdel_results <- rbind(toptitdel_results, lm9.3_4_13_15_17_20_23_39_42.rsqs)
-# 
-# lm8.3_4_13_17_20_23_39_42<-lm(nextDayCFU ~ Otu00003 + Otu00004 + Otu00013 + Otu00017 + Otu00020 + Otu00023 + Otu00039 + Otu00042, data=toptitdel)
-# lm8.3_4_13_17_20_23_39_42.results <- lm_Analysis_Tests(lm8.3_4_13_17_20_23_39_42, actual)
-# lm8.3_4_13_17_20_23_39_42.rsqs <- RSQcomparisons(lm8.3_4_13_17_20_23_39_42.results, "lm8.3_4_13_17_20_23_39_42")
-# toptitdel_results <- rbind(toptitdel_results, lm8.3_4_13_17_20_23_39_42.rsqs)
-# 
-# 
-# anova(lm8.3_4_13_17_20_23_39_42, lm9.3_4_13_15_17_20_23_39_42) # 0.004704 **
-# anova(lm8.3_4_13_17_20_23_39_42, lm9.3_4_8_13_17_20_23_39_42) # 0.004491 **
-# 
-# anova(lm8.3_4_13_17_20_23_39_42, lm10.3_4_7_8_13_17_20_23_39_42) # 0.001618 **
-# anova(lm8.3_4_13_17_20_23_39_42, lm10.3_4_8_13_15_17_20_23_39_42) # 0.0002017 ***
-# anova(lm8.3_4_13_17_20_23_39_42, lm10.3_4_13_15_17_20_23_39_42_65) # 0.004751 **
-# anova(lm8.3_4_13_17_20_23_39_42, lm10.3_4_13_15_17_20_23_39_42_78) # 0.004979 **
-# anova(lm8.3_4_13_17_20_23_39_42, lm10.3_4_8_13_17_18_20_23_39_42) # 0.005226 **
-# 
-# anova(lm10.3_4_8_13_15_17_20_23_39_42, lm9.3_4_13_15_17_20_23_39_42) # 0.002663 **
-# anova(lm10.3_4_13_15_17_20_23_39_42_65, lm9.3_4_13_15_17_20_23_39_42) # 0.09881 .
-# anova(lm10.3_4_13_15_17_20_23_39_42_78, lm9.3_4_13_15_17_20_23_39_42) # 0.1048
-# 
-# anova(lm10.3_4_7_8_13_17_20_23_39_42, lm9.3_4_8_13_17_20_23_39_42) # 0.02864 *
-# anova(lm10.3_4_8_13_15_17_20_23_39_42, lm9.3_4_8_13_17_20_23_39_42) # 0.002787 **
-# anova(lm10.3_4_8_13_17_18_20_23_39_42, lm9.3_4_8_13_17_20_23_39_42) # 0.1174
-# 
-# toptitdel_results_curated_20150208 <- toptitdel_results
-# 
-# detach(toptitdel)
-# 
+
+detach(toptitdel)
+
+
 
 
 ############################
@@ -702,8 +293,8 @@ ids = ids[-1] #ids of OTUs in toptitdel
 #Perform an exhaustive search for the best linear models with different numbers of parameters.
 #inGroup <- c(which(ids == "Otu00007"), which(ids == "Otu000020"), which(ids == "Otu00039"), which(ids == "Otu00013"), which(ids == "Otu00003"), which(ids == "Otu00015"), which(ids == "Otu00053"))
 inGroup <- c(NULL)
-outGroup <- c(which(ids == "Otu00006"))
-leaps.toptitdel.uncurated <- regsubsets(nextDayCFU ~ ., data=toptitdel, nbest=5, nvmax=18, force.in=inGroup, force.out=outGroup, really.big=T)
+outGroup <- NULL #c(which(ids == "Otu00006"))
+leaps.toptitdel.uncurated <- regsubsets(nextDayCFU ~ ., data=toptitdel, nbest=5, nvmax=16, force.in=inGroup, force.out=outGroup, really.big=T)
 
 leaps.toptitdel.uncurated.20150213 <- leaps.toptitdel.uncurated
 
@@ -802,6 +393,8 @@ lm9.3_4_8_13_15_17_20_23_39.rsqs <- RSQcomparisons(lm9.3_4_8_13_15_17_20_23_39.r
 toptitdel_results <- rbind(toptitdel_results, lm9.3_4_8_13_15_17_20_23_39.rsqs)
 
 toptitdel_results_uncurated_20150212 <- toptitdel_results
+
+
 
 
 library(plotrix)
