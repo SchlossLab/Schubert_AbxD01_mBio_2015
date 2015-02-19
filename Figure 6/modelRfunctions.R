@@ -6,10 +6,44 @@
 # Returns 
 # 
 #  
-#getModels <- function(regsubsetsObj, paramNum){}
+makeFormula <- function(x){ #this function will be used to convert combinations of OTUs in formula objects
+  as.formula(paste('nextDayCFU', paste(x, collapse=' + '), sep=' ~ '))
+}
 
+buildLM <- function(leaps.models, data, actual){ #for models of interest, after going through getModels
+  data_results <- NULL
+  for(i in 1:(dim(leaps.models)[1])){
+    x <- colnames(leaps.models)[which(leaps.models[i,1:(dim(leaps.models)[2]-4)]==1)]
+    formula <- makeFormula(x[-1])
+    linmodel <- lm(formula, data=data)
+    linearModels.results <- lm_Analysis_Tests(linmodel, actual)
+    linearModels.rsqs <- RSQcomparisons(linearModels.results, paste(x, collapse="_"))
+    data_results <- rbind(data_results, linearModels.rsqs)
+    
+  }
+  return(data_results)
+}
 
-rf.predict <- function(file, descr, rf.model) {
+buildAllLM <- function(all.leaps.models, data, actual){ #for models of interest, after going through getModels
+  data_results <- NULL
+  for(i in 1:(dim(all.leaps.models)[1])){
+    x <- colnames(all.leaps.models)[which(all.leaps.models[i,1:(dim(all.leaps.models)[2])]==TRUE)]
+    formula <- makeFormula(x[-1])
+    linmodel <- lm(formula, data=data)
+    linearModels.results <- lm_Analysis_Tests(linmodel, actual,plot.graph = FALSE)
+    linearModels.rsqs <- RSQcomparisons(linearModels.results, paste(x, collapse="_"))
+    data_results <- rbind(data_results, linearModels.rsqs)
+  }
+  return(data_results)
+}
+
+##########################################################################
+# Inputs 
+#  
+# Returns 
+# 
+#  
+rf.predict <- function(file, descr, rf.model, title) {
   file<-read.csv(file=file, header=T)
   file<-file[,-1] #new titration data only
   
@@ -31,7 +65,7 @@ rf.predict <- function(file, descr, rf.model) {
   rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
   
   #plot results
-  plot(results$actual, results$predict, main="RF, 1% relabund cutoff", ylab="Predicted Values", xlab="Actual Values")
+  plot(results$actual, results$predict, main=title, ylab="Predicted Values", xlab="Actual Values")
   mtext(paste(descr, "r^2 = ", signif(rsq, 3)), side=3, line=0)
   
   return(rsq)
@@ -220,9 +254,9 @@ RSQcomparisons <- function(model.results, model.name){
 # Returns a list of results from fitting the linear model to the topdose data 
 # and predicting the titration and delay data
 # Creates plots of actual values vs fitted or predicted values
-lm_Analysis_Tests <- function(model, actualVals){
+lm_Analysis_Tests <- function(model, actualVals, plot.graph=TRUE){
   
-  model.results <- lmTests(model) #returns a list
+  model.results <- lmTests(model, plot.graph = plot.graph) #returns a list
   fitted <- cbind( model.results$lm_fitted_values )
   residuals <- cbind( model.results$lm_residuals )
   rsq <- model.results$rsq_lm
@@ -232,9 +266,11 @@ lm_Analysis_Tests <- function(model, actualVals){
   
   #plot results of linear model
   fitted <- cbind( model.results[[2]] )
-  plot(actualVals[,1], fitted[,1], xlab="Actual Values", ylab="Fitted values", main=model$call)
-  mtext("Top Dose Data", side=3, line=0)
-  mtext(paste("Adj R^2 = ", signif(model.results[[1]], 3)), side=1, line=4)
+  if(plot.graph==TRUE){
+    plot(actualVals[,1], fitted[,1], xlab="Actual Values", ylab="Fitted values", main=paste(names(model$coefficients), collapse="+"))
+    mtext("Top Dose Data", side=3, line=0)
+    mtext(paste("Adj R^2 = ", signif(model.results[[1]], 3)), side=1, line=4)
+  }
   
   return(all.results)
 }
@@ -243,7 +279,7 @@ lm_Analysis_Tests <- function(model, actualVals){
 # Returns a list of results from fitting the linear model to the topdose data 
 # and predicting the ttitration and delay data
 # Creates plots for new data sets
-lmTests <- function(model){
+lmTests <- function(model, plot.graph = TRUE){
   
   model.anova <- anova(model)
   res<-residuals(model)
@@ -252,12 +288,12 @@ lmTests <- function(model){
   model.summary <- summary(model)
   rsq <- model.summary$adj.r.squared
   
-  model.results.td <- modelNewData(model, "Topdose Data", "~/Desktop/mothur/abxD01/model/shared.topdose.avg0.01.logtrans.csv")
+  model.results.td <- modelNewData(model, "Topdose Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv", plot.graph = plot.graph)
   
-  model.results.titration <- modelNewData(model, "Titration Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv")
+  model.results.titration <- modelNewData(model, "Titration Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv", plot.graph = plot.graph)
   #  colnames(model.results.titration) <- c(paste0(colnames(model.results.titration), "_titration"))
   
-  model.results.delay <- modelNewData(model, "Delay Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv")
+  model.results.delay <- modelNewData(model, "Delay Data", "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv", plot.graph = plot.graph)
   #   colnames(model.results.delay) <- c(paste0(colnames(model.results.delay), "_delay"))
   # 
   #   all.results <- cbind(model.results.titration, model.results.delay, rsq)
@@ -274,7 +310,7 @@ lmTests <- function(model){
 # newDataFile headings=Group, nextDayCFU, OtuX...etc; descr should be a description of the new data set the anlaysis is performed on
 # model should be a linear model, newDataFile = "~/Documents/blah/blah.csv", descr = "Titration Data"
 # Returns a results data frame, creates the plot of actual vs predicted values
-modelNewData <- function(model, descr, newDataFile ){
+modelNewData <- function(model, descr, newDataFile, plot.graph=TRUE ){
   
   titr<-read.csv(file=newDataFile, header=T)
   actual<-as.data.frame(titr[,2]) #save the actual results in new df
@@ -298,10 +334,12 @@ modelNewData <- function(model, descr, newDataFile ){
   rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
   
   #plot results
-  plot(results$actual, results$predict, main=model$call, ylab="Predicted Values", xlab="Actual Values")
-  mtext(descr, side=3, line=0)
-  mtext(paste("r^2 = ", signif(rsq, 3)), side=1, line=4)
-  
+  if(plot.graph==TRUE){
+    plot(results$actual, results$predict, main=paste(names(model$coefficients), collapse="+"), ylab="Predicted Values", xlab="Actual Values")
+    mtext(descr, side=3, line=0)
+    mtext(paste("r^2 = ", signif(rsq, 3)), side=1, line=4)
+  }  
+
   #Calculate the residuals and add them to the results df, ordering them by the magnitude of the residual
   resid <- (results$actual - results$predict)
   results <- cbind(results, resid)
