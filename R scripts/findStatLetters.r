@@ -1,10 +1,15 @@
 
 
-findStatLetters <- function(file, mavgs){
+findStatLetters <- function(file, otus, graphGroups){
 
-  otus <- dimnames(mavgs)[2][[1]]
   statLetter <- NULL
   statLetter <- matrix(c("NA"),nrow=3, ncol=length(otus))
+  
+  ind <- NULL
+  for(a in 1:(length(graphGroups))){
+    ind <- c(ind, which(file$expgroup==graphGroups[a]))
+  }
+  file <- file[ind,]
   
   for (i in 1:(length(otus))) {      
     results.wilcox <- pairwise.wilcox.test(file[,which(names(file)==otus[i])], file$expgroup, p.adj="BH")
@@ -14,11 +19,11 @@ findStatLetters <- function(file, mavgs){
     if(results.wilcox$p.value[1] == "NaN"){
       results.wilcox$p.value[1] <- 10 #a value greater than 0.05
     }
-    if(results.wilcox$p.value[1] == "NaN"){
-      results.wilcox$p.value[1] <- 10
+    if(results.wilcox$p.value[2] == "NaN"){
+      results.wilcox$p.value[2] <- 10
     }
-    if(results.wilcox$p.value[1] == "NaN"){
-      results.wilcox$p.value[1] <- 10
+    if(results.wilcox$p.value[4] == "NaN"){
+      results.wilcox$p.value[4] <- 10
     }
     
     if( results.wilcox$p.value[1] >= 0.05 ){

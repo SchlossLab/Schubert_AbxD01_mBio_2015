@@ -56,9 +56,11 @@ plot(numOTUxThreshold$numOTU ~ numOTUxThreshold$threshold, xlab="Avg % RelAbund 
 abline(v=seq(0,3, by=.1), col="light gray")
 abline(h=seq(1,300, by=10), col="light gray")
 
-perc.5 <- meanOTU[ , meanOTU[19,] >= .5 ]
+perc.875 <- meanOTU[ , meanOTU[19,] >= .875 ]
 
-write.table(perc.5, file="~/Desktop/mothur/abxD01/model/otusAbove0.5p.byGroup.txt", sep="\t")
+otus <- names(perc.875)[-(length(perc.875))]
+
+write.table(perc.875, file="~/Desktop/mothur/abxD01/model/otusAbove0.875p.byGroup.txt", sep="\t")
 
 
 

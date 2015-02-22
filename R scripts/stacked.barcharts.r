@@ -2,14 +2,14 @@
 #Purpose: Convert csv matrix of columns you want converted into barcharts
 #input: csv file following this heading format format:  sampleID, expgroup, (nextDayCFU,) Otu001, Otu002, Otu003, etc
 #ex:file<-read.csv("~/Desktop/mothur/abxD01/barcharts/abxD01.final.tx.5.subsample.relabund.topdose.forlogscale2.csv
-#Note: It is assumed that anything after the expgroup column are vectors containing data to be split by the groups in 'expgroup' 
+#Note: It is assumed that anything after the expgroup column are vectors containing data to be divide by the groups in 'expgroup' 
 #      and averaged with SD measured. 
 #Output: matrices avg[],  std[], bp[y] with the barplot coordinates info stored for each subgraph
 #################################################
 # Parameters to change, an example:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
-fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv", header=T)
+#file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
+#fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv", header=T)
 
 file <- "~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv"
 fileIDS <- "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv"
@@ -18,21 +18,15 @@ fileIDS <- "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.cs
 # abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
 # abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 graphLabels<-c("Cefoperazone", "Streptomycin", "Vancomycin")
-
-# If you want each OTU on the Y axis to be sorted by the most abundant phylum and then decreasing abundance within that phylum, change to TRUE
-# The default is false, which means sort be decreasing relative abundance in the top group (untreated/control)
 sortbyphyl<-TRUE
-
-# If you want individual graphs as each group (FALSE) or as phylums with each OTU (TRUE)
-# If you choose TRUE, then set sortbyphyl as TRUE too... IF you forget to change this it changes automatically in the code.
 graphbyphyl<-FALSE
+divide<-TRUE
 # file<-file[file$expgroup!="1untrVanc",]
 
 
-graphBeside <- TRUE
 # Highlight all and run!
 #################################################
-stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl, graphbyphyl, excludeGroups="") {
+stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl=TRUE, graphbyphyl=FALSE, excludeGroups="", divide=FALSE) {
   file<-read.csv(file=file, header=T)
   file<-file[file$expgroup!=excludeGroups,]
   
@@ -41,31 +35,32 @@ stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl, graphbyphyl
   
   if(graphbyphyl==TRUE)
   {
-    sortbyphyl=TRUE
+    sortbyphyl<-TRUE
   }
   
   id.info <- NULL
-  if(split == TRUE) {
+  if(divide == TRUE) {
     id.info <- file[,1:4]
-    file<-file[,-1] # get rid of the extra split column
+    file<-file[,-1] # get rid of the extra divide column in this filetype
+    
   }
 
   file<-file[,-1] #delete the first col of group names
   
   
-  avgs=NULL
+  avgs<-NULL
   avgs <-data.frame(levels(file$expgroup))
   colnames(avgs) <- c("expgroup")
-  stds=NULL
+  stds<-NULL
   stds <-data.frame(levels(file$expgroup))
   colnames(stds) <- c("expgroup")
-  SEs=NULL
+  SEs<-NULL
   SEs <-data.frame(levels(file$expgroup))
   colnames(SEs) <- c("expgroup")
   
   #Calculate average cdiff
-  avgCD=NULL
-  sdCD=NULL
+  avgCD<-NULL
+  sdCD<-NULL
   avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
   avgCD<-format(avgCD, scientific=TRUE, digits=2)
   sdCD<-tapply(file$nextDayCFU, file$expgroup, sd)
@@ -276,7 +271,6 @@ stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl, graphbyphyl
     
     numgr <- length(unique(file$expgroup))
     
-    
     ids<-data.frame(1:(totalOTU))
     
     for (i in 1:(length(ordered_avgs)-1)){
@@ -295,14 +289,10 @@ stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl, graphbyphyl
           #jtime<-rbind(jtime, j)
         }
       }
-      
     }
-    
     
     names(ids)<-c("x", "name")
     ids<-rbind(ids, data.frame(x=totalOTU+1, name= "Other"))
-    
-    
     
   }  #end if(sortbyphyl == FALSE){
   
@@ -317,7 +307,7 @@ stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl, graphbyphyl
   #####################################################################################################################
   #####################################################################################################################
   ###PLOT PARAMETERS
-  if(graphbyphyl==FALSE && split==FALSE){
+  if(graphbyphyl==FALSE && divide==FALSE){
     par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
     par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
     color_transparent <- adjustcolor("black", alpha.f = 0.1) 
@@ -431,11 +421,11 @@ stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl, graphbyphyl
         if(results.wilcox$p.value[1] == "NaN"){
           results.wilcox$p.value[1] <- 10 #a value greater than 0.05
         }
-        if(results.wilcox$p.value[1] == "NaN"){
-          results.wilcox$p.value[1] <- 10
+        if(results.wilcox$p.value[2] == "NaN"){
+          results.wilcox$p.value[2] <- 10
         }
-        if(results.wilcox$p.value[1] == "NaN"){
-          results.wilcox$p.value[1] <- 10
+        if(results.wilcox$p.value[4] == "NaN"){
+          results.wilcox$p.value[4] <- 10
         }
         
         if( results.wilcox$p.value[1] >= 0.05 ){
@@ -516,15 +506,15 @@ stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl, graphbyphyl
   
   ################################
   ###3rd PLOT PARAMETERS
-  if(split == TRUE){ 
+  if(divide == TRUE){ 
 
     mavgs <- mavgs[-which(grepl("untr", row.names(mavgs))),]
     matrix.se <- matrix.se[-which(grepl("untr", row.names(matrix.se))),]
     id.info <- id.info[-which(grepl("untr", id.info$expgroup)),]
     
-    barplotBeside(id.info = id.info, matrix.of.avgs = mavgs, matrix.of.se = matrix.se, ids = ids)
+    barplotBeside(id.info = id.info, matrix.of.avgs = mavgs, matrix.of.se = matrix.se, ids = ids, file=file)
     
-  } # if(split=TRUE){
+  } # if(divide=TRUE){
   
   
 }
