@@ -2,6 +2,151 @@
 
 ##########################################################################
 # Inputs 
+# Assumes the data input has columns "nextDayCFU  Otu1  Otu2 ..."
+#
+# Returns 
+# 
+#  
+RF.validate <- function(data, iters){
+  
+  numSamples <- dim(data)[1]
+  rsqs <- NULL
+  for(i in i:iters){
+    trainInd <- sample(1:(numSamples), (2/3*numSamples))
+    trainSet <- data[trainInd,]
+    testSet <- data[-trainInd,]
+    
+    
+    library(randomForest)
+    rf.trainSet <- randomForest(nextDayCFU~., 
+                                data = trainSet[,-1],  outscale=TRUE,
+                                importance=TRUE, proximity=TRUE,
+                                keep.forest=TRUE
+    )
+    
+    #plot(rf.trainSet)
+    #varImpPlot(rf.trainSet, type=1)
+    
+    plot.title <- "RF.model Validation: trained on 2/3 data, tested on 1/3"
+    rsqs <- c(rsqs,rf.predict(data=testSet, descr="rf.trainSet on Test Set Data", rf.model=rf.trainSet, title=plot.title, plotgraph = FALSE))
+  } #for(i in i:iters)
+  
+  c(mean(rsqs), sd(rsqs))
+  #data.frame(mean=mean(rsqs), sd=sd(rsqs))
+  
+}
+
+
+
+
+
+
+##########################################################################
+# Inputs 
+#  
+# Returns 
+# 
+#  
+RF.analysis <- function(dataFile, otus, plot.title){
+  
+  library(randomForest)
+  
+  all <- read.csv(file=dataFile, header=T)
+  leng <- dim(all)[2]
+  
+  cols<- NULL
+  for(i in 1:(length(otus))){
+   cols <-c(cols, which(names(all)==otus[i]))
+  }
+  
+  cols <- c(which(names(all)=="Group"), which(names(all)=="nextDayCFU"), cols)
+  
+  topdose <- all[1:99,cols]
+  toptit <- all[1:154,cols]
+  toptitdel <- all[,cols]
+    
+  
+  #fit the randomforest model
+  td.rf <- randomForest(nextDayCFU~., 
+                        data = topdose[,-1],  outscale=TRUE,
+                        importance=TRUE, proximity=TRUE,
+                        keep.forest=TRUE, ntree=5000
+  ) #assumes that the nexDayCFU column is right before the first Otu column
+  plot(td.rf)
+  
+  #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+  varImpPlot(td.rf, type=1)
+  #imp<-importance(td.rf)
+  #write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.topdose.avg0.01.txt", sep="\t", row.names=T, col.names=T)
+  
+  # function to give me the prediction results on each data set
+ # td <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv"
+ # titr <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv"
+ # delay <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv"
+  
+  td <- all[1:99,]
+  titr <- all[100:154,]
+  delay <- all[154:179,]
+
+  results <- data.frame(matrix(ncol=5, nrow=3))
+  row.names(results) <- c("topdose", "toptit", "toptitdel")
+  colnames(results) <- c("PercVarExpl","td", "titr", "delay", "withinValidate")
+
+  results[1,1] <- signif(td.rf$rsq[length(td.rf$rsq)],3)
+  results[1,2] <- signif(rf.predict(data=td, descr="td.rf on Topdose Data", rf.model=td.rf, title=plot.title),3)
+  results[1,3] <- signif(rf.predict(data=titr, descr="td.rf on Titration Data", rf.model=td.rf, title=plot.title),3)
+  results[1,4] <- signif(rf.predict(data=delay, descr="td.rf on Delay Data", rf.model=td.rf, title=plot.title),3)
+  results[1,5] <- signif(RF.validate(topdose, 100)[1],3)
+ 
+ 
+  ######## Now with the toptit data
+  #fit the randomforest model
+  rf.toptit <- randomForest(nextDayCFU~., 
+                            data = toptit[,-1],  outscale=TRUE,
+                            importance=TRUE, proximity=TRUE,
+                            keep.forest=TRUE, ntree=5000
+  )
+  plot(rf.toptit)
+ 
+  #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+  varImpPlot(rf.toptit, type=1)
+  imp<-importance(rf.toptit)
+  #write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.01.txt", sep="\t", row.names=T, col.names=T)
+    
+  results[2,1] <- signif(rf.toptit$rsq[length(rf.toptit$rsq)],3)  
+  results[2,2] <- signif(rf.predict(data=td, descr="rf.toptit on Topdose Data", rf.model=rf.toptit, title=plot.title),3)
+  results[2,3] <- signif(rf.predict(data=titr, descr="rf.toptit on Titration Data", rf.model=rf.toptit, title=plot.title),3)
+  results[2,4] <- signif(rf.predict(data=delay, descr="rf.toptit on Delay Data", rf.model=rf.toptit, title=plot.title), 3)
+  results[2,5] <- signif(RF.validate(toptit, 100)[1],3)
+ 
+  
+  ######## Now with the toptitdel data
+  #fit the randomforest model
+  rf.toptitdel <- randomForest(nextDayCFU~., 
+                               data = toptitdel[,-1],  outscale=TRUE,
+                               importance=TRUE, proximity=TRUE,
+                               keep.forest=TRUE, ntree=5000
+  )
+  plot(rf.toptitdel)
+  
+  #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
+  varImpPlot(rf.toptitdel, type=1)
+  #imp<-importance(rf.toptitdel)
+  #write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.0.5p.txt", sep="\t", row.names=T, col.names=T)
+  
+  results[3,1] <- signif(rf.toptitdel$rsq[length(rf.toptitdel$rsq)],3)
+  results[3,2] <- signif(rf.predict(data=td, descr="rf.toptitdel on Topdose Data", rf.model=rf.toptitdel, title=plot.title), 3)
+  results[3,3] <- signif(rf.predict(data=titr, descr="rf.toptitdel on Titration Data", rf.model=rf.toptitdel, title=plot.title), 3)
+  results[3,4] <- signif(rf.predict(data=delay, descr="rf.toptitdel on Delay Data", rf.model=rf.toptitdel, title=plot.title), 3)
+  results[3,5] <- signif(RF.validate(toptitdel, 100)[1],3)
+  
+ return(results)
+}  
+
+
+
+##########################################################################
+# Inputs 
 #  
 # Returns 
 # 
@@ -39,16 +184,24 @@ buildAllLM <- function(all.leaps.models, data, actual){ #for models of interest,
 
 ##########################################################################
 # Inputs 
-#  
+# Assumes the data input comes in with "Groups  nextDayCFU  Otu..." headers 
+#
+#
 # Returns 
 # 
 #  
-rf.predict <- function(file, descr, rf.model, title) {
-  file<-read.csv(file=file, header=T)
-  file<-file[,-1] #new titration data only
+rf.predict <- function(file=FALSE, data=NULL, descr, rf.model, title, plotgraph=TRUE) {
+  if(file){
+    file<-read.csv(file=file, header=T)
+  } else{
+    file <- data 
+  }
+  file<-file[,-1] #take off groups column
+  
+  Otu1Col <- min(which(grepl("Otu",names(file))))
   
   #predict the outcome of the testing data
-  predictions <- predict(rf.model, newdata=file[ ,-1])
+  predictions <- predict(rf.model, newdata=file[ ,(Otu1Col:(dim(file)[2]))])
   
   # what is the proportion variation explained in the outcome of the testing data?
   # i.e., what is 1-(SSerror/SStotal)
@@ -65,8 +218,11 @@ rf.predict <- function(file, descr, rf.model, title) {
   rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
   
   #plot results
-  plot(results$actual, results$predict, main=title, ylab="Predicted Values", xlab="Actual Values")
-  mtext(paste(descr, "r^2 = ", signif(rsq, 3)), side=3, line=0)
+  if(plotgraph==TRUE){
+    plot(results$actual, results$predict, main=title, ylab="Predicted Values", xlab="Actual Values")
+    mtext(paste(descr, "r^2 = ", signif(rsq, 3)), side=3, line=0)
+    abline(a=0, b=1, col="red")
+  }
   
   return(rsq)
   
