@@ -7,26 +7,19 @@
 #Output: matrices avg[],  std[], bp[y] with the barplot coordinates info stored for each subgraph
 #################################################
 # Parameters to change, an example:
-# CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.0001, expgroups #'d by graph order & sorted by first graph)
-#file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
-#fileIDS<-read.csv("~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv", header=T)
+# CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.001, expgroups #'d by graph order & sorted by first graph)
 
 file <- "~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv"
 fileIDS <- "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv"
-
-# Y Labels for each graph: 
-# abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
-# abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 graphLabels<-c("Cefoperazone", "Streptomycin", "Vancomycin")
 sortbyphyl<-TRUE
 graphbyphyl<-FALSE
 divide<-TRUE
-# file<-file[file$expgroup!="1untrVanc",]
 
 
 # Highlight all and run!
 #################################################
-stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl=TRUE, graphbyphyl=FALSE, excludeGroups="", divide=FALSE) {
+stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, graphbyphyl=FALSE, excludeGroups="", divide=FALSE) {
   file<-read.csv(file=file, header=T)
   file<-file[file$expgroup!=excludeGroups,]
   
@@ -516,12 +509,6 @@ stackedbarcharts <- function(file, fileIDS, graphLabels, sortbyphyl=TRUE, graphb
     
   } # if(divide=TRUE){
   
-  
 }
-###END 2ND PLOT PARAMETERS
 
 
-
-
-##############END CODE###########################
-#################################################
