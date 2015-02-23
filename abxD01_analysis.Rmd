@@ -194,7 +194,7 @@ This results in the file called "abxD01.final.an.unique_list.0.03.topdose2.theta
 
 ## Figure 2
 
-This figure shows the correlation analysis of bacterial species present on Day 0 with *C. difficile* levels on Day 1. 
+This figure shows the correlation analysis of bacterial species present on Day 0 with *C. difficile* levels on Day 1 using the original set of antibiotic groups. 
 
 ### Figure 2: Correlation Calculations
 
@@ -202,7 +202,7 @@ Before we get to how this graph was made, we first used an R script to calculate
 
 The required file is located on Github.
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 
 meta <- read.table('~/Documents/Github/abxD01/Figure 2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.txt',header=T)
 #meta<-meta[1:96] #change based on number of OTUs above .05%, then add 2 for first two cols
@@ -228,18 +228,17 @@ results = NULL
 results <- matrix(c(otu, cor.spear, pval.spear, cor.ken, pval.ken), ncol=5)
 colnames(results) <- c('otu','corSpear','pvalSpear', "corKen", "pvalKen")
 results <- results[order(results[,3]),]  #order by pvalue column=3
-write.table(results[1:dim(results)[1],], file="~/Documents/Github/abxD01/Figure 2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.results.txt", sep="\t", row.names=FALSE)
+#write.table(results[1:dim(results)[1],], file="~/Documents/Github/abxD01/Figure 2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.results.txt", sep="\t", row.names=FALSE)
+print(results[1:dim(results)[1],])
 
 ```
 
 
 ### Figure 2: Stipchart
 
-This figure shows correlation values for OTUs with next day *C. difficile* CFU levels calculated across the original set of antibiotic experiments. 
-
 Necessary files are on github, and it was made using the following code: 
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 
 ##Paper Figure: correlations for topdose 
 otuCorrs<-read.csv("~/Documents/Github/abxD01/Figure 2/corr_avgAbove0.001_topdose2_stripchart.csv", header=T)
@@ -264,199 +263,44 @@ Figure saved as "corr_avgAbove0.001_topdose2_10x10.pdf".
 
 ## Figure 3
 
-### Figure 3: Barchart
-
 This figure shows the effect of titrating antibiotics on the community as well as the resulting *C. difficile* levels.  
 
-The code for this is the script "stacked.barcharts.r" which contains the stackedbarcharts() function in the paper's home Github directory. Opening this file, the parameters I changed in the top were:
-```{r, eval=FALSE}
-setwd("/Users/alyxschubert/Documents/Github/abxD01/")
-
-abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
-stackedbarcharts(file = "./Figure 3/abxD01.final.tx.2.subsample.allceftitr.forlogscale.csv", fileIDS = "./Figure 3/allceftitr_tx2_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = TRUE, excludeGroups = "1untrCef")
-
-abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
-stackedbarcharts(file = "./Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", fileIDS = "./Figure 3/allstreptitr_tx2_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = TRUE, excludeGroups = "1untrStrep")
-
-abx<-c("5 mg/ml", "0.5 mg/ml", "0.1 mg/ml")
-stackedbarcharts(file = "./Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", fileIDS = "./Figure 3/allvanctitr_tx2_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = TRUE, excludeGroups = "1untrVanc")
-
-
-```
+### Figure 3: Barchart
 
 The file/fileIDS should be matched by the titration.
 Input files on github:
-1. abxD01.final.tx.2.subsample.allceftitr.forlogscale.csv
-2. abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv
-3. abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv
-4. allceftitr_tx2_barchart_ids.csv
-5. allstreptitr_tx2_barchart_ids.csv
-6. allvanctitr_tx2_barchart_ids.csv
+1. abxD01.final.tx.2.subsample.alltitrations.forlogscale.csv
+2. alltitrations_tx2_barchart_ids.csv
 
-For this graph I decided to take out the untreated communities to highlight the differences among titration groups. So in r I changed the file a bit:
+Uses functions in R scripts folder: stacked.barcharts.r, findStatLetters.r, barplotBeside.r
 
-```{r, eval=FALSE}
-file<-file[file$expgroup!="1untrStrep",]
-#alternatively for the other titrated antibiotics it's "1untrCef", or "1untrVanc"
+```{r, eval=TRUE}
+
+stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv", divide = TRUE)
+
 ```
 
 ### Figure 3: Statistics
 
 For comparison of the CFU's among titration groups: 
 ```{r, eval=TRUE}
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
-file<-file[file$expgroup!="1untrStrep",]
-avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
-strep_avgCD<-format(avgCD, scientific=TRUE, digits=2)
+file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
+file<-file[!grepl("untr", file$expgroup),]
 file$nextDayCFU <- log10(file$nextDayCFU+1)
-#kruskal.test(file$nextDayCFU ~ file$expgroup)
-# p < 0.0001
-#strep_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
-# all significantly different
-strep.aov<-aov(file$nextDayCFU ~ file$expgroup)
-anova(strep.aov)
-#TukeyHSD(strep.aov)
-strep_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
-print(strep_ttest)
-# all significantly different
 
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allceftitr.forlogscale.csv", header=T)
-file<-file[file$expgroup!="1untrCef",]
-avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
-cef_avgCD<-format(avgCD, scientific=TRUE, digits=2)
-file$nextDayCFU <- log10(file$nextDayCFU+1)
-#kruskal.test(file$nextDayCFU ~ file$expgroup)
-# p = 0.003
-#cef_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
-# mid and low dose not different, but high different than mid and low
-cef.aov<-aov(file$nextDayCFU ~ file$expgroup)
-anova(cef.aov)
-#TukeyHSD(cef.aov)
-cef_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
-print(cef_ttest)
-# all significantly different
+cef <- file[file$abx=="Cefoperazone", 3:4]
+strep <- file[file$abx=="Streptomycin", 3:4]
+vanc <- file[file$abx=="Vancomycin", 3:4]
 
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
-file<-file[file$expgroup!="1untrVanc",]
-avgCD<-tapply(file$nextDayCFU, file$expgroup, mean)
-vanc_avgCD<-format(avgCD, scientific=TRUE, digits=2)
-file$nextDayCFU <- log10(file$nextDayCFU+1)
-#kruskal.test(file$nextDayCFU ~ file$expgroup)
-# p = 0.0016
-#vanc_CFU_wilcox <- pairwise.wilcox.test(file$nextDayCFU, file$expgroup, p.adj="BH")
-# mid and low dose not different, but high different than mid and low
-vanc.aov<-aov(file$nextDayCFU ~ file$expgroup)
-anova(vanc.aov)
-#TukeyHSD(vanc.aov)
-vanc_ttest <- pairwise.t.test(file$nextDayCFU, file$expgroup, p.adjust="BH")
-print(vanc_ttest)
-# mid and low dose not different, but high different than mid and low
+diffs <- function(data){
+  data.aov<-aov(data$nextDayCFU ~ data$expgroup)
+  anova(data.aov)
+  pairwise.t.test(data$nextDayCFU, data$expgroup, p.adjust="BH")
+}
 
-```
-
-
-
-For comparisons between family-level phylotypes:
-Performed inside abxD01.barcharts.xOTU.test.r
-```{r, eval=FALSE}
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allstreptitr.forlogscale.csv", header=T)
-file<-file[file$expgroup!="1untrStrep",]
-kruskal.test(file$Otu001 ~ file$expgroup)
-kruskal.test(file$Otu003 ~ file$expgroup)
-kruskal.test(file$Otu002 ~ file$expgroup)
-kruskal.test(file$Otu005 ~ file$expgroup)
-kruskal.test(file$Otu004 ~ file$expgroup)
-kruskal.test(file$Otu014 ~ file$expgroup)
-kruskal.test(file$Otu006 ~ file$expgroup)
-kruskal.test(file$Otu007 ~ file$expgroup)
-kruskal.test(file$Otu009 ~ file$expgroup)
-kruskal.test(file$Otu015 ~ file$expgroup)
-kruskal.test(file$Otu017 ~ file$expgroup)
-kruskal.test(file$Other ~ file$expgroup)
-
-test <- pairwise.wilcox.test(file$Otu001, file$expgroup, p.adj="BH")
-comparisons <- length(test$p.value[]) - sum(is.na(test$p.value))
-
-
-pairwise.wilcox.test(file$Otu003, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu005, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu002, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu004, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu014, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu006, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu007, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu009, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu015, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu017, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Other, file$expgroup, p.adj="BH")
-
-
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allvanctitr.forlogscale.csv", header=T)
-file<-file[file$expgroup!="1untrVanc",]
-kruskal.test(file$Otu001 ~ file$expgroup)
-kruskal.test(file$Otu002 ~ file$expgroup)
-kruskal.test(file$Otu003 ~ file$expgroup)
-kruskal.test(file$Otu005 ~ file$expgroup)
-kruskal.test(file$Otu004 ~ file$expgroup)
-kruskal.test(file$Otu014 ~ file$expgroup)
-kruskal.test(file$Otu006 ~ file$expgroup)
-kruskal.test(file$Otu007 ~ file$expgroup)
-kruskal.test(file$Otu008 ~ file$expgroup)
-kruskal.test(file$Otu019 ~ file$expgroup)
-kruskal.test(file$Otu018 ~ file$expgroup)
-kruskal.test(file$Otu017 ~ file$expgroup)
-kruskal.test(file$Other ~ file$expgroup)
-
-pairwise.wilcox.test(file$Otu001, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu003, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu005, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu002, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu004, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu014, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu006, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu007, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu008, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu019, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu018, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu017, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Other, file$expgroup, p.adj="BH")
-
-
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx.2.subsample.allceftitr.forlogscale.csv", header=T)
-file<-file[file$expgroup!="1untrCef",]
-kruskal.test(file$Otu001 ~ file$expgroup)
-kruskal.test(file$Otu002 ~ file$expgroup)
-kruskal.test(file$Otu003 ~ file$expgroup)
-kruskal.test(file$Otu005 ~ file$expgroup)
-kruskal.test(file$Otu004 ~ file$expgroup)
-kruskal.test(file$Otu014 ~ file$expgroup)
-kruskal.test(file$Otu006 ~ file$expgroup)
-kruskal.test(file$Otu007 ~ file$expgroup)
-kruskal.test(file$Otu008 ~ file$expgroup)
-kruskal.test(file$Otu009 ~ file$expgroup)
-kruskal.test(file$Otu019 ~ file$expgroup)
-kruskal.test(file$Otu018 ~ file$expgroup)
-kruskal.test(file$Otu016 ~ file$expgroup)
-kruskal.test(file$Otu024 ~ file$expgroup)
-kruskal.test(file$Otu011 ~ file$expgroup)
-kruskal.test(file$Other ~ file$expgroup)
-
-pairwise.wilcox.test(file$Otu001, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu003, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu005, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu002, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu004, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu014, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu006, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu007, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu008, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu009, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu011, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu019, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu018, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu016, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Otu024, file$expgroup, p.adj="BH")
-pairwise.wilcox.test(file$Other, file$expgroup, p.adj="BH")
+diffs(cef)
+diffs(strep)
+diffs(vanc)
 
 ```
 
@@ -521,8 +365,8 @@ print(model_tx2)
 #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
 par(mfrow=c(1, 1)) 
 varImpPlot(model_tx2, type=1)
-imp<-importance(model_tx2)
-most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
+#imp<-importance(model_tx2)
+#most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
 ```
 
 
