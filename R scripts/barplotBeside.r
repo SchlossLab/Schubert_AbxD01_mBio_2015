@@ -14,7 +14,7 @@ barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file){
   par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
   par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
   color_transparent <- adjustcolor("black", alpha.f = 0.2) 
-  color <- gray.colors(3, start=0, end=1, alpha=NULL)
+  color <- gray.colors(3, start=0.2, end=1, alpha=NULL)
 
   for(j in 1:numgr){
     
