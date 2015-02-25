@@ -276,7 +276,7 @@ Uses functions in R scripts folder: stacked.barcharts.r, findStatLetters.r, barp
 
 ```{r, eval=TRUE}
 
-stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv", divide = TRUE)
+stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv", excludeGroup="untr", divide = TRUE)
 
 ```
 
@@ -342,6 +342,8 @@ Each row in this heatmap represents a single OTU. The side colors show broad tax
 
 ## Figure 5
 
+This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole.
+
 ### Figure 5: Random Forest Analysis
 
 Performed RF analysis on family level phylotypes:
@@ -367,6 +369,9 @@ par(mfrow=c(1, 1))
 varImpPlot(model_tx2, type=1)
 #imp<-importance(model_tx2)
 #most.imp<-rownames(imp[order(imp[, "%IncMSE"], decreasing=T)[1:17],])
+
+
+
 ```
 
 
@@ -374,8 +379,20 @@ varImpPlot(model_tx2, type=1)
 
 This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole. The figure is shown as a pdf on github.
 
-Input files found on github:
-1. abxD01.final.tx.2.subsample.2.metro.relabund.D0s.csv
+The file/fileIDS should be matched.
+Input files on github folder Figure 5:
+1. abxD01.final.tx.2.subsample.alldelay.forlogscale.csv
+2. alldelay_tx2_barchart_ids.csv
+
+Uses functions in R scripts folder: stacked.barcharts.r, findStatLetters.r, barplotBeside.r
+
+```{r, eval=TRUE}
+
+stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.alldelay.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 5/alldelay_tx2_barchart_ids.csv", divide = TRUE)
+
+```
+
+
 
 ```{r, eval=FALSE}
 #First calculating:
