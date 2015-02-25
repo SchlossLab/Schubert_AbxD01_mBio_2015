@@ -1,3 +1,7 @@
+
+
+
+
 # ############################
 # # Random forest models 2/20/15, using otus=50 (0.875% cutoff) 
 # ############################
@@ -59,18 +63,261 @@ otusAtPercAbund <- function(percThresh, meanOTU){
   return(otus)
 }
 
-otus <- otusAtPercAbund(1, meanOTU)
-
-rf.results<-RF.analysis(dataFile = "~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.toptitdel.noNewUntr.logtrans.filter16mintot.grouped.csv", 
-            otus = otus, plot.title = paste("RF model, 1% cutoff relabund otus=", length(otus)))
-
-rf.results.perc5 <- rf.results
-# rf.results.0.875perc
-# rf.results.0.9perc
+perc<-1
+otus <- otusAtPercAbund(perc, meanOTU)
+dataFile <- "~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.toptitdel.noNewUntr.logtrans.filter16mintot.grouped.csv"
+rf.results<-RF.analysis(dataFile=dataFile, 
+            otus = otus, plot.title = paste0("RF model, ", perc, "% cutoff relabund otus=", length(otus)))
+rf.results.perc1  <- rf.results
+write.table(rf.results.perc1, file="~/Desktop/mothur/abxD01/rf/rfmodels.results.1percent.txt", sep="\t", row.names=T, col.names=T)
 # rf.results.perc1
 # rf.results.perc1.5
-# rf.results.perc3
+# rf.results.perc3, has otu3, but not otu 39
 # rf.results.perc.5
+# rf.results.perc5, doesn't contain otu3 or otu39
+# rf.results.perc2, has both otu3 and 39
+
+all <- read.csv(file=dataFile, header=T)
+
+cols<- NULL
+for(i in 1:(length(otus))){
+  cols <-c(cols, which(names(all)==otus[i]))
+}
+cols <- c(which(names(all)=="Group"), which(names(all)=="nextDayCFU"), cols)
+
+topdose <- all[1:99,cols]
+titr <- all[100:153,cols]
+del <- all[154:179, cols]
+toptit <- all[1:153,cols]
+titdel <- all[c(100:153, 154:179),cols]
+topdel <- all[c(1:99, 154:179),cols]
+toptitdel <- all[,cols]
+
+tdOTUs <- c("Otu00007", "Otu00003", "Otu00015")
+titrOTUs <- c("Otu00003", "Otu00013", "Otu00020")
+delOTUs <- c("Otu00003", "Otu00039")
+
+allcombos <- function(otuPool, data, dataName){
+  resultsAll <- data.frame(matrix(ncol=5, nrow=0))
+  colnames(resultsAll) <- c("model", "PercVarExpl", "rsq_td", "rsq_titr", "rsq_delay") 
+  for(i in 1:(length(otuPool))){
+    combos <- combn(otuPool, i)
+    results <- data.frame(matrix(ncol=5, nrow=dim(combos)[2]))
+    colnames(results) <- c("model", "PercVarExpl", "rsq_td", "rsq_titr", "rsq_delay")
+    for(j in 1:dim(combos)[2]){
+      formula <- makeFormula(combos[,j])
+      subsets.rf <- randomForest(formula, 
+                                 data = data,  outscale=TRUE,
+                                 importance=TRUE, proximity=TRUE,
+                                 keep.forest=TRUE, ntree=5000
+      )
+      #varImpPlot(subsets.rf, type=1)
+      results[j,1] <- paste0(combos[,j], collapse="_")
+      results[j,2] <- signif(subsets.rf$rsq[length(subsets.rf$rsq)],3)
+      results[j,3] <- signif(rf.predict(data=topdose, descr=paste0(results[j,1]," model on Topdose Data"), rf.model=subsets.rf, title=paste0("RF model trained on ", dataName)),3) 
+      results[j,4] <- signif(rf.predict(data=titr, descr=paste0(results[j,1]," model on Titration Data"), rf.model=subsets.rf, title=paste0("RF model trained on ", dataName)),3)
+      results[j,5] <- signif(rf.predict(data=del, descr=paste0(results[j,1]," model on Delay Data"), rf.model=subsets.rf, title=paste0("RF model trained on ", dataName)),3)
+    }
+    resultsAll <- rbind(resultsAll, results)  
+  }
+  return(resultsAll)
+}
+
+topdose.topSubsets <- allcombos(tdOTUs, topdose, "Topdose")
+titration.topSubsets <- allcombos(titrOTUs, titr, "Titration")
+delay.topSubsets <- allcombos(delOTUs, del, "Delay")
+
+topOTUs <- c("Otu00003", "Otu00039", "Otu00013", "Otu00017", "Otu00020", "Otu00023")
+poop2 <- allcombos(topOTUs, toptitdel, "All Data")
+poop2[order(poop2$rsq_delay, decreasing = TRUE),]
+write.table(poop2, file= "~/Desktop/mothur/abxD01/rf/subsetToptitdel_models_results2.txt", sep="\t", row.names=FALSE)
+
+test3.39 <- toptitdel[,c("Group","nextDayCFU","Otu00003", "Otu00039")]
+RF.validate(data = test3.39, iters=100)
+# 0.79946012 0.05804047for mean and sd, respectively
+
+toptitdel.rf <- randomForest(nextDayCFU ~ ., 
+                           data = toptitdel[,-1],  outscale=TRUE,
+                           importance=TRUE, proximity=TRUE,
+                           keep.forest=TRUE, ntree=5000
+)
+print(toptitdel.rf)
+plot(toptitdel.rf)
+varImpPlot(toptitdel.rf, type=1)
+imp<-importance(toptitdel.rf)
+imp<-imp[order(imp[,1], decreasing = TRUE),]
+topimp<- imp[1:15,]
+write.table(topimp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importance.txt", sep="\t", row.names=TRUE)
+
+#Plot importance Plot
+topimp<-topimp[order(topimp[,1], decreasing=FALSE),]
+ids <- read.csv(file = "~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importance.ids.csv", header = TRUE)
+#ids <- ids[order]
+labels<- paste0(ids$name, " (", ids$otuname, ")")
+par(mfrow=c(1, 1)) #+1 to give extra labeling space
+par(mar=c(5, 15, 0.5, 2) +0.1, mgp=c(3, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+plot(topimp[,1], 1:15, xlab="% Increase in Mean Squared Error", yaxt="n", ylab="", pch=16, cex=1.5, xlim=c(20, 80))
+axis(2, at = c(1:15), labels = labels, las=1, cex.axis=.9 )
+abline(h=c(1:15), lty="dashed", col='black')
+
+# rf.predict(data=topdose, descr=paste0(row.names(results)[i]," model on Topdose Data"), rf.model=toptitdel.rf, title=plot.title)
+# signif(rf.predict(data=titr, descr=paste0(row.names(results)[i]," model on Titration Data"), rf.model=toptitdel.rf, title=plot.title),3)
+# signif(rf.predict(data=del, descr=paste0(row.names(results)[i]," model on Delay Data"), rf.model=toptitdel.rf, title=plot.title),3)
+
+predictions <- predict(toptitdel.rf, newdata=toptitdel[,-c(1,2)])
+actual <- toptitdel$nextDayCFU
+expgroup<- as.character(all[,2])
+results<-as.data.frame(cbind(actual, predictions))
+colnames(results) <- c( "actual", "predict")
+
+ybar <- apply(results, 2, mean)
+num<-sum((results$actual-ybar["actual"])*(results$predict-ybar["predict"]))
+denA <- sum((results$actual-ybar["actual"])^2)
+denB <- sum((results$predict-ybar["predict"])^2)
+rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
+
+results <- cbind(expgroup, results)
+
+
+#Plot observed vs predicted
+#information for plotting
+color<-rainbow(7)
+colors <- c(control = "black",
+          cipro = color[1],
+          clinda = "#FFCC00",
+          vanc.625 = "#00CC00",
+          vanc.3 = "#00CC00",
+          vanc.1 = "#00CC00",
+          strep5 = "#33FFFF",
+          strep.5 = "#33FFFF",
+          strep.1 = "#33FFFF",
+          cef.5 = color[5],
+          cef.3 = color[5],
+          cef.1 = color[5],
+          amp.5 = color[6],
+          amp.5d = color[6],
+          metro1 = color[7],
+          metro1d = color[7])
+
+# topdose is all circles, middle dose is square, 
+# low dose is upward pointing triangle, delayed is starburst
+pch <- c(control = 1,
+         cipro = 16,
+         clinda = 16,
+         vanc.625 = 16,
+         vanc.3 = 15,
+         vanc.1 = 17,
+         strep5 = 16,
+         strep.5 = 15,
+         strep.1 = 17,
+         cef.5 = 16,
+         cef.3 = 15,
+         cef.1 = 17,
+         amp.5 = 16,
+         amp.5d = 8,
+         metro1 = 16,
+         metro1d = 8)
+
+#these are needed for the legend
+legend.labels <- c(control = "Control",
+            cipro = "Ciprofloxacin",
+            clinda = "Clindamycin",
+            vanc.625 = "Vancomycin High",
+            vanc.3 = "Vancomycin Medium",
+            vanc.1 = "Vancomycin Low",
+            strep5 = "Streptomycin High",
+            strep.5 = "Streptomycin Medium",
+            strep.1 = "Streptomycin Low",
+            cef.5 = "Cefoperazone High",
+            cef.3 = "Cefoperazone Medium",
+            cef.1 = "Cefoperazone Low",
+            amp.5 = "Ampicillin",
+            amp.5d = "Ampicillin +5D",
+            metro1 = "Metronidazole",
+            metro1d = "Metronidazole +5D")
+
+treatments <- c(control = "Control",
+            cipro = "Ciprofloxacin",
+            clinda = "Clindamycin",
+            vanc.625 = "Vancomycin High",
+            vanc.3 = "Vancomycin Medium",
+            vanc.1 = "Vancomycin Low",
+            strep5 = "Streptomycin High",
+            strep.5 = "Streptomycin Medium",
+            strep.1 = "Streptomycin Low",
+            cef.5 = "Cefoperazone High",
+            cef.3 = "Cefoperazone Medium",
+            cef.1 = "Cefoperazone Low",
+            amp.5 = "Ampicillin",
+            amp.5d = "Ampicillin +5D",
+            metro1 = "Metronidazole",
+            metro1d = "Metronidazole +5D")
+
+par(mfrow=c(1, 1)) 
+par(mar=c(5, 5, 4, 2) +0.1, mgp=c(3, 1, 0), las=1) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+plot(results[results[,1]=="control",2], 
+     results[results[,1]=="control",3], 
+     main="", 
+     ylab=expression(paste("Predicted Log ", italic("C. difficile"), " Values")), 
+     xlab=expression(paste("Actual Log ", italic("C. difficile"), " Values")), 
+     ylim=c(0,9), xlim=c(0,9), xaxt='n', yaxt='n', cex=1.5)
+mtext(bquote("r"^"2" ~ " = " ~ .(signif(rsq, 3))), side=3, line=0)
+abline(a=0, b=1, lty="dashed", lwd=2, col="black")
+axis(1, at = c(0:9), labels=c(0:9))
+axis(2, at = c(0:9), labels=c(0:9))
+
+
+for(i in 2:(length(legend.labels))){
+  points(results[results[,1]==names(legend.labels)[i],2], 
+         results[results[,1]==names(legend.labels)[i],3], 
+         col=colors[i], pch=pch[i], cex=1.5)
+}
+legend("bottomright", inset= .07, legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=.6, bty="n")
+
+
+par(mfrow=c(1, 1)) 
+par(mar=c(5, 5, 4, 2) +0.1, mgp=c(3, 1, 0), las=1) 
+
+otu <- "Otu00003"
+pretty_otus <- gsub("Otu0*", "OTU ", otu)
+
+
+corrs<-read.csv(file="~/Desktop/mothur/abxD01/correlation/toptitdel.correlation.impOTUs.csv", header=TRUE)
+corrs <- corrs[1:8,]
+otunames <-  row.names(topimp)[15:8]
+otulabels <- labels[15:8]
+graphOTUxCD(otunames, otulabels, corrs)
+
+
+
+###Correlation for toptitdel against cdiff cfu
+c<-1
+otu <- c()
+cor.spear <- c()
+pval.spear <- c()
+cor.ken <- c()
+pval.ken <- c()
+for(i in 3:length(toptitdel)){
+  otu[c] <- colnames(toptitdel[i])
+  cor.spear[c] <- cor.test(toptitdel[,2],toptitdel[,i], method="spearman")$estimate
+  pval.spear[c] <- cor.test(toptitdel[,2],toptitdel[,i], method="spearman")$p.value
+  cor.ken[c] <- cor.test(toptitdel[,2],toptitdel[,i], method="kendall")$estimate #good to see because kendall handles ties
+  pval.ken[c] <- cor.test(toptitdel[,2],toptitdel[,i], method="kendall")$p.value #but only works if this is tao-b and not tao-a which im not sure about
+  c <- c+1
+}
+pval.spear<-p.adjust(pval.spear, method='BH') #adjust for multiple comparisons
+pval.ken<-p.adjust(pval.ken, method='BH') #adjust for multiple comparisons
+
+results = NULL
+results <- matrix(c(otu, cor.spear, pval.spear, cor.ken, pval.ken), ncol=5)
+colnames(results) <- c('otu','corSpear','pvalSpear', "corKen", "pvalKen")
+results <- results[order(results[,3]),]  #order by pvalue column=3
+write.table(results[1:dim(results)[1],], file="~/Desktop/mothur/abxD01/correlation/toptidel.1p.correl.txt", sep="\t", row.names=FALSE)
+print(results[1:dim(results)[1],])
+
+
+
+
 
 # ############################
 # # Random forest models 2/20/15, using otus=57 (0.75% cutoff) 
