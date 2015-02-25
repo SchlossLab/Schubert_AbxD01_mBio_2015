@@ -2,7 +2,7 @@
 
 ##########################################################################
 # Inputs 
-# Assumes the data input has columns "nextDayCFU  Otu1  Otu2 ..."
+# Assumes the data input has columns "Group nextDayCFU  Otu1  Otu2 ..."
 #
 # Returns 
 # 
@@ -27,7 +27,7 @@ RF.validate <- function(data, iters){
     #plot(rf.trainSet)
     #varImpPlot(rf.trainSet, type=1)
     
-    plot.title <- "RF.model Validation: trained on 2/3 data, tested on 1/3"
+   # plot.title <- "RF.model Validation: trained on 2/3 data, tested on 1/3"
     rsqs <- c(rsqs,rf.predict(data=testSet, descr="rf.trainSet on Test Set Data", rf.model=rf.trainSet, title=plot.title, plotgraph = FALSE))
   } #for(i in i:iters)
   
@@ -36,10 +36,77 @@ RF.validate <- function(data, iters){
   
 }
 
+##########################################################################
+# Inputs 
+# Assumes the data input has columns "nextDayCFU  Otu1  Otu2 ..."
+#
+# Returns 
+# 
+#  
 
-
-
-
+graphOTUxCD <- function(otus, labels, corrs){
+  
+  par(mar=c(0.5,0.5,0.5,0.5))
+  design <- matrix(1:8, nrow=4, byrow=T)
+  design <- cbind(c(9,9,9,9), design)
+  design <- rbind(design, c(0,10,10))
+  design <- cbind(design,c(11, 11, 11, 11, 0))
+  layout(design, widths=c(0.2,1,1, .5), heights=c(1,1, 1, 1,0.3))
+  
+  for(i in 1:(length(otus))){
+    
+    otulog <- toptitdel[,otus[i]]
+    otulog <- otulog/1625
+    zeroes <- otulog == 0
+    x_zeroes <- runif(sum(zeroes),.000075,.00016)
+    
+    #plot controls
+    plot(otulog[!zeroes & expgroup=="control"], actual[!zeroes & expgroup=="control"],
+         log="x", ylim=c(0,10), xlim=c(0.00008, 1), main="",
+         ylab="", 
+         xaxt='n', yaxt="n", xlab="")
+    
+    #plot zeroes in jitter
+    points(x=x_zeroes, actual[zeroes], pch=pch[as.character(results[zeroes,1])],
+           col=colors[as.character(results[zeroes,1])], cex=1.5)
+    
+    #add other treatment points
+    for(j in 2:(length(legend.labels))){
+      points(otulog[!zeroes & names(legend.labels)[j]==expgroup], 
+             actual[!zeroes & names(legend.labels)[j]==expgroup], 
+             col=colors[j], pch=pch[j], cex=1.5)
+    }
+    abline(v=c(0.005, 0.05, 0.5), lty="dotted", col="gray")
+    abline(v=c(0.001, 0.01, 0.1, 1), lty="longdash", col="gray")
+    abline(v=0.0005, lty="dotted", lwd=2, col="black")
+    text(x = 0.00005, y = 9.3, labels = paste(labels[i], ", \u03c1 = ",signif(corrs[i, 2], 3)), 
+         cex = 1, pos=4, font=2)
+    
+    #bquote(bold(.(labels[i])) ~ bold(", ") ~ bold(rho) ~ bold(" = ") ~ bold(.(signif(corrs[i, 2], 3))))
+    #if it's on the bottom row, put a customized axis indicating the % rabund
+    if(i == 7 | i==8){
+      axis(1, at=c(0.0001,0.001, 0.01, 0.1, 1), labels=c(0,.1, 1, 10, 100), cex.axis=1.5)
+    }
+    
+    #if it's in the first column turn the axis labels to be horizontal
+    if(i== 1 | i==3 | i==5 | i==7){
+      axis(2, at=c(0:10), labels = c(0:10), cex.axis=1.5, las=2)
+    }
+  }
+  
+  #for spot 9
+  plot.new()
+  text(x=0.15, y=0.5, label=expression(paste("Log ", italic("C. difficile"), " CFU/g Feces")), cex=1.5, srt=90)
+  
+  #for spot 10
+  plot.new()
+  text(x=0.5, y=0.2, label="% Relative Abundance", cex=1.5)
+  
+  #for spot 11
+  plot.new()
+  legend("left", legend=legend.labels, pch=pch, col=colors, pt.cex=2,  cex=1.2, bty="n")
+  
+}
 
 ##########################################################################
 # Inputs 
@@ -49,100 +116,49 @@ RF.validate <- function(data, iters){
 #  
 RF.analysis <- function(dataFile, otus, plot.title){
   
-  library(randomForest)
-  
   all <- read.csv(file=dataFile, header=T)
-  leng <- dim(all)[2]
   
   cols<- NULL
   for(i in 1:(length(otus))){
    cols <-c(cols, which(names(all)==otus[i]))
   }
-  
   cols <- c(which(names(all)=="Group"), which(names(all)=="nextDayCFU"), cols)
   
   topdose <- all[1:99,cols]
-  toptit <- all[1:154,cols]
+  titr <- all[100:153,cols]
+  del <- all[154:179, cols]
+  toptit <- all[1:153,cols]
+  titdel <- all[c(100:153, 154:179),cols]
+  topdel <- all[c(1:99, 154:179),cols]
   toptitdel <- all[,cols]
-    
+  trainsets <- list(topdose, titr, del, toptit, titdel, topdel, toptitdel)
   
   #fit the randomforest model
-  td.rf <- randomForest(nextDayCFU~., 
-                        data = topdose[,-1],  outscale=TRUE,
-                        importance=TRUE, proximity=TRUE,
-                        keep.forest=TRUE, ntree=5000
-  ) #assumes that the nexDayCFU column is right before the first Otu column
-  plot(td.rf)
-  
-  #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-  varImpPlot(td.rf, type=1)
-  #imp<-importance(td.rf)
-  #write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.topdose.avg0.01.txt", sep="\t", row.names=T, col.names=T)
-  
-  # function to give me the prediction results on each data set
- # td <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.topdose2.regression.logtrans.filter16mintot.csv"
- # titr <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.newtitration.regression.logtrans.filter16mintot.noUntr.csv"
- # delay <- "~/Desktop/mothur/abxD01/rf/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.shared.rf.delay.regression.logtrans.filter16mintot.noUntr.csv"
-  
-  td <- all[1:99,]
-  titr <- all[100:154,]
-  delay <- all[154:179,]
-
-  results <- data.frame(matrix(ncol=5, nrow=3))
-  row.names(results) <- c("topdose", "toptit", "toptitdel")
+  leng <- length(trainsets)
+  results <- data.frame(matrix(ncol=5, nrow=leng))
+  row.names(results) <- c("topdose", "titr", "del", "toptit","titdel", "topdel", "toptitdel")
   colnames(results) <- c("PercVarExpl","td", "titr", "delay", "withinValidate")
-
-  results[1,1] <- signif(td.rf$rsq[length(td.rf$rsq)],3)
-  results[1,2] <- signif(rf.predict(data=td, descr="td.rf on Topdose Data", rf.model=td.rf, title=plot.title),3)
-  results[1,3] <- signif(rf.predict(data=titr, descr="td.rf on Titration Data", rf.model=td.rf, title=plot.title),3)
-  results[1,4] <- signif(rf.predict(data=delay, descr="td.rf on Delay Data", rf.model=td.rf, title=plot.title),3)
-  results[1,5] <- signif(RF.validate(topdose, 100)[1],3)
- 
- 
-  ######## Now with the toptit data
-  #fit the randomforest model
-  rf.toptit <- randomForest(nextDayCFU~., 
-                            data = toptit[,-1],  outscale=TRUE,
-                            importance=TRUE, proximity=TRUE,
-                            keep.forest=TRUE, ntree=5000
-  )
-  plot(rf.toptit)
- 
-  #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-  varImpPlot(rf.toptit, type=1)
-  imp<-importance(rf.toptit)
-  #write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptit.avg0.01.txt", sep="\t", row.names=T, col.names=T)
+  library(randomForest)
+  for(i in 1:leng){
+    trainsets.rf <- randomForest(nextDayCFU~., 
+                          data = trainsets[[i]][,-1],  outscale=TRUE,
+                          importance=TRUE, proximity=TRUE,
+                          keep.forest=TRUE, ntree=5000
+    ) #assumes that the nexDayCFU column is right before the first Otu column
+    #plot(trainsets.rf)
+    varImpPlot(trainsets.rf, type=1)
+    # partialPlot(trainsets.rf, trainsets[[i]][,-1], x.var =  "Otu00039") #Otu00003, Otu00013, Otu00023, 27
     
-  results[2,1] <- signif(rf.toptit$rsq[length(rf.toptit$rsq)],3)  
-  results[2,2] <- signif(rf.predict(data=td, descr="rf.toptit on Topdose Data", rf.model=rf.toptit, title=plot.title),3)
-  results[2,3] <- signif(rf.predict(data=titr, descr="rf.toptit on Titration Data", rf.model=rf.toptit, title=plot.title),3)
-  results[2,4] <- signif(rf.predict(data=delay, descr="rf.toptit on Delay Data", rf.model=rf.toptit, title=plot.title), 3)
-  results[2,5] <- signif(RF.validate(toptit, 100)[1],3)
- 
-  
-  ######## Now with the toptitdel data
-  #fit the randomforest model
-  rf.toptitdel <- randomForest(nextDayCFU~., 
-                               data = toptitdel[,-1],  outscale=TRUE,
-                               importance=TRUE, proximity=TRUE,
-                               keep.forest=TRUE, ntree=5000
-  )
-  plot(rf.toptitdel)
-  
-  #what are the important variables (via permutation) #type 1 is mean decrease in accuracy, type 2 is mean decrease in node impurity
-  varImpPlot(rf.toptitdel, type=1)
-  #imp<-importance(rf.toptitdel)
-  #write.table(imp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.0.5p.txt", sep="\t", row.names=T, col.names=T)
-  
-  results[3,1] <- signif(rf.toptitdel$rsq[length(rf.toptitdel$rsq)],3)
-  results[3,2] <- signif(rf.predict(data=td, descr="rf.toptitdel on Topdose Data", rf.model=rf.toptitdel, title=plot.title), 3)
-  results[3,3] <- signif(rf.predict(data=titr, descr="rf.toptitdel on Titration Data", rf.model=rf.toptitdel, title=plot.title), 3)
-  results[3,4] <- signif(rf.predict(data=delay, descr="rf.toptitdel on Delay Data", rf.model=rf.toptitdel, title=plot.title), 3)
-  results[3,5] <- signif(RF.validate(toptitdel, 100)[1],3)
-  
- return(results)
-}  
+    results[i,1] <- signif(trainsets.rf$rsq[length(trainsets.rf$rsq)],3)
+    results[i,2] <- signif(rf.predict(data=topdose, descr=paste0(row.names(results)[i]," model on Topdose Data"), rf.model=trainsets.rf, title=plot.title),3)
+    results[i,3] <- signif(rf.predict(data=titr, descr=paste0(row.names(results)[i]," model on Titration Data"), rf.model=trainsets.rf, title=plot.title),3)
+    results[i,4] <- signif(rf.predict(data=del, descr=paste0(row.names(results)[i]," model on Delay Data"), rf.model=trainsets.rf, title=plot.title),3)
+    results[i,5] <- signif(RF.validate(trainsets[[i]], 100)[1],3)
+  }
 
+  return(results)
+  
+}
 
 
 ##########################################################################
@@ -219,9 +235,13 @@ rf.predict <- function(file=FALSE, data=NULL, descr, rf.model, title, plotgraph=
   
   #plot results
   if(plotgraph==TRUE){
-    plot(results$actual, results$predict, main=title, ylab="Predicted Values", xlab="Actual Values")
-    mtext(paste(descr, "r^2 = ", signif(rsq, 3)), side=3, line=0)
-    abline(a=0, b=1, col="red")
+    par(mfrow=c(1, 1)) #+1 to give extra labeling space
+    par(mar=c(5, 5, 4, 2) +0.1, mgp=c(3, 1, 0), las=1) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+    plot(results$actual, results$predict, main=title, ylab=expression(paste("Predicted Log ", italic("C. difficile"), " Values")), xlab=expression(paste("Actual Log ", italic("C. difficile"), " Values")), ylim=c(0,9), xlim=c(0,9), xaxt='n', yaxt='n')
+    mtext(bquote("r"^"2" ~ " = " ~ .(signif(rsq, 3))), side=3, line=0)
+    abline(a=0, b=1, lty="dashed", lwd=2, col="black")
+    axis(1, at = c(0:9), labels=c(0:9))
+    axis(2, at = c(0:9), labels=c(0:9))
   }
   
   return(rsq)
