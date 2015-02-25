@@ -9,9 +9,9 @@
 # Parameters to change, an example:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.001, expgroups #'d by graph order & sorted by first graph)
 
-file <- "~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv"
-fileIDS <- "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv"
-graphLabels<-c("Cefoperazone", "Streptomycin", "Vancomycin")
+file <- "~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.alldelay.forlogscale.csv"
+fileIDS <- "~/Documents/Github/abxD01/Figure 5/alldelay_tx2_barchart_ids.csv"
+#graphLabels<-c("Cefoperazone", "Streptomycin", "Vancomycin")
 sortbyphyl<-TRUE
 graphbyphyl<-FALSE
 divide<-TRUE
@@ -19,9 +19,8 @@ divide<-TRUE
 
 # Highlight all and run!
 #################################################
-stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, graphbyphyl=FALSE, excludeGroups="", divide=FALSE) {
+stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, graphbyphyl=FALSE, excludeGroup=NA, divide=FALSE) {
   file<-read.csv(file=file, header=T)
-  file<-file[file$expgroup!=excludeGroups,]
   
   fileIDS<-read.csv(file=fileIDS, header=T)
   abx <- graphLabels
@@ -133,7 +132,6 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
     
     leng<-length(avgs)
     
-    
     #jtime<-NULL
     #itime<-NULL
     #inside<-FALSE
@@ -155,12 +153,9 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
         else{
           j <- j + 1
           #count<-count+1
-          #jtime<-rbind(jtime, j)
-          
-          
+          #jtime<-rbind(jtime, j)    
         }
-      } #WARNING: could cause an error if dont find the ID, theres no check for the end of the list
-      
+      } #WARNING: could cause an error if dont find the ID, theres no check for the end of the list 
       physums[pnum, 2] <- physums[pnum, 2] + avgs[2, i] ##add the relabund of the otu   
     }
     
@@ -501,9 +496,11 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
   ###3rd PLOT PARAMETERS
   if(divide == TRUE){ 
 
-    mavgs <- mavgs[-which(grepl("untr", row.names(mavgs))),]
-    matrix.se <- matrix.se[-which(grepl("untr", row.names(matrix.se))),]
-    id.info <- id.info[-which(grepl("untr", id.info$expgroup)),]
+    if(!is.na(excludeGroup)){
+      mavgs <- mavgs[-which(grepl(excludeGroup, row.names(mavgs))),]
+      matrix.se <- matrix.se[-which(grepl(excludeGroup, row.names(matrix.se))),]
+      id.info <- id.info[-which(grepl(excludeGroup, id.info$expgroup)),]
+    }
     
     barplotBeside(id.info = id.info, matrix.of.avgs = mavgs, matrix.of.se = matrix.se, ids = ids, file=file)
     

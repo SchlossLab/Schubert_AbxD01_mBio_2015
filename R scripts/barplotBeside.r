@@ -1,15 +1,12 @@
 # The most number of side by side groups should be 3. Not made for others. 
 
-
+#run this alyx!! to fix missing stat letter
 barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file){
 
   library(Hmisc)
   groups <- unique(id.info$abx)
   numgr <- length(groups)
-
-  #leng<-dim(mavgs)[2]
-  
-  
+  leng<-dim(mavgs)[2]
   
   par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
   par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
@@ -86,7 +83,7 @@ barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file){
   } # for(j in 1:numgr){
  
   plot(0,xaxt='n',yaxt='n',bty='n',pch='',ylab='',xlab='')
-  leg<-c("High Dose", "Middle Dose","Low Dose" )
+  leg<-c("Untreated", "On Time","+5d Recovery" )
   #pch<-c(16, 16, 16)
   colors<-color
   colors[3] <- "black"
