@@ -145,13 +145,17 @@ print(toptitdel.rf)
 plot(toptitdel.rf)
 varImpPlot(toptitdel.rf, type=1)
 imp<-importance(toptitdel.rf)
-imp<-imp[order(imp[,1], decreasing = TRUE),]
-topimp<- imp[1:15,]
+imp1<-imp[order(imp[,1], decreasing = TRUE),]
+imp2<-imp[order(imp[,2], decreasing = TRUE),]
+topimp <- imp1[1:15,]
+toppurity <- imp2[1:15,]
 write.table(topimp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importance.txt", sep="\t", row.names=TRUE)
+write.table(toppurity, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importanceNode.txt", sep="\t", row.names=TRUE)
+
 
 #Plot importance Plot
 topimp<-topimp[order(topimp[,1], decreasing=FALSE),]
-ids <- read.csv(file = "~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importance.ids.csv", header = TRUE)
+ids <- read.csv(file = "~/Documents/Github/abxD01/Figure 6/rf.toptitdel.1p.importance.ids.csv", header = TRUE)
 #ids <- ids[order]
 labels<- paste0(ids$name, " (", ids$otuname, ")")
 par(mfrow=c(1, 1)) #+1 to give extra labeling space
@@ -159,6 +163,18 @@ par(mar=c(5, 15, 0.5, 2) +0.1, mgp=c(3, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/
 plot(topimp[,1], 1:15, xlab="% Increase in Mean Squared Error", yaxt="n", ylab="", pch=16, cex=1.5, xlim=c(20, 80))
 axis(2, at = c(1:15), labels = labels, las=1, cex.axis=.9 )
 abline(h=c(1:15), lty="dashed", col='black')
+
+
+#Plot importance Plot by node purity
+toppurity<-toppurity[order(toppurity[,2], decreasing=FALSE),]
+ids <- read.csv(file = "~/Documents/Github/abxD01/Figure 6/rf.toptitdel.1p.importanceNode.ids.csv", header = TRUE)
+labels<- paste0(ids$name, " (", ids$otuname, ")")
+par(mfrow=c(1, 1)) #+1 to give extra labeling space
+par(mar=c(5, 15, 0.5, 2) +0.1, mgp=c(3, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+plot(toppurity[,2], 1:15, xlab="Increase in Node Purity", yaxt="n", ylab="", pch=16, cex=1.5, xlim=c(0, 600))
+axis(2, at = c(1:15), labels = labels, las=1, cex.axis=.9 )
+abline(h=c(1:15), lty="dashed", col='black')
+
 
 # rf.predict(data=topdose, descr=paste0(row.names(results)[i]," model on Topdose Data"), rf.model=toptitdel.rf, title=plot.title)
 # signif(rf.predict(data=titr, descr=paste0(row.names(results)[i]," model on Titration Data"), rf.model=toptitdel.rf, title=plot.title),3)
@@ -222,15 +238,15 @@ pch <- c(control = 1,
 legend.labels <- c(control = "Control",
             cipro = "Ciprofloxacin",
             clinda = "Clindamycin",
-            vanc.625 = "Vancomycin High",
-            vanc.3 = "Vancomycin Medium",
-            vanc.1 = "Vancomycin Low",
-            strep5 = "Streptomycin High",
-            strep.5 = "Streptomycin Medium",
-            strep.1 = "Streptomycin Low",
-            cef.5 = "Cefoperazone High",
-            cef.3 = "Cefoperazone Medium",
-            cef.1 = "Cefoperazone Low",
+            vanc.625 = "Vancomycin 0.625 mg/ml",
+            vanc.3 = "Vancomycin 0.3 mg/ml",
+            vanc.1 = "Vancomycin 0.1 mg/ml",
+            strep5 = "Streptomycin 5 mg/ml",
+            strep.5 = "Streptomycin 0.5 mg/ml",
+            strep.1 = "Streptomycin 0.1 mg/ml",
+            cef.5 = "Cefoperazone 0.5 mg/ml",
+            cef.3 = "Cefoperazone 0.3 mg/ml",
+            cef.1 = "Cefoperazone 0.1 mg/ml",
             amp.5 = "Ampicillin",
             amp.5d = "Ampicillin +5D",
             metro1 = "Metronidazole",
@@ -258,10 +274,10 @@ par(mar=c(5, 5, 4, 2) +0.1, mgp=c(3, 1, 0), las=1) #default is 5.1 4.1 4.1 2.1, 
 plot(results[results[,1]=="control",2], 
      results[results[,1]=="control",3], 
      main="", 
-     ylab=expression(paste("Predicted Log ", italic("C. difficile"), " Values")), 
-     xlab=expression(paste("Actual Log ", italic("C. difficile"), " Values")), 
+     ylab=expression(paste("Predicted Log ", italic("C. difficile"), " CFU/g Feces")), 
+     xlab=expression(paste("Actual Log ", italic("C. difficile"), " CFU/g Feces")), 
      ylim=c(0,9), xlim=c(0,9), xaxt='n', yaxt='n', cex=1.5)
-mtext(bquote("r"^"2" ~ " = " ~ .(signif(rsq, 3))), side=3, line=0)
+#mtext(bquote("r"^"2" ~ " = " ~ .(signif(rsq, 3))), side=3, line=0)
 abline(a=0, b=1, lty="dashed", lwd=2, col="black")
 axis(1, at = c(0:9), labels=c(0:9))
 axis(2, at = c(0:9), labels=c(0:9))
@@ -272,24 +288,24 @@ for(i in 2:(length(legend.labels))){
          results[results[,1]==names(legend.labels)[i],3], 
          col=colors[i], pch=pch[i], cex=1.5)
 }
-legend("bottomright", inset= .07, legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=.6, bty="n")
+$legend("bottomright", inset= .07, legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=.6, bty="n")
 
 
-par(mfrow=c(1, 1)) 
-par(mar=c(5, 5, 4, 2) +0.1, mgp=c(3, 1, 0), las=1) 
-
-otu <- "Otu00003"
-pretty_otus <- gsub("Otu0*", "OTU ", otu)
 
 
 corrs<-read.csv(file="~/Desktop/mothur/abxD01/correlation/toptitdel.correlation.impOTUs.csv", header=TRUE)
 corrs <- corrs[1:8,]
 otunames <-  row.names(topimp)[15:8]
-otulabels <- labels[15:8]
-graphOTUxCD(otunames, otulabels, corrs)
+graphID <- ids[15:8,c(1,3)]
+
+graphOTUxCD(otunames, graphID, corrs)
 
 
 
+
+
+
+####################################################################################################
 ###Correlation for toptitdel against cdiff cfu
 c<-1
 otu <- c()
