@@ -295,6 +295,7 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
   #####################################################################################################################
   #####################################################################################################################
   ###PLOT PARAMETERS
+  library(plotrix)
   if(graphbyphyl==FALSE && divide==FALSE){
     par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
     par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)

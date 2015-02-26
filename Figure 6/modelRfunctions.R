@@ -43,15 +43,25 @@ RF.validate <- function(data, iters){
 # Returns 
 # 
 #  
+graphOTUxCD(otunames, otulabels, corrs)
 
-graphOTUxCD <- function(otus, labels, corrs){
+pretty_otus <- as.data.frame(gsub("Otu0*", "OTU", otus))
+otulabels <- cbind(ids,pretty_otus)
+names(otulabels) <- c("names", "otus")
+
+
+otus<-otunames
+ids<-otulabels
+
+
+graphOTUxCD <- function(otus, ids, corrs){
   
   par(mar=c(0.5,0.5,0.5,0.5))
   design <- matrix(1:8, nrow=4, byrow=T)
   design <- cbind(c(9,9,9,9), design)
   design <- rbind(design, c(0,10,10))
   design <- cbind(design,c(11, 11, 11, 11, 0))
-  layout(design, widths=c(0.2,1,1, .5), heights=c(1,1, 1, 1,0.3))
+  layout(design, widths=c(0.2,.9,.9, .6), heights=c(1,1, 1, 1,0.3))
   
   for(i in 1:(length(otus))){
     
@@ -79,9 +89,16 @@ graphOTUxCD <- function(otus, labels, corrs){
     abline(v=c(0.005, 0.05, 0.5), lty="dotted", col="gray")
     abline(v=c(0.001, 0.01, 0.1, 1), lty="longdash", col="gray")
     abline(v=0.0005, lty="dotted", lwd=2, col="black")
-    text(x = 0.00005, y = 9.3, labels = paste(labels[i], ", \u03c1 = ",signif(corrs[i, 2], 3)), 
-         cex = 1, pos=4, font=2)
     
+    test <- grep("aceae", ids[i, 1])
+    name<-as.character(ids$names[i])
+    number<-as.character(ids$otus[i])
+    corr<-as.character(signif(corrs$corSpear[i], 2))
+    graphTitle <- bquote(bolditalic(.(name)) *" " *bold(.(number)) *bold(", ") *bold(rho) *bold(" = ") *bold(.(corr)))
+    text(x = 0.00005, y = 9.3, labels = graphTitle, 
+         cex = 1, pos=4, font=2)
+  
+    #paste(labels[i], ", \u03c1 = ",signif(corrs[i, 2], 2))
     #bquote(bold(.(labels[i])) ~ bold(", ") ~ bold(rho) ~ bold(" = ") ~ bold(.(signif(corrs[i, 2], 3))))
     #if it's on the bottom row, put a customized axis indicating the % rabund
     if(i == 7 | i==8){
@@ -90,7 +107,7 @@ graphOTUxCD <- function(otus, labels, corrs){
     
     #if it's in the first column turn the axis labels to be horizontal
     if(i== 1 | i==3 | i==5 | i==7){
-      axis(2, at=c(0:10), labels = c(0:10), cex.axis=1.5, las=2)
+      axis(2, at=c(0, 2, 4, 6, 8, 10), labels =c(0, 2, 4, 6, 8, 10), cex.axis=1.5, las=2)
     }
   }
   
