@@ -2,8 +2,8 @@
 
 **Short title:** Alterations of the Murine Gut Microbiota that Lead to Clostridium difficile Colonization
 
-Alyxandria M. Schubert<sup>1</sup>, Hamide Sinani<sup>1</sup>, and Patrick D.
-Schloss<sup>1</sup>\*
+Alyxandria M. Schubert^1^, Hamide Sinani^1^, and Patrick D.
+Schloss^1^\*
 
 > \* Correspondence: <pschloss@umich.edu>
 > 734.647.5801
@@ -58,10 +58,23 @@ Though we are limited in a resolution at the strain and species level, we have i
 
 ### Results
 
-***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] all have decreased resistance against this pathogen. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics (Table 1) to differentially alter the microbiota and assess their resistance to *C. difficile* colonization. 16S rRNA gene sequencing of the fecal communities sampled at the time of *C. difficile* inoculation revealed distinct and reproducible microbiota structures (Figure 1). The community structures of the beta-lactam-treated mice (i.e. cefoperazone and ampicillin) were not significantly different from each other (AMOVA, p=0.36). Clindamycin-treated microbiotas were significantly different from all other treatment groups (AMOVA, p=0.001) and were characterized by the predominance of Enterobacteriaceae. Of all groups significantly different from the untreated microbiota, the levels of Enterobacteriaceae increased with all treatments except with streptomycin. Vancomycin-treated communities saw the largest bloom in Akkermansia. In addition, the ciprofloxacin-treated microbiota were the only group that was not significantly different from untreated mice (AMOVA, p=0.09). Subsequently, 24 hours after inoculation *C. difficile* was undetectable in the untreated mice or the ciprofloxacin-treated mice; however it had successfully colonized the mice in all of the other treatment groups to similarly high levels (10<sup>7</sup>-10<sup>8</sup> CFU/g) (Figure 1). We calculated the diversity of all of the communities using the Inverse Simpson (Supplemental Figure 1) and Shannon indices (data not shown) and observed a significant negative correlation with subsequent *C. difficile* colonization (both p<0.001). These results suggest that multiple microbiota structures are capable of being colonized by *C. difficile* and that diversity may be an important factor in resistance to invasion.
+***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] all have decreased resistance against this pathogen. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics (**Table 1**) to differentially alter the microbiota and assess their resistance to *C. difficile* colonization. 16S rRNA gene sequencing of the fecal communities sampled at the time of *C. difficile* inoculation revealed distinct and reproducible microbiota structures (**Figure 1**). The community structures of the beta-lactam-treated mice (i.e. cefoperazone and ampicillin) were not significantly different from each other (AMOVA, p=0.-36). Clindamycin-treated microbiotas were significantly different from all other treatment groups (AMOVA, p=0.001) and were characterized by the predominance of *Enterobacteriaceae*. Of all groups significantly different from the untreated microbiota, the levels of *Enterobacteriaceae* increased with all treatments except with streptomycin. Vancomycin-treated communities saw the largest bloom in *Akkermansia*. In addition, the ciprofloxacin-treated microbiota were the only group that was not significantly different from untreated mice (AMOVA, p=0.09). Subsequently, 24 hours after inoculation *C. difficile* was undetectable in the untreated mice or the ciprofloxacin-treated mice; however it had successfully colonized the mice in all other treatment groups to similarly high levels (10^7^-10^8^ CFU/g) (**Figure 1**). We calculated the diversity of all of the communities using the Inverse Simpson (**Supplemental Figure 1**) and Shannon indices (data not shown) and observed a significant negative correlation with subsequent *C. difficile* colonization (both p<0.001). These results suggest that multiple microbiota structures are capable of being colonized by *C. difficile* and that diversity may be an important factor in resistance to invasion.
 
-### CFU stats comparison
-To compare CFU levels: 
+--------
+
+![**Figure 1.**](Figure 1/topdose2_tx2_sorted_10x20.pdf)
+
+**Figure 1. Microbiota structures following diverse antibiotic treatments.** This figure shows the average percent relative abundances for family level phylotypes found in each experimental group on the day of *C. difficile* challenge. Each row depicts a different antibiotic perturbation. The level *C. difficile* colonization found 24 hours post microbiota sampling is plotted in the top right corner. Each represented phylum is a different shade of gray. Error bars depict standard error of the mean. 
+
+--------
+
+![**Supplemental Figure 1.**](supplemental/FigS1_topdose_inverseSimp.pdf)
+
+**Supplemental Figure 1. Diversity is nevatively correlated with *C. difficile* levels.** This figure shows the relationship between the inverse simpson diversity index of microbiotas of each experimental group on day 0 and *C. difficile* CFU/g feces on day 1. Spearman's rho is plotted in the top right corner. 
+
+
+> ### CFU stats comparison
+> To compare CFU levels: 
 ```{r, eval=TRUE}
 
 file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
@@ -75,22 +88,21 @@ data <- data[ which(data$expgroup != '2cipro'), ] #remove ciprofloxacin to see n
 anova(lm(data$nextDayCFU ~ data$expgroup)) 
               
 ```
-
-### Amova to compare resulting community structures
-Amova calculation in mothur to determine the uniqueness of each community structure:
+> 
+> ### Amova to compare resulting community structures
+> Amova calculation in mothur to determine the uniqueness of each community structure:
+> 
 ```
 dist.shared(shared=abxD01.final.an.unique_list.0.03.topdose2.shared, calc=thetayc-jclass, subsample=1625)
 amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist, design=topdose_design_byABX.txt, iters=1000000)
 
 ```
-This results in the file called "abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.amova" located in the github folder. The results of these are summarized in "amova8expgroups.xlsx".
-
-### Figure 1: Bargraph
-
-This figure shows the differences in the communities' structures following different antibiotic treatments. The average *C. difficile* CFU/g Feces is also calculated in this code for each treatment group. 
-
-This figure was built using the R script called "stacked.barcharts.r", which contains the stackedbarcharts() funciton in the abxD01 folder.The input files are listed in Github. The graph can be sorted 2 ways either by the untreated's decreasing relabund (sortbyphyl=FALSE), or by the most abundant within each phylum (sortbyphyl=TRUE). For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. 
-The parameters I changed in the r script were:
+> This results in the file called "abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.amova" located in the github folder. The results of these are summarized in "amova8expgroups.xlsx".
+> 
+> ### Figure 1: Bargraph
+> 
+> This figure was built using the R script called "stacked.barcharts.r", which contains the stackedbarcharts() funciton in the abxD01 folder.The input files are listed in Github. The graph can be sorted 2 ways either by the untreated's decreasing relabund (sortbyphyl=FALSE), or by the most abundant within each phylum (sortbyphyl=TRUE). For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. 
+> The parameters I changed in the r script were:
 ```{r, eval=FALSE}
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 library(plotrix)
@@ -101,15 +113,23 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subs
 stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 1/topdose_tx1_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
 
 ```
-
-Files saved as "topdose2_tx1_sorted_10x20.pdf" and "topdose2_tx2_sorted_10x20.pdf".
-
-### Supplemental Figure 1: correlation plot of diversity with *C. difficile*
-
-For the correlation calculations see the next section of the results.
-Figure making:
+> 
+> Files saved as "topdose2_tx1_sorted_10x20.pdf" and "topdose2_tx2_sorted_10x20.pdf".
+> 
+> ### Supplemental Figure 1: correlation plot of diversity with *C. difficile*
+> 
+> For the correlation calculations see the next section of the results.
+> Figure making:
+> 
+--------
 
 ***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each species-level OTU on the day of inoculation with the level of *C. difficile* colonization 24 hours later across all treatment groups (Figure 2). Of the significant OTUs (p<0.05) with an average abundance greater than 0.1%, OTUs with negative a correlation were associated with providing resistance against *C. difficile* (N=40) and those with a positive correlation were associated with susceptibility (N=7). Among various bacterial families, three were consistently negatively correlated with *C. difficile* colonization: Porphyromonadaceae (ρaverage= -0.63), Lachnospiraceae (ρaverage= -0.51), Ruminococcaceae (ρaverage= -0.53). OTUs from the Proteobacteria phylum had strong positive relationships with *C. difficile* colonization. These included OTUs associated with the Pseudomonas (ρ= 0.31) and Escherichia (ρ= 0.56) genera. Other notable OTUs that were found at the extremes of the distribution of correlation scores included those affiliated with the genus Lactobacillus (family Lactobacillaceae; OTU23, ρ= -0.73), Alistipes (family Rickenellaceae; OTU20, ρ= -0.78), Enterorhabdus (phylum Actinobacterium, family Coriobacteriaceae; OTU29, ρ= -0.70), and Streptococcus (family Streptococcaceae; OTU78, ρ= 0.36). Overall, these results suggest that several larger groups of related OTUs, particularly within the Firmicutes and Bacteroidetes phyla, may participate in colonization resistance against *C. difficile*, while members of the Proteobacteria phylum may be involved in susceptibility.
+
+--------
+
+![**Figure 2.**](Figure 2/corr_avgAbove0.001_topdose2_10x10.pdf)
+
+**Figure 2. TITLE.** Species level OTUs (3% cutoff) found on day 0 were correlated with the level of *C. difficile* CFU/g feces on day 1 using Spearman’s rank based correlation coefficient. Only OTUs with an average abundance of at least 0.05% across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant (p<0.05). OTUs were grouped by family. Asterisk * indicates unclassified at family level.
 
 ### Correlation Calculations
 
@@ -263,7 +283,7 @@ stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.su
 
 ```
 
-***Modeling microbiota data can predict *C. difficile* colonization outcomes.*** Given our ability to make general predictions of *C. difficile* colonization based on the microbiota, we next designed a model to calculate expected colonization levels given the relative abundance of a subset of OTUs. Combining the three datasets (Table 1, Supplemental Table 1 and 2), we set a 1% relative abundance threshold, eliminating OTUs that on average were not present at this level in at least one of the 16 experimental groups. In total, there were 44 OTUs utilized for building a random forest regression model. This model fit the data with an R2 of 0.98 (Figure 5A). We identified OTUs that contributed most to increased accuracy of the model using random forest’s feature selection (Figure 5B). Many of the top contributing OTUs includes members of the Porphyromonadaceae family, Alistipes, Lachnospiraceae, Lactobacillus, and Escherichia taxa. The relationship between these OTUs and *C. difficile* is shown in Figure 5C. Escherichia had the largest positive correlation with *C. difficile* levels of any bacterial species.  This finding was consistent across susceptible antibiotic treated communities except for streptomycin treated communities, which altogether lacked Enterobacteriaceae spp. OTUs 3 and 39 (Porphyromonadaceae and Lachnospiraceae, respectively), were the two most important features in accurately predicting subsequent *C. difficile* levels. In fact, a model built with only these two features was able to account for 79% of the variance observed. Together these results suggest that colonization resistance is likely conferred by porphyromonadaceae, Alistipes, and lachnospiraceae and a loss in these bacteria, concurrently with a gain of Escherichia, can result in increased susceptibility to infection.  
+***Modeling microbiota data can predict C. difficile colonization outcomes.*** Given our ability to make general predictions of *C. difficile* colonization based on the microbiota, we next designed a model to calculate expected colonization levels given the relative abundance of a subset of OTUs. Combining the three datasets (Table 1, Supplemental Table 1 and 2), we set a 1% relative abundance threshold, eliminating OTUs that on average were not present at this level in at least one of the 16 experimental groups. In total, there were 44 OTUs utilized for building a random forest regression model. This model fit the data with an R2 of 0.98 (Figure 5A). We identified OTUs that contributed most to increased accuracy of the model using random forest’s feature selection (Figure 5B). Many of the top contributing OTUs includes members of the Porphyromonadaceae family, Alistipes, Lachnospiraceae, Lactobacillus, and Escherichia taxa. The relationship between these OTUs and *C. difficile* is shown in Figure 5C. Escherichia had the largest positive correlation with *C. difficile* levels of any bacterial species.  This finding was consistent across susceptible antibiotic treated communities except for streptomycin treated communities, which altogether lacked Enterobacteriaceae spp. OTUs 3 and 39 (Porphyromonadaceae and Lachnospiraceae, respectively), were the two most important features in accurately predicting subsequent *C. difficile* levels. In fact, a model built with only these two features was able to account for 79% of the variance observed. Together these results suggest that colonization resistance is likely conferred by porphyromonadaceae, Alistipes, and lachnospiraceae and a loss in these bacteria, concurrently with a gain of Escherichia, can result in increased susceptibility to infection.  
 
 ### Evaluating cutoffs for OTU inclusion in Random Forest model
 
