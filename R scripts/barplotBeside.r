@@ -31,6 +31,7 @@ barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file){
       # add standard error bars
       d <- as.data.frame( cbind( c(bp), c(mavgs), c(matrix.se) ) )
       names(d) <- c("x", "y", "se")
+      library(Hmisc)
       with (
         data = d
         , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
@@ -38,6 +39,12 @@ barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file){
       
       # Statistical differences between groups
       statLetter <- findStatLetters(file, otus, graphGroups)
+      
+      statLetter <- as.data.frame(statLetter)
+      bp <- as.data.frame(bp)
+      mavgs <- as.data.frame(mavgs)
+      matrix.se <- as.data.frame(matrix.se)
+      
       #For labeling letters above each bar
       for(n in 1:leng){
         text( bp[,n], (mavgs[,n]+matrix.se[,n]), labels=statLetter[,n], cex=1, col="red", pos=3, offset=0.15, xpd=TRUE)
@@ -57,6 +64,7 @@ barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file){
         # add standard error bars
         d <- as.data.frame( cbind( c(bp), c(mavgs), c(matrix.se) ) )
         names(d) <- c("x", "y", "se")
+        library(Hmisc)
         with (
           data = d
           , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
@@ -64,6 +72,12 @@ barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file){
         
         # Statistical differences between groups
         statLetter <- findStatLetters(file, otus, graphGroups)
+        statLetter <- as.data.frame(statLetter)
+        
+        bp <- as.data.frame(bp)
+        mavgs <- as.data.frame(mavgs)
+        matrix.se <- as.data.frame(matrix.se)
+        
         #For labeling letters above each bar
         for(n in 1:leng){
           text( bp[,n], (mavgs[,n]+matrix.se[,n]), labels=statLetter[,n], cex=1, col="red", pos=3, offset=0.15, xpd=TRUE)
