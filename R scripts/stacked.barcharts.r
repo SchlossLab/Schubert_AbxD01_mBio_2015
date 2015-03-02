@@ -8,13 +8,15 @@
 #################################################
 # Parameters to change, an example:
 # CSV file: Group  expgroup  Otu001... (limited by most abund, end with 'Other', OTUs normalized +0.001, expgroups #'d by graph order & sorted by first graph)
+# 
 
-file <- "~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.alldelay.forlogscale.csv"
-fileIDS <- "~/Documents/Github/abxD01/Figure 5/alldelay_tx2_barchart_ids.csv"
-#graphLabels<-c("Cefoperazone", "Streptomycin", "Vancomycin")
-sortbyphyl<-TRUE
-graphbyphyl<-FALSE
-divide<-TRUE
+
+# file <- "~/Documents/Github/abxD01/Figure 5/abxD01.final.tx.2.subsample.alldelay.forlogscale.csv"
+# fileIDS <- "~/Documents/Github/abxD01/Figure 5/alldelay_tx2_barchart_ids.csv"
+# #graphLabels<-c("Cefoperazone", "Streptomycin", "Vancomycin")
+# sortbyphyl<-TRUE
+# graphbyphyl<-FALSE
+# divide<-TRUE
 
 
 # Highlight all and run!
