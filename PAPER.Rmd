@@ -22,7 +22,7 @@ Schloss<sub>1</sub>\*
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1500 W. Medical Center Dr.
 
-Ann Arbor, MI 48109
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ann Arbor, MI 48109
 
 1 Department of Microbiology and Immunology, 1500 W. Medical Center,
 University of Michigan, Ann Arbor, MI 48109
