@@ -10,7 +10,7 @@
 Alyxandria M. Schubert<sub>1</sub>, Hamide Sinani<sub>1</sub>, and Patrick D.
 Schloss<sub>1</sub>\*
 
-<blockquote>\* Correspondence: <pschloss@umich.edu>
+<p>\* Correspondence: <pschloss@umich.edu>
 
 734.647.5801
 
@@ -22,7 +22,7 @@ University of Michigan
 
 1500 W. Medical Center Dr.
 
-Ann Arbor, MI 48109</blockquote>
+Ann Arbor, MI 48109 </p>
 
 1 Department of Microbiology and Immunology, 1500 W. Medical Center,
 University of Michigan, Ann Arbor, MI 48109
