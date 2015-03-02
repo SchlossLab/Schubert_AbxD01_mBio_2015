@@ -10,19 +10,19 @@
 Alyxandria M. Schubert<sub>1</sub>, Hamide Sinani<sub>1</sub>, and Patrick D.
 Schloss<sub>1</sub>\*
 
-$nbsp;$nbsp;$nbsp;$nbsp;$nbsp;\* Correspondence: <pschloss@umich.edu>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\* Correspondence: <pschloss@umich.edu>
 
-$nbsp;$nbsp;$nbsp;$nbsp;$nbsp;734.647.5801
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;734.647.5801
 
-$nbsp;$nbsp;$nbsp;$nbsp;$nbsp;Department of Microbiology and Immunology
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Department of Microbiology and Immunology
 
-$nbsp;$nbsp;$nbsp;$nbsp;$nbsp;University of Michigan
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;University of Michigan
 
-$nbsp;$nbsp;$nbsp;$nbsp;$nbsp;5618 Medical Sciences II
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5618 Medical Sciences II
 
-$nbsp;$nbsp;$nbsp;$nbsp;$nbsp;1500 W. Medical Center Dr.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1500 W. Medical Center Dr.
 
-$nbsp;$nbsp;$nbsp;$nbsp;$nbsp;Ann Arbor, MI 48109
+Ann Arbor, MI 48109
 
 1 Department of Microbiology and Immunology, 1500 W. Medical Center,
 University of Michigan, Ann Arbor, MI 48109
