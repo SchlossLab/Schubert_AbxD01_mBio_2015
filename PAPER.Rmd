@@ -75,6 +75,7 @@ Though we are limited in a resolution at the strain and species level, we have i
 
 > ### CFU stats comparison
 > To compare CFU levels: 
+
 ```{r, eval=TRUE}
 
 file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
@@ -88,10 +89,11 @@ data <- data[ which(data$expgroup != '2cipro'), ] #remove ciprofloxacin to see n
 anova(lm(data$nextDayCFU ~ data$expgroup)) 
               
 ```
-> 
+
 > ### Amova to compare resulting community structures
 > Amova calculation in mothur to determine the uniqueness of each community structure:
-> 
+>
+
 ```
 dist.shared(shared=abxD01.final.an.unique_list.0.03.topdose2.shared, calc=thetayc-jclass, subsample=1625)
 amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist, design=topdose_design_byABX.txt, iters=1000000)
@@ -103,6 +105,7 @@ amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist,
 > 
 > This figure was built using the R script called "stacked.barcharts.r", which contains the stackedbarcharts() funciton in the abxD01 folder.The input files are listed in Github. The graph can be sorted 2 ways either by the untreated's decreasing relabund (sortbyphyl=FALSE), or by the most abundant within each phylum (sortbyphyl=TRUE). For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. 
 > The parameters I changed in the r script were:
+
 ```{r, eval=FALSE}
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 library(plotrix)
@@ -113,7 +116,7 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subs
 stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 1/topdose_tx1_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
 
 ```
-> 
+
 > Files saved as "topdose2_tx1_sorted_10x20.pdf" and "topdose2_tx2_sorted_10x20.pdf".
 > 
 > ### Supplemental Figure 1: correlation plot of diversity with *C. difficile*
@@ -121,6 +124,7 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subs
 > For the correlation calculations see the next section of the results.
 > Figure making:
 > 
+
 --------
 
 ***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each species-level OTU on the day of inoculation with the level of *C. difficile* colonization 24 hours later across all treatment groups (Figure 2). Of the significant OTUs (p<0.05) with an average abundance greater than 0.1%, OTUs with negative a correlation were associated with providing resistance against *C. difficile* (N=40) and those with a positive correlation were associated with susceptibility (N=7). Among various bacterial families, three were consistently negatively correlated with *C. difficile* colonization: Porphyromonadaceae (ρaverage= -0.63), Lachnospiraceae (ρaverage= -0.51), Ruminococcaceae (ρaverage= -0.53). OTUs from the Proteobacteria phylum had strong positive relationships with *C. difficile* colonization. These included OTUs associated with the Pseudomonas (ρ= 0.31) and Escherichia (ρ= 0.56) genera. Other notable OTUs that were found at the extremes of the distribution of correlation scores included those affiliated with the genus Lactobacillus (family Lactobacillaceae; OTU23, ρ= -0.73), Alistipes (family Rickenellaceae; OTU20, ρ= -0.78), Enterorhabdus (phylum Actinobacterium, family Coriobacteriaceae; OTU29, ρ= -0.70), and Streptococcus (family Streptococcaceae; OTU78, ρ= 0.36). Overall, these results suggest that several larger groups of related OTUs, particularly within the Firmicutes and Bacteroidetes phyla, may participate in colonization resistance against *C. difficile*, while members of the Proteobacteria phylum may be involved in susceptibility.
