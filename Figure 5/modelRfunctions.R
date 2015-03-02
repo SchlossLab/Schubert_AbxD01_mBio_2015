@@ -42,16 +42,20 @@ RF.validate <- function(data, iters){
 #
 # Returns 
 # 
-#  
-graphOTUxCD(otunames, otulabels, corrs)
-
-pretty_otus <- as.data.frame(gsub("Otu0*", "OTU", otus))
-otulabels <- cbind(ids,pretty_otus)
-names(otulabels) <- c("names", "otus")
 
 
-otus<-otunames
-ids<-otulabels
+
+
+# #  
+# graphOTUxCD(otunames, otulabels, corrs)
+# 
+# pretty_otus <- as.data.frame(gsub("Otu0*", "OTU", otus))
+# otulabels <- cbind(ids,pretty_otus)
+# names(otulabels) <- c("names", "otus")
+# 
+# 
+# otus<-otunames
+# ids<-otulabels
 
 
 graphOTUxCD <- function(otus, ids, corrs){
@@ -91,12 +95,13 @@ graphOTUxCD <- function(otus, ids, corrs){
     abline(v=0.0005, lty="dotted", lwd=2, col="black")
     
     test <- grep("aceae", ids[i, 1])
-    name<-as.character(ids$names[i])
+    name<-as.character(ids$name[i])
     number<-as.character(ids$otus[i])
     corr<-as.character(signif(corrs$corSpear[i], 2))
+    library(base)
     graphTitle <- bquote(bolditalic(.(name)) *" " *bold(.(number)) *bold(", ") *bold(rho) *bold(" = ") *bold(.(corr)))
     text(x = 0.00005, y = 9.3, labels = graphTitle, 
-         cex = 1, pos=4, font=2)
+         cex = 1, pos=4)
   
     #paste(labels[i], ", \u03c1 = ",signif(corrs[i, 2], 2))
     #bquote(bold(.(labels[i])) ~ bold(", ") ~ bold(rho) ~ bold(" = ") ~ bold(.(signif(corrs[i, 2], 3))))
