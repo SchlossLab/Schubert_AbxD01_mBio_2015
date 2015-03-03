@@ -51,7 +51,7 @@ Though we are limited in a resolution at the strain and species level, we have i
 
 ***Antibiotic Administration.*** Mice were administered one of seven different antibiotics, including cefoperazone, vancomycin, metronidazole, streptomycin, ciprofloxacin, ampicillin, and clindamycin. The route of administration depended on the specific antibiotic. Cefoperazone (either 0.5mg/ml, 0.3mg/ml, or 0.1mg/ml), vancomycin (0.625mg/ml, 0.3mg/ml, or 0.1mg/ml), streptomycin (5mg/ml, 0.5mg/ml, or 0.1mg/ml), metronidazole (0.5mg/ml), and ampicillin (0.5mg/ml) were all administered in the mouse drinking water for 5 days. Ciprofloxacin (10 mg/kg) was administered via oral gavage, and clindamycin (10 mg/kg) was administered via IP injection. All antibiotic treated mice were given 24 hours of recovery on regular drinking water prior to *C. difficile* challenge. 
 
-****C. difficile* Preparation and Challenge*** In all our experiments we used *C. difficile* strain 630Δerm [cite dena lyras]. The spores used were prepared from a single large batch made following previously established protocols [cite paul?]. Spores were quantified within the week prior to *C. difficile* challenge for each experiment [established protocol I can cite?]. Spores were quantified by boiling a small volume at 65°C for 20 minutes to kill off residual vegetative cells. The volume was then diluted and plated on TCCFA plates. These were incubated at 37°C anaerobically overnight. The next day *C. difficile* colony forming units (CFU) were counted and the concentration of spores in the working stock was back calculated. On the day of challenge, *C. difficile* spores, at a final concentration of 103, were administered to mice via oral gavage. Immediately following this challenge, the remaining *C. difficile* inoculum was diluted in a series and plated to confirm the correct dosage. 
+***C. difficile Preparation and Challenge*** In all our experiments we used *C. difficile* strain 630Δerm [cite dena lyras]. The spores used were prepared from a single large batch made following previously established protocols [cite paul?]. Spores were quantified within the week prior to *C. difficile* challenge for each experiment [established protocol I can cite?]. Spores were quantified by boiling a small volume at 65°C for 20 minutes to kill off residual vegetative cells. The volume was then diluted and plated on TCCFA plates. These were incubated at 37°C anaerobically overnight. The next day *C. difficile* colony forming units (CFU) were counted and the concentration of spores in the working stock was back calculated. On the day of challenge, *C. difficile* spores, at a final concentration of 103, were administered to mice via oral gavage. Immediately following this challenge, the remaining *C. difficile* inoculum was diluted in a series and plated to confirm the correct dosage. 
 
 ***Sample Collection and Plating*** Fecal samples were freshly collected for each mouse immediately prior to the administration of any antibiotic, during any antibiotic recovery days, and days 0 and 1 post *C. difficile* challenge. Each fecal sample on day 1 was weighed and diluted under anaerobic conditions with anaerobic PBS 1:10 based on pellet weight. A dilution series was then plated onto TCCFA plates [cite plates] and incubated at 37°C anaerobically overnight. The colony forming units (CFU) were counted and calculated the subsequent day. 
 
@@ -68,7 +68,7 @@ Though we are limited in a resolution at the strain and species level, we have i
 
 --------
 
-![**Figure 1.**](Figure 1/figure1.png)
+![**Figure 1.**](Figure1/figure1.png)
 
 **Figure 1. Microbiota structures following diverse antibiotic treatments.** This figure shows the average percent relative abundances for family level phylotypes found in each experimental group on the day of *C. difficile* challenge. Each row depicts a different antibiotic perturbation. The level *C. difficile* colonization found 24 hours post microbiota sampling is plotted in the top right corner. Each represented phylum is a different shade of gray. Error bars depict standard error of the mean. 
 
@@ -85,7 +85,7 @@ Though we are limited in a resolution at the strain and species level, we have i
 
 ```{r, eval=TRUE}
 
-file<-read.csv("~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
 
 data <- file[ which(file$expgroup != '1untr'), ] #choose experimental groups
 data$nextDayCFU<-log10(data$nextDayCFU+1) #log transform CFUs
@@ -117,10 +117,10 @@ amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist,
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 
 library(Hmisc)
-stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 1/topdose_tx2_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
+stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.2.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure1/topdose_tx2_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
 
 
-# stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 1/topdose_tx1_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
+# stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure1/topdose_tx1_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
 
 ```
 
@@ -138,7 +138,7 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subs
 
 --------
 
-![**Figure 2.**](Figure 2/figure2.png)
+![**Figure 2.**](Figure2/figure2.png)
 
 **Figure 2. TITLE.** Species level OTUs (3% cutoff) found on day 0 were correlated with the level of *C. difficile* CFU/g feces on day 1 using Spearman’s rank based correlation coefficient. Only OTUs with an average abundance of at least 0.05% across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant (p<0.05). OTUs were grouped by family. Asterisk * indicates unclassified at family level.
 
@@ -148,9 +148,9 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure 1/abxD01.final.tx.2.subs
 > 
 > The required file is located on Github.
 
-```{r, eval=TRUE}
+```{r, eval=TRUE, warning=FALSE}
 
-meta <- read.table('~/Documents/Github/abxD01/Figure 2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.txt',header=T)
+meta <- read.table('~/Documents/Github/abxD01/Figure2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.txt',header=T)
 #meta<-meta[1:96] #change based on number of OTUs above .05%, then add 2 for first two cols
 c<-1
 otu <- c()
@@ -174,7 +174,7 @@ results = NULL
 results <- matrix(c(otu, cor.spear, pval.spear, cor.ken, pval.ken), ncol=5)
 colnames(results) <- c('otu','corSpear','pvalSpear', "corKen", "pvalKen")
 results <- results[order(results[,3]),]  #order by pvalue column=3
-#write.table(results[1:dim(results)[1],], file="~/Documents/Github/abxD01/Figure 2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.results.txt", sep="\t", row.names=FALSE)
+#write.table(results[1:dim(results)[1],], file="~/Documents/Github/abxD01/Figure2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.results.txt", sep="\t", row.names=FALSE)
 print(results[1:dim(results)[1],])
 
 ```
@@ -185,10 +185,10 @@ print(results[1:dim(results)[1],])
 > 
 > Necessary files are on github, and it was made using the following code: 
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 
 ##Paper Figure: correlations for topdose 
-otuCorrs<-read.csv("~/Documents/Github/abxD01/Figure 2/corr_avgAbove0.001_topdose2_stripchart.csv", header=T)
+otuCorrs<-read.csv("~/Documents/Github/abxD01/Figure2/corr_avgAbove0.001_topdose2_stripchart.csv", header=T)
 
 pch <- c(6,6,6,6, 1,1, 1, 1, 1, 1, 1, 1,0, 0, 9, 2, 2, 4)
 par(mar=c(12, 7, 2, 2) +0.1, mgp=c(4, 1, 0)) #default is 5.1 4.1 4.1 2.1 [bottom, left, top, right space], mgp=c(3, 1, 0) [label line location for x/y location labels, tick mark labels location, tick mark locations]
@@ -215,7 +215,7 @@ The titrated antibiotic doses clearly resulted in distinct community structures 
 
 --------
 
-![**Figure 3.**](Figure 3/figure3.png)
+![**Figure 3.**](Figure3/figure3.png)
 
 **Figure 3. TITLE.** This figure shows the average percent relative abundances for family level phylotypes found on the day of *C. difficile* challenge in each titration group. Each row depicts a different antibiotic that was titrated. High, medium, and low antibiotic doses are represented by black, grey, and white colored bars respectively. The specific dose amount is shown for each antibiotic. Error bars show the standard error of the mean. 
 
@@ -226,7 +226,7 @@ The titrated antibiotic doses clearly resulted in distinct community structures 
 > For comparison of the CFU's among titration groups: 
 
 ```{r, eval=TRUE}
-file<-read.csv("~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
 file<-file[!grepl("untr", file$expgroup),]
 file$nextDayCFU <- log10(file$nextDayCFU+1)
 
@@ -259,7 +259,7 @@ diffs(vanc)
 
 ```{r, eval=FALSE}
 
-stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 3/alltitrations_tx2_barchart_ids.csv", excludeGroup="untr", divide = TRUE)
+stackedbarcharts(file = "~/Documents/Github/abxD01/Figure3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure3/alltitrations_tx2_barchart_ids.csv", excludeGroup="untr", divide = TRUE)
 
 ```
 
@@ -269,7 +269,7 @@ Additionally, we assessed the resistance of ampicillin treated mice given five e
 
 --------
 
-![**Figure 4.**](Figure 4/figure4.png)
+![**Figure 4.**](Figure4/figure4.png)
 
 **Figure 4. TITLE.** This figure shows the average percent relative abundances for family level phylotypes found on the day of *C. difficile* challenge in each experimental group. Each row depicts a different antibiotic that was allowed to recover. Black bars represent untreated animals. Grey bars represent animals given 1 day of recovery off antibiotics as in Figure 1. White bars represent animals given a total of 6 recovery days (5 additional days). Error bars show standard error of the mean.
 
@@ -280,7 +280,7 @@ Additionally, we assessed the resistance of ampicillin treated mice given five e
 > ### Statistical comparison of delayed and on time CFU results
 
 ```{r, eval=TRUE}
-file<-read.csv("~/Documents/Github/abxD01/Figure 5/abxD01.final.tx2.subsample.alldelay.relabund.csv", header=T)
+file<-read.csv("~/Documents/Github/abxD01/Figure4/abxD01.final.tx2.subsample.alldelay.relabund.csv", header=T)
 file<-file[file$expgroup!="1untr",]
 file$nextDayCFU <- log10(file$nextDayCFU+1)
 
@@ -310,7 +310,7 @@ diffs(amp)
 
 ```{r, eval=FALSE}
 
-stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 4/abxD01.final.tx.2.subsample.alldelay.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure 4/alldelay_tx2_barchart_ids.csv", divide = TRUE)
+stackedbarcharts(file = "~/Documents/Github/abxD01/Figure4/abxD01.final.tx.2.subsample.alldelay.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure4/alldelay_tx2_barchart_ids.csv", divide = TRUE)
 
 ```
 
@@ -318,11 +318,11 @@ stackedbarcharts(file = "~/Documents/Github/abxD01/Figure 4/abxD01.final.tx.2.su
 
 --------
 
-![**Figure 5A.**](Figure 5/figure5a_9x9.png)
+![**Figure 5A.**](Figure5/figure5a_9x9.png)
 
-![**Figure 5B.**](Figure 5/figure5b_6x4.5.png)
+![**Figure 5B.**](Figure5/figure5b_6x4.5.png)
 
-![**Figure 5C.**](Figure 5/figure5c.png)
+![**Figure 5C.**](Figure5/figure5c.png)
 
 **Figure 5. Random forest model to predict *C. difficile* colonization levels based on the microbiota.** a) The fit of the random forest model by experimental group. The dashed line represents the y=x line. b) The 15 OTUs with the highest percent increase in mean squared error when dropped from the model. c) The percent relative abundance of the top 8 OTUs from (b) on day 0 are plotted against the log<sub>10</sub> *C. difficile* CFU/g feces.
 
@@ -380,6 +380,7 @@ plot(numOTUxThreshold$numOTU ~ numOTUxThreshold$threshold, xlab="Avg % RelAbund 
 abline(v=seq(0,3, by=.1), col="light gray")
 abline(h=seq(1,300, by=10), col="light gray")
 ```
+
 > This feeds into the next analysis section.
 > 
 > ### Random forest results
@@ -430,7 +431,7 @@ topimp <- imp1[1:15,]
 
 > ### Figure 5A: Evaluating and plotting the fit of the model
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 predictions <- predict(toptitdel.rf, newdata=toptitdel[,-c(1,2)])
 actual <- toptitdel$nextDayCFU
 expgroup<- as.character(all[,2])
@@ -541,10 +542,11 @@ legend(x=7, y=3, legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=.6, b
 
 ```
 
-### Figure 5B: Importance Plot
-```{r, eval=TRUE}
+> ### Figure 5B: Importance Plot
+
+```{r, eval=FALSE}
 topimp<-topimp[order(topimp[,1], decreasing=FALSE),]
-ids <- read.csv(file = "~/Documents/Github/abxD01/Figure 5/rf.toptitdel.1p.importance.ids.csv", header = TRUE)
+ids <- read.csv(file = "~/Documents/Github/abxD01/Figure5/rf.toptitdel.1p.importance.ids.csv", header = TRUE)
 labels<- paste0(ids$name, " (", ids$otuname, ")")
 par(mfrow=c(1, 1)) #+1 to give extra labeling space
 par(mar=c(5, 15, 0.5, 2) +0.1, mgp=c(3, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
