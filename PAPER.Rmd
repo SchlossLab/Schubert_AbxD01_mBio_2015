@@ -113,14 +113,11 @@ amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist,
 > This figure was built using the R script called "stacked.barcharts.r", which contains the stackedbarcharts() funciton in the abxD01 folder.The input files are listed in Github. The graph can be sorted 2 ways either by the untreated's decreasing relabund (sortbyphyl=FALSE), or by the most abundant within each phylum (sortbyphyl=TRUE). For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. 
 > The parameters I changed in the r script were:
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, warning=FALSE}
 abx<-c("Untreated", "Ciprofloxacin", "Clindamycin", "Vancomycin", "Streptomycin", "Cefoperazone", "Ampicillin", "Metronidazole")
 
 library(Hmisc)
 stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.2.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure1/topdose_tx2_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
-
-
-# stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure1/topdose_tx1_barchart_ids.csv", graphLabels = abx, sortbyphyl = TRUE, graphbyphyl = FALSE)
 
 ```
 
@@ -138,9 +135,9 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.2.subsa
 
 --------
 
-![**Figure 2.**](Figure2/figure2.png)
+![**Figure 2.**](Figure2/figure2_9x6.5.png)
 
-**Figure 2. TITLE.** Species level OTUs (3% cutoff) found on day 0 were correlated with the level of *C. difficile* CFU/g feces on day 1 using Spearman’s rank based correlation coefficient. Only OTUs with an average abundance of at least 0.05% across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant (p<0.05). OTUs were grouped by family. Asterisk * indicates unclassified at family level.
+**Figure 2. Broader taxonomic groups share similar relationships with *C. difficile*.** Species level OTUs (3% cutoff) found on day 0 were correlated with the level of *C. difficile* CFU/g feces on day 1 using Spearman’s rank based correlation coefficient. Only OTUs with an average abundance of at least 0.05% across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant (p<0.05). OTUs were grouped by family. Asterisk * indicates unclassified at family level.
 
 --------
 
@@ -191,18 +188,18 @@ print(results[1:dim(results)[1],])
 otuCorrs<-read.csv("~/Documents/Github/abxD01/Figure2/corr_avgAbove0.001_topdose2_stripchart.csv", header=T)
 
 pch <- c(6,6,6,6, 1,1, 1, 1, 1, 1, 1, 1,0, 0, 9, 2, 2, 4)
-par(mar=c(12, 7, 2, 2) +0.1, mgp=c(4, 1, 0)) #default is 5.1 4.1 4.1 2.1 [bottom, left, top, right space], mgp=c(3, 1, 0) [label line location for x/y location labels, tick mark labels location, tick mark locations]
+par(mar=c(8, 6, 2, 2) +0.1, mgp=c(4, 1, 0)) #default is 5.1 4.1 4.1 2.1 [bottom, left, top, right space], mgp=c(3, 1, 0) [label line location for x/y location labels, tick mark labels location, tick mark locations]
 stripchart(otuCorrs$corr ~ otuCorrs$graphOrder, vertical=TRUE, ylab="Spearman Correlation", ylim=c(-1, 1), cex.axis=1, cex=2, pch=pch, lwd=2, col="black",  method="jitter",  jitter=.2, cex.lab=1.1, yaxt="n", xaxt="n")
 axis(1, cex.axis=1, at=(1:nlevels(otuCorrs$family)), labels=FALSE)
 family.labels <- unique(otuCorrs[order(otuCorrs$graphOrder), "family"])
-text(1:nlevels(otuCorrs$family)+.1, par("usr")[3]-0.05, label=(family.labels), xpd=NA, pos=2, srt=45, cex=1)
+text(1:nlevels(otuCorrs$family)+.3, par("usr")[3]-0.05, label=(family.labels), xpd=NA, pos=2, srt=45, cex=1)
 axis(2, cex.axis=1, at=seq(-1,+1, by=.1), las=1)
 color_transparent <- adjustcolor("black", alpha.f = 0.3) 
 abline(v=c(1:nlevels(otuCorrs$family)), col=color_transparent)
 abline(h=0, col="dark gray", lwd=2)
 abline(h=c(0.25, 0.5, 0.75, -0.25, -0.5, -0.75), col=color_transparent, lwd=2, lty="dashed")
 phylum.labels <- unique(otuCorrs[order(otuCorrs$graphOrder), "phyl"])
-leg<-legend("top", legend=phylum.labels, pch=c(6, 1, 0, 9, 2, 4), cex=0.7, bty="o", horiz=TRUE, pt.cex=1.5, text.width=2.5)
+leg<-legend("top",  legend=phylum.labels, pch=c(6, 1, 0, 9, 2, 4), cex=1, bty="o", horiz=TRUE, pt.cex=1, text.width=2.5)
 
 ```
 
