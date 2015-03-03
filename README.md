@@ -1,6 +1,6 @@
 README
 ======
 
-This repository corresponds to the manuscript "MANUSCRIPT TITLE" that is under consideration at JOURNAL.
+This repository corresponds to the manuscript "Alterations of the Murine Gut Microbiota that Lead to *Clostridium difficile* Colonization" that is under consideration at JOURNAL.
 
-Here you will see the R markdown file, markdown file, and pdf versions of the figures. An html-rendered version of the exectued R markdown file can be found HERE.
+Looking at the html rendered verion of the PAPER.Rmd file, you will find the body of the paper as well as the figures and corresponding analysis.
