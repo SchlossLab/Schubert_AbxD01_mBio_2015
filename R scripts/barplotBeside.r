@@ -1,7 +1,7 @@
 # The most number of side by side groups should be 3. Not made for others. 
 
 #run this alyx!! to fix missing stat letter
-barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file, titration){
+barplotBeside <- function(id.info, matrix.of.avgs, matrix.of.se, ids, file, titration=FALSE){
 
   library(Hmisc)
   groups <- unique(id.info$abx)

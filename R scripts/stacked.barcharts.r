@@ -522,7 +522,7 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
       matrix.se <- matrix.se[-which(grepl(excludeGroup, row.names(matrix.se))),]
       id.info <- id.info[-which(grepl(excludeGroup, id.info$expgroup)),]
       titration<-TRUE
-    }
+    } else{ titration <- FALSE}
     
     barplotBeside(id.info = id.info, matrix.of.avgs = mavgs, matrix.of.se = matrix.se, ids = ids, file=file, titration=titration)
     
