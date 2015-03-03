@@ -315,9 +315,7 @@ stackedbarcharts(file = "~/Documents/Github/abxD01/Figure4/abxD01.final.tx.2.sub
 
 --------
 
-![**Figure 5A.**](Figure5/figure5a_9x9.png)
-
-![**Figure 5B.**](Figure5/figure5b_6x4.5.png)
+![**Figure 5AB.**](Figure5/figure5ab.png)
 
 ![**Figure 5C.**](Figure5/figure5c.png)
 
@@ -400,12 +398,6 @@ for(i in 1:(length(otus))){
 }
 cols <- c(which(names(all)=="Group"), which(names(all)=="nextDayCFU"), cols)
 
-# dose <- all[1:99,cols]
-# titr <- all[100:153,cols]
-# del <- all[154:179, cols]
-# toptit <- all[1:153,cols]
-# titdel <- all[c(100:153, 154:179),cols]
-# topdel <- all[c(1:99, 154:179),cols]
 toptitdel <- all[,cols]
 library(randomForest)
 
@@ -419,11 +411,9 @@ plot(toptitdel.rf)
 varImpPlot(toptitdel.rf, type=1)
 imp<-importance(toptitdel.rf)
 imp1<-imp[order(imp[,1], decreasing = TRUE),]
-#imp2<-imp[order(imp[,2], decreasing = TRUE),]
 topimp <- imp1[1:15,]
-#toppurity <- imp2[1:15,]
 #write.table(topimp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importance.txt", sep="\t", row.names=TRUE)
-#write.table(toppurity, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importanceNode.txt", sep="\t", row.names=TRUE)
+
 ```
 
 > ### Figure 5A: Evaluating and plotting the fit of the model
@@ -434,6 +424,7 @@ actual <- toptitdel$nextDayCFU
 expgroup<- as.character(all[,2])
 results<-as.data.frame(cbind(actual, predictions))
 colnames(results) <- c( "actual", "predict")
+
 
 ybar <- apply(results, 2, mean)
 num<-sum((results$actual-ybar["actual"])*(results$predict-ybar["predict"]))
@@ -517,8 +508,16 @@ treatments <- c(control = "Control",
             metro1 = "Metronidazole",
             metro1d = "Metronidazole +5D")
 
-par(mfrow=c(1, 1)) 
-par(mar=c(5, 5, 4, 2) +0.1, mgp=c(3, 1, 0), las=1) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+#par(mfrow=c(1,2))
+design<-as.matrix(1:2)
+design<-cbind(design, c(3,3))
+layout(design, widths=c(1,1), heights=c(.3, 1))
+
+plot.new()
+par(mar=c(rep(0.5, 4)))
+legend("bottom", legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=1, bty="n", ncol = 2)
+
+par(mar=c(5, 5, 0.5, 0.5) +0.1, mgp=c(3, 1, 0), las=1) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
 plot(results[results[,1]=="control",2], 
      results[results[,1]=="control",3], 
      main="", 
@@ -535,7 +534,6 @@ for(i in 2:(length(legend.labels))){
          results[results[,1]==names(legend.labels)[i],3], 
          col=colors[i], pch=pch[i], cex=1.5)
 }
-legend(x=7, y=3, legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=.6, bty="n")
 
 ```
 
@@ -544,12 +542,17 @@ legend(x=7, y=3, legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=.6, b
 ```{r, eval=FALSE}
 topimp<-topimp[order(topimp[,1], decreasing=FALSE),]
 ids <- read.csv(file = "~/Documents/Github/abxD01/Figure5/rf.toptitdel.1p.importance.ids.csv", header = TRUE)
-labels<- paste0(ids$name, " (", ids$otuname, ")")
-par(mfrow=c(1, 1)) #+1 to give extra labeling space
-par(mar=c(5, 15, 0.5, 2) +0.1, mgp=c(3, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+#par(mfrow=c(1, 1)) #+1 to give extra labeling space
+par(mar=c(5, 15, 0.5, 1) +0.1, mgp=c(3, 1, 0), las=0) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
 plot(topimp[,1], 1:15, xlab="% Increase in Mean Squared Error", yaxt="n", ylab="", pch=16, cex=1.5, xlim=c(20, 80))
-axis(2, at = c(1:15), labels = labels, las=1, cex.axis=.9 )
+axis(2, at = c(1:15), labels = rep("", 15), las=1, cex.axis=.9 )
+for(z in 1:(dim(ids)[1])){
+  name<-as.character(ids$name[z])
+  otuname<- as.character(ids$otuname[z])
+  mtext(text = bquote(italic(.(name))*" ("*.(otuname)*")"), at=z, side = 2, line = 1, las=2)
+}
 abline(h=c(1:15), lty="dashed", col='black')
+
 ```
 
 > ### Testing a random forest model with only OTUs 3 and 39
