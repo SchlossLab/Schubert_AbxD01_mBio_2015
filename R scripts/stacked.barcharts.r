@@ -291,16 +291,24 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
   matrix.se<-as.matrix(sort_stderr)
   
   
-  
-  
   #####################################################################################################################
   #####################################################################################################################
   #####################################################################################################################
   ###PLOT PARAMETERS
   library(plotrix)
+  library(Hmisc)
   if(graphbyphyl==FALSE && divide==FALSE){
-    par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
-    par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0)) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+    #par(mfrow=c(numgr+1, 1)) #+1 to give extra labeling space
+  #  par(mar=c(0.3, 8, 0.5, 2) +0.1, mgp=c(4.5, 1, 0), las=2) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+   
+    par(mar=c(0.5,0.5,0.5,0.5))
+    design <- matrix(1:numgr, nrow=numgr, byrow=T)
+    design <- cbind(rep((numgr+1), numgr), design)
+    design <- rbind(design, c(0, numgr+2))
+    layout(design, widths=c(0.1,1), heights=c(rep(1, numgr), 1))
+    
+    
+    
     color_transparent <- adjustcolor("black", alpha.f = 0.1) 
     color <- gray.colors((numphyla+1), start=0, end=1, alpha=NULL)
     
@@ -332,12 +340,15 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
           , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
         )
         
-        axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
-        mtext(abx[j], side=2, line=6, cex=.8)
-        mtext(avgCD[j], side=2, line=4.5, cex=.8)
-        abline(h=c(0.001, 1), lwd=3) #min/max
+        axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, 1, 10, 100), cex.axis=1.1)
+        center <- (bp[1,1] + bp[leng,1])/2
+        graphlabel <- bquote(bold(.(abx[j])))
+        cdifflabel <- bquote(bolditalic("C. difficile")*bold(" CFU/g Feces = ")*bold(.(avgCD[j])))
+        text(center, 0.5, labels = graphlabel, cex = 1.2)
+        text(center, 0.15, labels = cdifflabel, cex = 1)
         abline(h=c(0.01, 0.1), col=color_transparent, lty="longdash", lwd=2)
         abline(h=c(0.0025, 0.005, 0.0075, 0.025, 0.05, 0.075, 0.25, 0.5, 0.75), col=color_transparent, lty="dashed")
+        box()
       }
       
       else{ #the last graph needs different margins    
@@ -351,19 +362,26 @@ stackedbarcharts <- function(file, fileIDS, graphLabels=NULL, sortbyphyl=TRUE, g
           , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
         )
         
-        #error.bar(bp[k], mavgs[j, 1:leng[2]], mstds[j, 1:leng[2]])  #the bp[k] was for storing the barplot locations to use for these errors
-        axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, .01, .1, 1), cex.axis=1.1)
-        mtext(abx[j], side=2, line=6, cex=.8)
-        mtext(avgCD[j], side=2, line=4.5, cex=.8)
+        axis(2, las=1, at=c(.001, .01, .1, 1), labels=c(0, 1, 10, 100), cex.axis=1.1)
+        center <- (bp[1,1] + bp[leng,1])/2
+                
+        graphlabel <- bquote(bold(.(abx[j])))
+        cdifflabel <- bquote(bolditalic("C. difficile")*bold(" CFU/g Feces = ")*bold(.(avgCD[j])))
+        
+        text(center, 0.5, labels = graphlabel, cex = 1.2)
+        text(center, 0.15, labels = cdifflabel, cex = 1)
+        
         axis(1, at=(label[,1]), labels=FALSE)
-        text(label[,1]+.13, .0005, label=ids[,2], xpd=NA, pos=2, srt=45, cex=1.2)
-        #text(-3.9,.0001, label=expression(paste(italic("C.d."), " CFU/g Feces:")), xpd=NA, pos=2, srt=90, cex=1.1)
-        abline(h=c(0.001,1), lwd=3) #min/max
+        text(label[,1]+.2, .0005, label=ids[,2], xpd=NA, pos=2, srt=45, cex=1.2)
         abline(h=c(0.01, 0.1), col=color_transparent, lty="longdash", lwd=2)
         abline(h=c(0.0025, 0.005, 0.0075, 0.025, 0.05, 0.075, 0.25, 0.5, 0.75), col=color_transparent, lty="dashed") 
+        box()
       }  
-      
     }
+    plot.new()
+    text(x=0.3, y=0.5, label="% Relative Abundance", cex=1.5, srt=90, font=2)
+    plot.new()
+    
     par(mfrow=c(1, 1))
   } #if(graphbyphyl=FALSE)
   #####END 1ST PLOT PARAMETERS
