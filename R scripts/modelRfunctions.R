@@ -96,7 +96,7 @@ graphOTUxCD <- function(otus, ids, corrs){
     
     test <- grep("aceae", ids[i, 1])
     name<-as.character(ids$name[i])
-    number<-as.character(ids$otus[i])
+    number<-as.character(ids$otuname[i])
     corr<-as.character(signif(corrs$corSpear[i], 2))
     library(base)
     graphTitle <- bquote(bolditalic(.(name)) *" " *bold(.(number)) *bold(", ") *bold(rho) *bold(" = ") *bold(.(corr)))

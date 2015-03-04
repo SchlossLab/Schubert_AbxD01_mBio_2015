@@ -74,7 +74,7 @@ Though we are limited in a resolution at the strain and species level, we have i
 
 --------
 
-![**Supplemental Figure 1.**](supplemental/FigS1_topdose_inverseSimp.pdf)
+![**Supplemental Figure 1.**](supplemental/sfigure1.png)
 
 **Supplemental Figure 1. Diversity is nevatively correlated with *C. difficile* levels.** This figure shows the relationship between the inverse simpson diversity index of microbiotas of each experimental group on day 0 and *C. difficile* CFU/g feces on day 1. Spearman's rho is plotted in the top right corner. 
 
@@ -127,7 +127,85 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.2.subsa
 > 
 > For the correlation calculations see the next section of the results.
 > Figure making:
-> 
+
+```
+# In mothur:
+summary.single(calc=invsimpson-shannon, shared=abxD01.final.an.unique_list.shared, subsample=1625)
+
+```
+> Using these results, I selected the samples within the original antibiotic set.  Then I calculated the spearman correlation of *C. difficile* CFU/g feces on day 1 with the level of diversity found in the community on day 0 (day of challenge). Both inverse simpson and shannon indices were included. 
+
+
+```{r, eval=FALSE}
+
+diversity<-read.csv("~/Documents/Github/abxD01/supplemental/topdose_diversity.csv",  header=T)
+diversity$nextDayCFU <- log((diversity$nextDayCFU+1), 10)
+
+#correlation of top dose
+pval.spear <- c()
+cor.spear <- c()
+count <- 1
+for(i in 4:5){
+  cor.spear[count] <- cor.test(diversity[,3],diversity[,i], method="spearman")$estimate
+  pval.spear[count] <- cor.test(diversity[,3],diversity[,i], method="spearman")$p.value
+  count <- count + 1 
+}
+corr.results <- as.matrix(cbind(cor.spear, pval.spear))
+rownames(corr.results) <- names(diversity)[4:5]
+
+# Plot inverse simpson vs. C. difficile levels
+color<-rainbow(7)
+colors.top <- c(control = "black",
+          cipro = color[1],
+          clinda = "#FFCC00",
+          vanc.625 = "#00CC00",
+          strep5 = "#33FFFF",
+          cef.5 = color[5],
+          amp.5 = "#6600FF",
+          metro1 = color[7])
+
+# shapes
+pch.top <- c(control = 1,
+         cipro = 16,
+         clinda = 16,
+         vanc.625 = 16,
+         strep5 = 16,
+         cef.5 = 16,
+         amp.5 = 16,
+         metro1 = 16)
+
+#these are needed for the legend
+legend.labels.top <- c(control = "Control",
+            cipro = "Ciprofloxacin",
+            clinda = "Clindamycin",
+            vanc.625 = "Vancomycin",
+            strep5 = "Streptomycin",
+            cef.5 = "Cefoperazone",
+            amp.5 = "Ampicillin",
+            metro1 = "Metronidazole")
+
+par(mar=c(5, 5, 1, 1) +0.1, mgp=c(3, 1, 0)) 
+par(mfrow=c(1,1))
+
+plot(diversity$invsimpson[diversity$expgroup=="control"], 
+     diversity$nextDayCFU[diversity$expgroup=="control"], 
+     pch=pch.top[1], col=colors.top[1], xlim=c(0, 20), ylim=c(0,10),  
+     cex=1.5, yaxt="n",  xaxt="n", cex.lab=1,
+     ylab=as.expression("Log " ~ italic("C. difficile") ~ " CFU/g feces"), xlab="Inverse Simpson Index")
+
+axis(1, las=1, cex.axis=1, at=seq(0,20, by=2))
+axis(2, las=1, cex.axis=1, at=seq(0,10, by=1))
+
+for(i in 2:(length(unique(diversity$expgroup)))){
+  points(diversity$invsimpson[diversity$expgroup==names(legend.labels.top)[i]],
+         diversity$nextDayCFU[diversity$expgroup==names(legend.labels.top)[i]], 
+         pch=pch.top[i], col=colors.top[i], cex=1.5)
+}
+
+legend(16, 6, legend=legend.labels.top, pch=pch.top, col=colors.top,  pt.cex=1.5, cex=1, bty="n", y.intersp=1.5)
+
+```
+
 
 --------
 
@@ -449,8 +527,8 @@ colors <- c(control = "black",
           cef.5 = color[5],
           cef.3 = color[5],
           cef.1 = color[5],
-          amp.5 = color[6],
-          amp.5d = color[6],
+          amp.5 = "#6600FF",
+          amp.5d = "#6600FF",
           metro1 = color[7],
           metro1d = color[7])
 
