@@ -189,11 +189,11 @@ par(mfrow=c(1,1))
 
 plot(diversity$invsimpson[diversity$expgroup=="control"], 
      diversity$nextDayCFU[diversity$expgroup=="control"], 
-     pch=pch.top[1], col=colors.top[1], xlim=c(0, 20), ylim=c(0,10),  
+     pch=pch.top[1], col=colors.top[1], xlim=c(0, 25), ylim=c(0,10),  
      cex=1.5, yaxt="n",  xaxt="n", cex.lab=1,
      ylab=as.expression("Log " ~ italic("C. difficile") ~ " CFU/g feces"), xlab="Inverse Simpson Index")
 
-axis(1, las=1, cex.axis=1, at=seq(0,20, by=2))
+axis(1, las=1, cex.axis=1, at=seq(0,25, by=5))
 axis(2, las=1, cex.axis=1, at=seq(0,10, by=1))
 
 for(i in 2:(length(unique(diversity$expgroup)))){
@@ -202,7 +202,8 @@ for(i in 2:(length(unique(diversity$expgroup)))){
          pch=pch.top[i], col=colors.top[i], cex=1.5)
 }
 
-legend(16, 6, legend=legend.labels.top, pch=pch.top, col=colors.top,  pt.cex=1.5, cex=1, bty="n", y.intersp=1.5)
+cor<-signif(results[1,1],2)
+legend("topright", inset=0.05, legend=legend.labels.top, pch=pch.top, col=colors.top,  pt.cex=1.5, cex=1, bty="n", y.intersp=1.5)
 
 ```
 
