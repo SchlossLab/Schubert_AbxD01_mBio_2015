@@ -393,7 +393,82 @@ getMatrixSubset <- function(file, ids){
 
 
 #getMatrixSubset("~/Desktop/mothur/abxD01/sparCC/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.all.0.03.filter16mintotal.0.03.sparcc_correlation", "~/Desktop/mothur/abxD01/ids.txt")
+file = "~/Desktop/mothur/abxD01/test.txt"
 
+# setRange = vector of 2 numbers signifying the range of days to look over for differences in thetayc or jaccard, etc
+getDistDiffs<-function(file, setRange=NULL){
+  ltDist<- read.delim(file = file, header=F, stringsAsFactors=F)
+  length <- ltDist[1,1]
+  ltDist <- ltDist[-1,]
+  ids <- c()
+  days <- c()
+  for(i in 1:length){
+    raw.end <- regexpr("D",ltDist[i,1])
+    raw.id <- substr(ltDist[i,1], 1, raw.end-1)
+    days[i] <- substr(ltDist[i,1], raw.end+1, 100)
+    substrInd<-regexpr("[0-9]+[-][0-9]+", raw.id)
+    id <- substr(ltDist[i,1], substrInd[1], attr(substrInd, which = "match.length"))
+    ids[i] <- id
+  }
+  uniq.ids<-unique(ids)
+  days <- as.numeric(days)
+
+  if (length(setRange)==2){
+    start <- setRange[1]
+    end <- setRange[2]
+  } else {
+    start <- range(days)[1]
+    end <- range(days)[2] 
+  }
+
+  dist.from <- matrix(nrow = (end - start))
+
+  for(i in 1:(length(uniq.ids))){
+    id.ind <- ids==uniq.ids[i] #grabs indices in the data frame interested in
+    id.days <- days[id.ind] #grabs the days for the first unique id
+    id.days <- id.days[order(id.days, decreasing = F)]
+    
+    # initialize a "distance from" matrix with NAs based on the entire range
+    # This way if we are missing any samples we have an NA instead
+    id.from <- matrix(nrow=(end-start))
+    colnames(id.from) <- paste0(uniq.ids[i], "-D", start)
+    rownames(id.from) <- c((start+1):end)
+    
+    start.ind <- c()
+    start.ind <- which(days==start & id.ind)
+    for(j in 2:(length(id.days))){          
+      # index to search ltDist:
+      index <- which(days==id.days[j] & id.ind)
+      
+      # find matching index in id.from to put in right spot:
+      id.from.index <- which(rownames(id.from)==id.days[j])
+      
+      # Note: the cols of ltDist are off by 1 because the ids are in col 1
+      # That's why there's "+1" for the col index
+      if( is.na( ltDist[start.ind, (index+1)] ) ) {
+        id.from[id.from.index, 1] <- ltDist[index, (start.ind+1)]
+      } else( id.from[id.from.index, 1] <- ltDist[start.ind, (index+1)] )
+      
+    } # end for(j in 2:(length(id.days)))
+    
+    dist.from <- cbind(dist.from,id.from)
+    
+  } # end for(i in 1:(length(uniq.ids)))
+  
+  dist.from <- dist.from[,-1]
+  na.ind <- which(is.na(dist.from))
+  max <- max(c(dist.from)[-na.ind])
+  
+  colors<-rainbow(dim(dist.from)[2])
+  plot(rownames(dist.from), dist.from[,1], 
+       xlab="Day", ylab=paste("ThetaYC distance from Day", start), 
+       ylim=c(0,max+max*.1),
+       col=colors[1], pch=16, cex=2)
+  for(i in 2:(dim(dist.from)[2])){
+    points(rownames(dist.from), dist.from[,i], 
+           col=colors[i], pch=16, cex=2)
+  }
+}
 
 ##########################################################################
 # Returns compliments! Plots ranks of models by AdjR^2, BIC, and Mallow's Cp.
