@@ -482,12 +482,9 @@ getDistDiffs<-function(file, setRange=NULL){
   } # end for(i in 1:(length(uniq.ids)))
   
   dist.from <- dist.from[,-1]
+  
   return(dist.from)
 }
-
-metadata <- read.delim(file="~/Desktop/mothur/abxD01/searchme.txt", header = T, stringsAsFactors=F)
-metadata$sample[1951] <- "007-1D1"
-names(metadata)[3] <- "group"
 
 plot.dist.from <- function(dist.from){
   matchPos <- match(colnames(dist.from), metadata$sample)
@@ -500,10 +497,10 @@ plot.dist.from <- function(dist.from){
   delay.group <- group[time=="delayed" & day == "-11"]
   ids <- cbind(delay.ids, delay.abx, delay.group)
   
-  dist.from <- dist.from[ids, ]
-  na.ind <- which(is.na(dist.from))
-  max <- max(c(dist.from)[-na.ind])
-  
+#   dist.from <- dist.from[ids, ]
+#   na.ind <- which(is.na(dist.from))
+#   max <- max(c(dist.from)[-na.ind])
+#   
   colors<-rainbow(length(unique(delay.abx)))
   colors <- c(amp="#6600FF",
               metro="#FF00DBFF")
@@ -512,14 +509,37 @@ plot.dist.from <- function(dist.from){
            ylim=c(.2,1), xlim=c(-5, 0))
   # Fill remaining points
   for(i in 1:(dim(ids)[1])){
-    notNApts <- !is.na(dist.from[6:11,ids[i]])
+    notNApts <- !is.na(dist.from[6:11,ids[i,1]])
     
     points(row.names(dist.from)[which(notNApts)+5], dist.from[which(notNApts)+5,ids[i]], 
            col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1)
     lines(row.names(dist.from)[which(notNApts)+5], dist.from[which(notNApts)+5,ids[i]], 
           col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1)
   }
-  legend("bottom", legend=names(colors), col=colors, pch=1)
+  legend("bottom", legend=names(colors), col=colors, pch=1, bty="n")
+  
+  subdist <- dist.from[6:11, ids[,1]]
+  ampdist <- subdist[,ids[,2]=="amp"]
+  metrodist <- subdist[,ids[,2]=="metro"]
+  avg<-function(numbers){
+    #print(numbers)
+    index <- which(!is.na(numbers))
+   # print(numbers[index])
+    sumTot <- sum(as.numeric(numbers[index]))
+  # print(sumTot)
+    total<-sum(!is.na(numbers))
+    result <-sumTot/total
+    #print(result)
+    return(result)
+  }
+  apply(ampdist, 1, avg)
+  plot(x="", y="",xlab="Day", ylab=paste("ThetaYC distance from Day", start), 
+       ylim=c(.2,1), xlim=c(-5, 0))
+  points(-5:0, apply(ampdist, 1, avg), pch=16, col=colors[1])
+  lines(-5:0, apply(ampdist, 1, avg), pch=16, col=colors[1])
+  points(-5:0, apply(metrodist, 1, avg), pch=16, col=colors[2])
+  lines(-5:0, apply(metrodist, 1, avg), pch=16, col=colors[2])
+  legend("bottom", legend=c("Ampicillin", "Metronidazole"), col=colors, pch=16, bty="n", horiz=TRUE, text.width=1)
   
 }
 

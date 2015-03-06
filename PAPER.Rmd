@@ -202,7 +202,6 @@ for(i in 2:(length(unique(diversity$expgroup)))){
          pch=pch.top[i], col=colors.top[i], cex=1.5)
 }
 
-cor<-signif(results[1,1],2)
 legend("topright", inset=0.05, legend=legend.labels.top, pch=pch.top, col=colors.top,  pt.cex=1.5, cex=1, bty="n", y.intersp=1.5)
 
 ```
@@ -351,8 +350,26 @@ Additionally, we assessed the resistance of ampicillin treated mice given five e
 
 --------
 
+![**Supplemental Figure 2.**](supplemental/sfigure2.png)
+
+**Supplemental Figure 2. Structural distances between untreated and recovery days.** This figure shows the average theta YC distance between pretreatment and recovery days by antibiotic group. Day -11 represent untreated mice. Day 0 represents day of *C. difficile* challenge. Error bars show standard error of the mean.
+
+--------
+
 > ### Differences between recovery days' thetayc
-> 
+ 
+```{r, eval=FALSE}
+file = "~/Desktop/mothur/abxD01/abxD01.final.an.unique_list.0.03.recovery.vancomycin.thetayc.0.03.lt.ave.dist"
+diffs <- getDistDiffs(file=file)
+
+metadata <- read.delim(file="~/Desktop/mothur/abxD01/searchme.txt", header = T, stringsAsFactors=F)
+metadata$sample[1951] <- "007-1D1" # ID was messed up
+names(metadata)[3] <- "group"
+
+plot.dist.from(dist.from = diffs)
+
+```
+
 > ### Statistical comparison of delayed and on time CFU results
 
 ```{r, eval=TRUE}
