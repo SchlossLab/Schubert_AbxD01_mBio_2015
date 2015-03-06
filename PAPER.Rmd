@@ -356,7 +356,7 @@ Additionally, we assessed the resistance of ampicillin treated mice given five e
 
 --------
 
-> ### Differences between recovery days' thetayc
+> ### Supplemental Figure 2: Differences between recovery days' thetayc
  
 ```{r, eval=FALSE}
 file = "~/Desktop/mothur/abxD01/abxD01.final.an.unique_list.0.03.recovery.vancomycin.thetayc.0.03.lt.ave.dist"
