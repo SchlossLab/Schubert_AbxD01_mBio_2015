@@ -394,15 +394,31 @@ getMatrixSubset <- function(file, ids){
 
 #getMatrixSubset("~/Desktop/mothur/abxD01/sparCC/abxD01.final.an.unique_list.0.03.subsample.0.03.pick.all.0.03.filter16mintotal.0.03.sparcc_correlation", "~/Desktop/mothur/abxD01/ids.txt")
 file = "~/Desktop/mothur/abxD01/test.txt"
+file = "~/Desktop/mothur/abxD01/abxD01.final.an.unique_list.0.03.recovery.vancomycin.thetayc.0.03.lt.ave.dist"
 
 # setRange = vector of 2 numbers signifying the range of days to look over for differences in thetayc or jaccard, etc
 getDistDiffs<-function(file, setRange=NULL){
-  ltDist<- read.delim(file = file, header=F, stringsAsFactors=F)
-  length <- ltDist[1,1]
-  ltDist <- ltDist[-1,]
+  values <- c()
+  values<- scan(file = file, what="character")
+  all.ids<-grep("D", values)
+  leng <- length(all.ids)
+  ltDist <- matrix( nrow=leng, ncol=leng+1)
+  idnames <- values[all.ids]
+  val.ind<- 2
+  for(i in 1:(leng)){
+    
+    if(i==leng)
+    {
+      count <- leng
+    } else {count <- all.ids[i+1]-all.ids[i]-1}
+    
+    ltDist[i, 1:(1+count)] <- values[(val.ind):(val.ind+count)]
+    val.ind <- val.ind + count +1 
+  }
+  
   ids <- c()
   days <- c()
-  for(i in 1:length){
+  for(i in 1:leng){
     raw.end <- regexpr("D",ltDist[i,1])
     raw.id <- substr(ltDist[i,1], 1, raw.end-1)
     days[i] <- substr(ltDist[i,1], raw.end+1, 100)
@@ -428,47 +444,85 @@ getDistDiffs<-function(file, setRange=NULL){
     id.days <- days[id.ind] #grabs the days for the first unique id
     id.days <- id.days[order(id.days, decreasing = F)]
     
+
+    start.ind <- c()
+    start.ind <- which(days==start & id.ind)
+    start.day <- start
+    if(length(start.ind)==0){
+      local.start <- range(id.days)[1]
+      start.ind <- which(days==local.start & id.ind)
+      start.day <- local.start
+    }
+    
     # initialize a "distance from" matrix with NAs based on the entire range
     # This way if we are missing any samples we have an NA instead
     id.from <- matrix(nrow=(end-start))
-    colnames(id.from) <- paste0(uniq.ids[i], "-D", start)
     rownames(id.from) <- c((start+1):end)
+    colnames(id.from) <- idnames[which(ids==uniq.ids[i] & days==start.day)]
     
-    start.ind <- c()
-    start.ind <- which(days==start & id.ind)
-    for(j in 2:(length(id.days))){          
-      # index to search ltDist:
-      index <- which(days==id.days[j] & id.ind)
-      
-      # find matching index in id.from to put in right spot:
-      id.from.index <- which(rownames(id.from)==id.days[j])
-      
-      # Note: the cols of ltDist are off by 1 because the ids are in col 1
-      # That's why there's "+1" for the col index
-      if( is.na( ltDist[start.ind, (index+1)] ) ) {
-        id.from[id.from.index, 1] <- ltDist[index, (start.ind+1)]
-      } else( id.from[id.from.index, 1] <- ltDist[start.ind, (index+1)] )
-      
-    } # end for(j in 2:(length(id.days)))
+    if(length(id.days)>1){
+      for(j in 2:(length(id.days))){          
+        # index to search ltDist:
+        index <- which(days==id.days[j] & id.ind)
+        
+        # find matching index in id.from to put in right spot:
+        id.from.index <- which(rownames(id.from)==id.days[j])
+        
+        # Note: the cols of ltDist are off by 1 because the ids are in col 1
+        # That's why there's "+1" for the col index
+        if( is.na( ltDist[start.ind, (index+1)] ) ) {
+          id.from[id.from.index, 1] <- ltDist[index, (start.ind+1)]
+        } else( id.from[id.from.index, 1] <- ltDist[start.ind, (index+1)] )
+        
+      } # end for(j in 2:(length(id.days)))
+    } # end if(length(id.days)>1)
     
     dist.from <- cbind(dist.from,id.from)
     
   } # end for(i in 1:(length(uniq.ids)))
   
   dist.from <- dist.from[,-1]
+  return(dist.from)
+}
+
+metadata <- read.delim(file="~/Desktop/mothur/abxD01/searchme.txt", header = T, stringsAsFactors=F)
+metadata$sample[1951] <- "007-1D1"
+names(metadata)[3] <- "group"
+
+plot.dist.from <- function(dist.from){
+  matchPos <- match(colnames(dist.from), metadata$sample)
+  abx <- metadata$abx[matchPos]
+  time <- metadata$time[matchPos]
+  day <- metadata$day[matchPos]
+  group <- metadata$group[matchPos]
+  delay.ids<- colnames(dist.from)[time=="delayed" & day == "-11"]
+  delay.abx <- abx[time=="delayed" & day == "-11"]
+  delay.group <- group[time=="delayed" & day == "-11"]
+  ids <- cbind(delay.ids, delay.abx, delay.group)
+  
+  dist.from <- dist.from[ids, ]
   na.ind <- which(is.na(dist.from))
   max <- max(c(dist.from)[-na.ind])
   
-  colors<-rainbow(dim(dist.from)[2])
-  plot(rownames(dist.from), dist.from[,1], 
-       xlab="Day", ylab=paste("ThetaYC distance from Day", start), 
-       ylim=c(0,max+max*.1),
-       col=colors[1], pch=16, cex=2)
-  for(i in 2:(dim(dist.from)[2])){
-    points(rownames(dist.from), dist.from[,i], 
-           col=colors[i], pch=16, cex=2)
+  colors<-rainbow(length(unique(delay.abx)))
+  colors <- c(amp="#6600FF",
+              metro="#FF00DBFF")
+  
+  plot(x="", y="",xlab="Day", ylab=paste("ThetaYC distance from Day", start), 
+           ylim=c(.2,1), xlim=c(-5, 0))
+  # Fill remaining points
+  for(i in 1:(dim(ids)[1])){
+    notNApts <- !is.na(dist.from[6:11,ids[i]])
+    
+    points(row.names(dist.from)[which(notNApts)+5], dist.from[which(notNApts)+5,ids[i]], 
+           col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1)
+    lines(row.names(dist.from)[which(notNApts)+5], dist.from[which(notNApts)+5,ids[i]], 
+          col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1)
   }
+  legend("bottom", legend=names(colors), col=colors, pch=1)
+  
 }
+
 
 ##########################################################################
 # Returns compliments! Plots ranks of models by AdjR^2, BIC, and Mallow's Cp.
