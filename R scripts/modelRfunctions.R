@@ -486,6 +486,9 @@ getDistDiffs<-function(file, setRange=NULL){
   return(dist.from)
 }
 
+
+
+# This function is pretty tailored to the ampicillin/metronidazole recovery data
 plot.dist.from <- function(dist.from){
   matchPos <- match(colnames(dist.from), metadata$sample)
   abx <- metadata$abx[matchPos]
@@ -496,51 +499,69 @@ plot.dist.from <- function(dist.from){
   delay.abx <- abx[time=="delayed" & day == "-11"]
   delay.group <- group[time=="delayed" & day == "-11"]
   ids <- cbind(delay.ids, delay.abx, delay.group)
-  
-#   dist.from <- dist.from[ids, ]
-#   na.ind <- which(is.na(dist.from))
-#   max <- max(c(dist.from)[-na.ind])
-#   
+
   colors<-rainbow(length(unique(delay.abx)))
   colors <- c(amp="#6600FF",
               metro="#FF00DBFF")
+  # xlab=expression(paste("Days Pre-", italic("C. difficile"), " Challenge")),
+  plot(x="", y="", 
+       ylab=paste("ThetaYC distance from Day", start), 
+       ylim=c(0,1), xlim=c(-6, 0.25), yaxt='n', xaxt='n')
+  axis(1, at=seq(-6, 0, by=1), label=c(-11, seq(-5, 0, by=1)), las= 1)
+  axis(2, at=seq(0, 1, by=0.2))
   
-  plot(x="", y="",xlab="Day", ylab=paste("ThetaYC distance from Day", start), 
-           ylim=c(.2,1), xlim=c(-5, 0))
-  # Fill remaining points
-  for(i in 1:(dim(ids)[1])){
-    notNApts <- !is.na(dist.from[6:11,ids[i,1]])
-    
-    points(row.names(dist.from)[which(notNApts)+5], dist.from[which(notNApts)+5,ids[i]], 
-           col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1)
-    lines(row.names(dist.from)[which(notNApts)+5], dist.from[which(notNApts)+5,ids[i]], 
-          col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1)
+  # "range" to jitter about
+  # "number" of values needed to jitter about x
+  jitter.about <- function(range=c(0,0), number=1) {
+    results <- runif(number, range[1], range[2])
+    return(results)    
   }
-  legend("bottom", legend=names(colors), col=colors, pch=1, bty="n")
   
+  # Plot each cage individually
+  for(i in 1:(dim(ids)[1])){
+    # only grab points that don't include NA values
+    notNApts <- !is.na(dist.from[6:11,ids[i,1]]) 
+    
+    # get the xvals for these points
+    xvals <- row.names(dist.from)[which(notNApts)+5]
+    
+    # jitter the x values to see them better
+    jitter.xvals <- c()
+    for(j in 1:(length(xvals))){
+      range <- c(-0.25, 0.25)+as.numeric(xvals[j])
+      new.x <- jitter.about(range, 1)
+      jitter.xvals <- c(jitter.xvals, new.x)
+    }
+    
+    jitter.xvals <- c(-6, jitter.xvals)
+    yvals <- c(0, dist.from[which(notNApts)+5,ids[i]])
+    points(jitter.xvals, yvals, 
+           col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1)
+    lines(jitter.xvals, yvals,
+          col=colors[delay.abx[i]], pch=which(unique(delay.group)==delay.group[i]), cex=1, lty="dashed")
+  }
+  
+  # Grab just the ampicillin or metro data
   subdist <- dist.from[6:11, ids[,1]]
   ampdist <- subdist[,ids[,2]=="amp"]
   metrodist <- subdist[,ids[,2]=="metro"]
+  
+  # Wrote my own function for finding mean so that I could ignore NA values
   avg<-function(numbers){
-    #print(numbers)
     index <- which(!is.na(numbers))
-   # print(numbers[index])
     sumTot <- sum(as.numeric(numbers[index]))
-  # print(sumTot)
     total<-sum(!is.na(numbers))
     result <-sumTot/total
-    #print(result)
     return(result)
   }
-  apply(ampdist, 1, avg)
-  plot(x="", y="",xlab="Day", ylab=paste("ThetaYC distance from Day", start), 
-       ylim=c(.2,1), xlim=c(-5, 0))
-  points(-5:0, apply(ampdist, 1, avg), pch=16, col=colors[1])
-  lines(-5:0, apply(ampdist, 1, avg), pch=16, col=colors[1])
-  points(-5:0, apply(metrodist, 1, avg), pch=16, col=colors[2])
-  lines(-5:0, apply(metrodist, 1, avg), pch=16, col=colors[2])
-  legend("bottom", legend=c("Ampicillin", "Metronidazole"), col=colors, pch=16, bty="n", horiz=TRUE, text.width=1)
-  
+
+  points(-6:0, c(0, apply(ampdist, 1, avg)), pch=16, col=colors[1], cex=1.7)
+  lines(-6:0, c(0, apply(ampdist, 1, avg)), pch=16, col=colors[1], lwd=3)
+  points(-6:0, c(0, apply(metrodist, 1, avg)), pch=16, col=colors[2], cex=1.7)
+  lines(-6:0, c(0, apply(metrodist, 1, avg)), pch=16, col=colors[2], lwd=3)
+  abline(v=-5.5, lty="dashed", lwd=3)
+  #legend("bottom", legend=c("Ampicillin", "Metronidazole"), col=colors, pch=16, bty="n", horiz=TRUE, text.width=1, pt.cex = 1.5)
+
 }
 
 
