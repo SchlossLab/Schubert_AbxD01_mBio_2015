@@ -587,7 +587,7 @@ varImpPlot(toptitdel.rf, type=1)
 imp<-importance(toptitdel.rf)
 imp1<-imp[order(imp[,1], decreasing = TRUE),]
 topimp <- imp1[1:15,]
-#write.table(topimp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importance.txt", sep="\t", row.names=TRUE)
+write.table(topimp, file="~/Desktop/mothur/abxD01/rf/rf.toptitdel.1p.importance.txt", sep="\t", row.names=TRUE)
 
 ```
 
@@ -607,7 +607,7 @@ denA <- sum((results$actual-ybar["actual"])^2)
 denB <- sum((results$predict-ybar["predict"])^2)
 rsq <- (num^2)/(denA*denB) #calculated from the square of the sample correlation coefficient, little r squared as opposed to big R squared
 
-results <- cbind(expgroup, results)
+fit.results <- cbind(expgroup, results)
 
 #Plot observed vs predicted
 #information for plotting
@@ -662,44 +662,26 @@ legend.labels <- c(control = "Control",
             cef.3 = "Cefoperazone 0.3 mg/ml",
             cef.1 = "Cefoperazone 0.1 mg/ml",
             amp.5 = "Ampicillin",
-            amp.5d = "Ampicillin +5D",
+            amp.5d = "Ampicillin +5 days",
             metro1 = "Metronidazole",
-            metro1d = "Metronidazole +5D")
+            metro1d = "Metronidazole +5 days")
 
-treatments <- c(control = "Control",
-            cipro = "Ciprofloxacin",
-            clinda = "Clindamycin",
-            vanc.625 = "Vancomycin High",
-            vanc.3 = "Vancomycin Medium",
-            vanc.1 = "Vancomycin Low",
-            strep5 = "Streptomycin High",
-            strep.5 = "Streptomycin Medium",
-            strep.1 = "Streptomycin Low",
-            cef.5 = "Cefoperazone High",
-            cef.3 = "Cefoperazone Medium",
-            cef.1 = "Cefoperazone Low",
-            amp.5 = "Ampicillin",
-            amp.5d = "Ampicillin +5D",
-            metro1 = "Metronidazole",
-            metro1d = "Metronidazole +5D")
 
-#par(mfrow=c(1,2))
 design<-as.matrix(1:2)
 design<-cbind(design, c(3,3))
-layout(design, widths=c(1,1), heights=c(.3, 1))
+layout(design, widths=c(1,1), heights=c(.35, 1))
 
 plot.new()
-par(mar=c(rep(0.5, 4)))
-legend("bottom", legend=legend.labels, pch=pch, col=colors, pt.cex=1,  cex=1, bty="n", ncol = 2)
+par(mar=c(0.5, 0.5, 0.5, 0.5))
+legend("bottomright", legend=legend.labels, pch=pch, col=colors, pt.cex=1.5,  cex=1, bty="n", ncol = 2, text.width=0.4)
 
-par(mar=c(5, 5, 0.5, 0.5) +0.1, mgp=c(3, 1, 0), las=1) #default is 5.1 4.1 4.1 2.1, bot/left/top/right, also default mgp is c(3,1,0)
+par(mar=c(5, 5, 0.5, 0.5) +0.1, mgp=c(3, 1, 0), las=1) 
 plot(results[results[,1]=="control",2], 
      results[results[,1]=="control",3], 
      main="", 
      ylab=expression(paste("Predicted Log ", italic("C. difficile"), " CFU/g Feces")), 
      xlab=expression(paste("Actual Log ", italic("C. difficile"), " CFU/g Feces")), 
      ylim=c(0,9), xlim=c(0,9), xaxt='n', yaxt='n', cex=1.5)
-#mtext(bquote("r"^"2" ~ " = " ~ .(signif(rsq, 3))), side=3, line=0)
 abline(a=0, b=1, lty="dashed", lwd=2, col="black")
 axis(1, at = c(0:9), labels=c(0:9))
 axis(2, at = c(0:9), labels=c(0:9))
@@ -724,7 +706,7 @@ axis(2, at = c(1:15), labels = rep("", 15), las=1, cex.axis=.9 )
 for(z in 1:(dim(ids)[1])){
   name<-as.character(ids$name[z])
   otuname<- as.character(ids$otuname[z])
-  mtext(text = bquote(italic(.(name))*" ("*.(otuname)*")"), at=z, side = 2, line = 1, las=2)
+  mtext(text = bquote(italic(.(name))*" ("*.(otuname)*")"), at=z, side = 2, line = 1, las=2, cex=0.9)
 }
 abline(h=c(1:15), lty="dashed", col='black')
 
@@ -778,12 +760,12 @@ for(i in 3:length(toptitdel)){
 pval.spear<-p.adjust(pval.spear, method='BH') #adjust for multiple comparisons
 pval.ken<-p.adjust(pval.ken, method='BH') #adjust for multiple comparisons
 
-results = NULL
-results <- matrix(c(otu, cor.spear, pval.spear, cor.ken, pval.ken), ncol=5)
-colnames(results) <- c('otu','corSpear','pvalSpear', "corKen", "pvalKen")
-results <- results[order(results[,3]),]  #order by pvalue column=3
-#write.table(results[1:dim(results)[1],], file="~/Desktop/mothur/abxD01/correlation/toptidel.1p.correl.txt", sep="\t", row.names=FALSE)
-print(results[1:dim(results)[1],])
+correl = NULL
+correl <- matrix(c(otu, cor.spear, pval.spear, cor.ken, pval.ken), ncol=5)
+colnames(correl) <- c('otu','corSpear','pvalSpear', "corKen", "pvalKen")
+correl <- correl[order(correl[,3]),]  #order by pvalue column=3
+#write.table(correl, file="~/Desktop/mothur/abxD01/correlation/toptidel.1p.correl.txt", sep="\t", row.names=FALSE)
+print(correl)
 ```
 
 > From this file I selected the top 8 OTUs identified by random forest's increase in mean squared error measurement to graph (next section).
@@ -791,12 +773,15 @@ print(results[1:dim(results)[1],])
 > ### Figure 5C: OTU abundance vs. *C. difficile* abundance
 
 ```{r, eval=FALSE}
-corrs<-read.csv(file="~/Desktop/mothur/abxD01/correlation/toptitdel.correlation.impOTUs.csv", header=TRUE)
-corrs <- corrs[1:8,]
-otunames <-  row.names(topimp)[15:8]
-graphID <- ids[15:8,c(1,3)]
+topimp.otus <-  row.names(topimp)[c(15:7)]
+temp.match <- match(topimp.otus, ids.master[,1])
+graphID <- ids.master[temp.match,c(4,3)]
 
-graphOTUxCD(otus = otunames, ids = graphID, corrs = corrs)
+temp.match <- match(topimp.otus, correl[,"otu"])
+topimp.corrs <- correl[temp.match, c("corSpear", "pvalSpear")]
+row.names(topimp.corrs) <- topimp.otus
+
+graphOTUxCD(otus = topimp.otus, ids = graphID, corrs = topimp.corrs)
 ```
 
 

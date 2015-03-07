@@ -57,15 +57,17 @@ RF.validate <- function(data, iters){
 # otus<-otunames
 # ids<-otulabels
 
-
+# this is actually dependent on expgroup, fit.results, and legend.labels 
+# existing correctly outside of the function... 
 graphOTUxCD <- function(otus, ids, corrs){
   
   par(mar=c(0.5,0.5,0.5,0.5))
-  design <- matrix(1:8, nrow=4, byrow=T)
-  design <- cbind(c(9,9,9,9), design)
-  design <- rbind(design, c(0,10,10))
-  design <- cbind(design,c(11, 11, 11, 11, 0))
-  layout(design, widths=c(0.2,.9,.9, .6), heights=c(1,1, 1, 1,0.3))
+  design <- matrix(1:9, nrow=3, byrow=T)
+  design <- cbind(c(10,10,10), design)
+  design <- rbind(design, c(0,11,11,11))
+  layout(design, widths=c(0.2,1,1,1), heights=c(1,1, 1, 0.3))
+  
+  corrs <- as.data.frame(corrs)
   
   for(i in 1:(length(otus))){
     
@@ -81,8 +83,8 @@ graphOTUxCD <- function(otus, ids, corrs){
          xaxt='n', yaxt="n", xlab="")
     
     #plot zeroes in jitter
-    points(x=x_zeroes, actual[zeroes], pch=pch[as.character(results[zeroes,1])],
-           col=colors[as.character(results[zeroes,1])], cex=1.5)
+    points(x=x_zeroes, actual[zeroes], pch=pch[as.character(fit.results[zeroes,1])],
+           col=colors[as.character(fit.results[zeroes,1])], cex=1.5)
     
     #add other treatment points
     for(j in 2:(length(legend.labels))){
@@ -94,10 +96,9 @@ graphOTUxCD <- function(otus, ids, corrs){
     abline(v=c(0.001, 0.01, 0.1, 1), lty="longdash", col="gray")
     abline(v=0.0005, lty="dotted", lwd=2, col="black")
     
-    test <- grep("aceae", ids[i, 1])
     name<-as.character(ids$name[i])
     number<-as.character(ids$otuname[i])
-    corr<-as.character(signif(corrs$corSpear[i], 2))
+    corr<-as.character(signif(as.numeric(as.character(corrs$corSpear[i])), 2))
     library(base)
     graphTitle <- bquote(bolditalic(.(name)) *" " *bold(.(number)) *bold(", ") *bold(rho) *bold(" = ") *bold(.(corr)))
     text(x = 0.00005, y = 9.3, labels = graphTitle, 
@@ -106,27 +107,27 @@ graphOTUxCD <- function(otus, ids, corrs){
     #paste(labels[i], ", \u03c1 = ",signif(corrs[i, 2], 2))
     #bquote(bold(.(labels[i])) ~ bold(", ") ~ bold(rho) ~ bold(" = ") ~ bold(.(signif(corrs[i, 2], 3))))
     #if it's on the bottom row, put a customized axis indicating the % rabund
-    if(i == 7 | i==8){
+    if(any(i == c(7:9))){
       axis(1, at=c(0.0001,0.001, 0.01, 0.1, 1), labels=c(0,.1, 1, 10, 100), cex.axis=1.5)
     }
     
     #if it's in the first column turn the axis labels to be horizontal
-    if(i== 1 | i==3 | i==5 | i==7){
+    if(i== 1 | i==4 | i==7){
       axis(2, at=c(0, 2, 4, 6, 8, 10), labels =c(0, 2, 4, 6, 8, 10), cex.axis=1.5, las=2)
     }
-  }
-  
-  #for spot 9
-  plot.new()
-  text(x=0.15, y=0.5, label=expression(paste("Log ", italic("C. difficile"), " CFU/g Feces")), cex=1.5, srt=90)
+  } # end for(i in 1:(length(otus)))
   
   #for spot 10
   plot.new()
-  text(x=0.5, y=0.2, label="% Relative Abundance", cex=1.5)
+  text(x=0.15, y=0.5, label=expression(paste("Log ", italic("C. difficile"), " CFU/g Feces")), cex=1.5, srt=90)
   
   #for spot 11
   plot.new()
-  legend("left", legend=legend.labels, pch=pch, col=colors, pt.cex=2,  cex=1.2, bty="n")
+  text(x=0.5, y=0.2, label="% Relative Abundance", cex=1.5)
+  
+#   #for spot 11
+#   plot.new()
+#   legend("left", legend=legend.labels, pch=pch, col=colors, pt.cex=2,  cex=1.2, bty="n")
   
 }
 
