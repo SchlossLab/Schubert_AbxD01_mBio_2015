@@ -555,10 +555,10 @@ plot.dist.from <- function(dist.from){
     return(result)
   }
 
-  points(-6:0, c(0, apply(ampdist, 1, avg)), pch=16, col=colors[1], cex=1.7)
-  lines(-6:0, c(0, apply(ampdist, 1, avg)), pch=16, col=colors[1], lwd=3)
-  points(-6:0, c(0, apply(metrodist, 1, avg)), pch=16, col=colors[2], cex=1.7)
-  lines(-6:0, c(0, apply(metrodist, 1, avg)), pch=16, col=colors[2], lwd=3)
+  points(-6:0, c(0, apply(ampdist, 1, avg)), pch=8, col=colors[1], cex=2, lwd=4)
+  lines(-6:0, c(0, apply(ampdist, 1, avg)), col=colors[1], lwd=3)
+  points(-6:0, c(0, apply(metrodist, 1, avg)), pch=8, col=colors[2], cex=2, lwd=4)
+  lines(-6:0, c(0, apply(metrodist, 1, avg)),  col=colors[2], lwd=3)
   abline(v=-5.5, lty="dashed", lwd=3)
   #legend("bottom", legend=c("Ampicillin", "Metronidazole"), col=colors, pch=16, bty="n", horiz=TRUE, text.width=1, pt.cex = 1.5)
 
