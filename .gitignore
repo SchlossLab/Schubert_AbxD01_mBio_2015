@@ -4,8 +4,6 @@
 
 data/
 
-data/
-
 *.qsub*
 mothur*logfile
 *temp*
