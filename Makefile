@@ -144,6 +144,14 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).
 
 
 
+################################################################################
+#
+#	Part 3: Write the paper
+#
+################################################################################
+
+
+
 write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
 		$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
 		$(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.ave.dist\
