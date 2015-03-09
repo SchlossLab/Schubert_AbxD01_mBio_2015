@@ -1,0 +1,5 @@
+set.current(inputdir=data/process, outputdir=data/process, processors=8)
+remove.groups(count=abxD0.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, fasta=abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, taxonomy=abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.taxonomy, groups=mock1-mock2-mock3-mock4-mock6-mock8)
+phylotype(taxonomy=current, label=5)
+make.shared(list=current, count=current)
+classify.otu(list=current, count=current, taxonomy=current)
