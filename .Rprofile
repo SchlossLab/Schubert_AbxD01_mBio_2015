@@ -6,6 +6,7 @@
 if (require("knitr")) {
     opts_chunk$set(fig.path="results/figures/")
     opts_knit$set(base.dir=normalizePath(getwd()))
+    opts_knit$set(root.dir=normalizePath(getwd()))
 }
 
 ############################################################
@@ -18,3 +19,9 @@ cat('Project home directory is available as PROJHOME or via get("PROJHOME","RPRO
 
 rm(RPROJ)
 ############################################################
+
+local({
+  r <- getOption("repos")
+  r["CRAN"] <- "http://cran.cnr.berkeley.edu/"
+  options(repos = r)
+})
