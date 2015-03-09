@@ -32,56 +32,67 @@ University of Michigan, Ann Arbor, MI 48109
 
 ### Introduction
 
-The microbiome, or the diverse community of microorganisms living in and on the body, has an integral role in deterring pathogen colonization and infection. This native protection by the microbiome from invasive pathogenic species is termed colonization resistance. It is well established that the gut bacterial microbiome is critical in the hosts’ defense against the pathogen Clostridium difficile. When this indigenous community is perturbed, this often leads to a loss of resistance. This is especially important in many hospital settings where patients are not only exposed to various types and degrees of perturbations, such as antibiotics, diet changes, chemotherapy, but also exposed to the environmental *C. difficile* spores. Among hospital-acquired infections in the United States, *C. difficile* infections (CDI) are the number one reported and are responsible for 14,000 deaths a year. It is not completely understood how different perturbations affect subsequent colonization resistance, nor do we have a comprehensive view of the taxonomic changes associated with a loss in colonization resistance.
+The microbiome, or the diverse community of microorganisms living in and on the body, has an integral role in deterring pathogen colonization and infection [ref]. This native protection by the microbiome from invasive pathogenic species is termed colonization resistance [ref]. It is well established that the gut bacterial microbiome is critical in the hosts’ defense against the pathogen Clostridium difficile [ref]. When this indigenous community is perturbed, this often leads to a loss of resistance. This is especially important in many hospital settings where patients are not only exposed to various types and degrees of perturbations, such as antibiotics, diet changes, chemotherapy, but also exposed to the environmental *C. difficile* spores [ref]. Among hospital-acquired infections in the United States, *C. difficile* infections (CDI) are the number one reported and are responsible for 14,000 deaths a year [ref]. It is not completely understood how different perturbations to the taxonomic composition of the gut microbiota result in a loss of colonization resistance.
 
-There is a need for more knowledge about interactions between members of the community. Know that fmts work [anna’s paper], but don’t know why, except that you recover the diversity and are receiving an established community already that works. Individual probiotics have not worked with complete success [dendukuri 2005], whereas studies find that combinations of bacteria often work better than by themselves [lawley, pamer, stein, hickson 2007]. It’s also common for bacteria to change their behavior in the context of other bacterial species [Crost 2010, quorum sensing-biofilms, recognizing fellow bacterial species vs killing others, synergistic effects (sieuwerts 2010)]. Understanding the scope of relationships between bacteria in a community is necessary to learn about its response, in concert with its host, to perturbations including antibiotic-induced, pathogen invasion, probiotics doses, and diet changes, etc. 
+<not done>
+There is a need for more knowledge about interactions between members of the community. Know that fmts work [anna’s paper], but don’t know why, except that you recover the diversity and are receiving an established community already that works. Individual probiotics have not worked with complete success [dendukuri 2005], whereas studies find that combinations of bacteria often work better than by themselves [lawley, pamer, stein, hickson 2007]. It’s also common for bacteria to change their behavior in the context of other bacterial species [Crost 2010, quorum sensing-biofilms, recognizing fellow bacterial species vs killing others, synergistic effects (sieuwerts 2010)]. Understanding the scope of relationships between bacteria in a community is necessary to learn about its response, in concert with its host, to perturbations including antibiotic-induced, pathogen invasion, probiotics doses, and diet changes, etc.
 
 The purest way of studying these bacterial interactions is by characterizing them in the context of their whole biome [ecology citation?]. [examples of papers showing microbiomes response to antibiotics in the context of CR]
 
 These observed changes in response to perturbation can be used to inform models and networks to predict future responses (stein, Gordon diet paper) and characterize bacterial interactions (psoriasis/Schubert, sparCC paper). These methods are advantageous in that they can be refined to determine probiotic prophylactics or treatments based on an individual patient’s gut microbial needs.  
 
-The purpose of this investigation was to test the effects of an array of perturbations on microbiome CR levels against *C. difficile*.  We then used this information to design microbiome-based models for estimating pathogen colonization levels. Through the administration of various antibiotic regimens, we altered the murine gut microbiota and observed these changes using 16S rRNA sequencing. The resultant gut communities were then challenged with *C. difficile* spores. Through correlation and random forest analysis of the starting communities with the subsequent level of *C. difficile* colonization, we built linear models to predict *C. difficile* colonization levels based on a subset of the microbiota. We used experimental data to test the ability of the model. 
+The purpose of this investigation was to test the effects of an array of perturbations on microbiome CR levels against *C. difficile*.  We then used this information to design microbiome-based models for estimating pathogen colonization levels. Through the administration of various antibiotic regimens, we altered the murine gut microbiota and observed these changes using 16S rRNA sequencing. The resultant gut communities were then challenged with *C. difficile* spores. Through correlation and random forest analysis of the starting communities with the subsequent level of *C. difficile* colonization, we built linear models to predict *C. difficile* colonization levels based on a subset of the microbiota. We used experimental data to test the ability of the model.
 
 Though we are limited in a resolution at the strain and species level, we have identified groups of related species with antagonistic relationships with *C. difficile* colonization. We identified several models with equally robust quality statistics and observed that across the top models a subset of 5 species were consistently present. These findings __
+</not done>
+
 
 
 ### Materials and Methods
 
-***Animal Care.*** We used 5-8 week old C57Bl/6 mice for all our experiments. These mice were housed in our SPF room in the animal facility at the University of Michigan. All animal-related protocols and experiments were approved by the University Committee on Use and Care of Animals at the University of Michigan. 
+***Animal Care.*** We used 5-8 week old C57Bl/6 mice for all our experiments. These mice were reared under SPF conditions within the animal facility at the University of Michigan. All animal-related protocols and experiments were approved by the University Committee on Use and Care of Animals at the University of Michigan.
 
-***Antibiotic Administration.*** Mice were administered one of seven different antibiotics, including cefoperazone, vancomycin, metronidazole, streptomycin, ciprofloxacin, ampicillin, and clindamycin. The route of administration depended on the specific antibiotic. Cefoperazone (either 0.5mg/ml, 0.3mg/ml, or 0.1mg/ml), vancomycin (0.625mg/ml, 0.3mg/ml, or 0.1mg/ml), streptomycin (5mg/ml, 0.5mg/ml, or 0.1mg/ml), metronidazole (0.5mg/ml), and ampicillin (0.5mg/ml) were all administered in the mouse drinking water for 5 days. Ciprofloxacin (10 mg/kg) was administered via oral gavage, and clindamycin (10 mg/kg) was administered via IP injection. All antibiotic treated mice were given 24 hours of recovery on regular drinking water prior to *C. difficile* challenge. 
+***Antibiotic Administration.*** Mice were administered one of seven different antibiotics, including cefoperazone, vancomycin, metronidazole, streptomycin, ciprofloxacin, ampicillin, and clindamycin. The route of administration depended on the specific antibiotic. Cefoperazone (either 0.5 mg/ml, 0.3mg/ml, or 0.1 mg/ml), vancomycin (0.625 mg/ml, 0.3 mg/ml, or 0.1 mg/ml), streptomycin (5 mg/ml, 0.5 mg/ml, or 0.1 mg/ml), metronidazole (0.5 mg/ml), and ampicillin (0.5 mg/ml) were all administered in the mouse drinking water for 5 days. Ciprofloxacin (10 mg/kg) was administered via oral gavage and clindamycin (10 mg/kg) was administered via IP injection. Mice that did not receive antibiotics were used as negative controls for these experiments.
 
-***C. difficile Preparation and Challenge*** In all our experiments we used *C. difficile* strain 630Δerm [cite dena lyras]. The spores used were prepared from a single large batch made following previously established protocols [cite paul?]. Spores were quantified within the week prior to *C. difficile* challenge for each experiment [established protocol I can cite?]. Spores were quantified by boiling a small volume at 65°C for 20 minutes to kill off residual vegetative cells. The volume was then diluted and plated on TCCFA plates. These were incubated at 37°C anaerobically overnight. The next day *C. difficile* colony forming units (CFU) were counted and the concentration of spores in the working stock was back calculated. On the day of challenge, *C. difficile* spores, at a final concentration of 103, were administered to mice via oral gavage. Immediately following this challenge, the remaining *C. difficile* inoculum was diluted in a series and plated to confirm the correct dosage. 
+***C. difficile Preparation and Challenge*** All antibiotic-treated mice were given 24 hours to recover with untreated drinking water prior to *C. difficile* challenge. *C. difficile* strain 630Δerm spores were used in all experiments [cite dena lyras]. Spores were prepared from a single large batch whose concentration was determined within the week prior to each *C. difficile* challenge [cite paul?]. On the day of challenge 10^3 *C. difficile* spores were administered to mice via oral gavage. Immediately following this challenge, the remaining *C. difficile* inoculum was diluted in a series and plated to confirm the correct dosage.
 
-***Sample Collection and Plating*** Fecal samples were freshly collected for each mouse immediately prior to the administration of any antibiotic, during any antibiotic recovery days, and days 0 and 1 post *C. difficile* challenge. Each fecal sample on day 1 was weighed and diluted under anaerobic conditions with anaerobic PBS 1:10 based on pellet weight. A dilution series was then plated onto TCCFA plates [cite plates] and incubated at 37°C anaerobically overnight. The colony forming units (CFU) were counted and calculated the subsequent day. 
+***Sample Collection and Plating*** Fecal samples were freshly collected for each mouse on the day of *C. difficile* challenge (day 0). On the day after the challenge (day 1), another fecal sample was weighed and diluted under anaerobic conditions with anaerobic PBS. The number of colony forming units (CFU) were counted following 24 hrs growth on TCCFA plates at 37°C under anaerobic conditions [cite plates].
 
-***DNA Extraction and Sequencing*** Total bacterial DNA was extracted from each untreated and day 0 stool sample using the MOBIO PowerSoil®-htp 96 Well Soil DNA Isolation Kit. Sequencing preparation and sequencing was carried out as previously described (Kozich JJ et al. 2013). Briefly, the V4 region of the 16S rRNA gene was amplified, purified, and pooled in equimolar concentrations. These libraries were then mixed with Illumina-prepared PhiX control libraries. Sequencing was performed using Illumina’s MiSeq platform to produce paired 250-nt reads. Mock/error/error of run?
+***DNA Extraction and Sequencing*** Total bacterial DNA was extracted from each  day 0 stool sample using the MOBIO PowerSoil®-htp 96 Well Soil DNA Isolation Kit. Sequencing preparation and sequencing was carried out as previously described (Kozich JJ et al. 2013). Briefly, the V4 region of the 16S rRNA gene was amplified, purified, and pooled in equimolar concentrations. These libraries were then mixed with Illumina-prepared PhiX control libraries.
 
-***Sequence Curation*** These sequences were curated using mothur as previously described (Kozich JJ et al and Schloss PD et al). The full pipeline is also demonstrated online at the mother website (http://www.mothur.org/wiki/MiSeq_SOP). Sequences were binned into operational taxonomic units (OTUs) using a 3% dissimilarity cutoff. Taxonomic assignments were determined by using a naïve Bayesian classifier with the Ribosomal Database Project (RDP) training set (version 9) requiring an 80% bootstrap confidence score. In order to avoid biases due to uneven sampling, samples were normalized to 1,625 sequences per samples [Schloss, reducing effects]. For those samples with more than 1,625 sequences per samples, the range was __, the mean was __, the median was __, the median absolute deviation was __. All 16S rRNA gene sequence data and the MIMARKS table are available at __. 
+***Sequence Curation*** These sequences were curated using mothur as previously described (Kozich JJ et al and Schloss PD et al). Sequences were binned into operational taxonomic units (OTUs) using a 3% dissimilarity cutoff. Taxonomic assignments were determined by using a naïve Bayesian classifier with the Ribosomal Database Project (RDP) training set (version 9) requiring an 80% bootstrap confidence score. In parallel to the fecal samples, we also sequeced a mock community where we knew the true sequence of the 16S rRNA gene sequences. Analysis of the mock community data indicated that the error rate following our cuation procedure was 0.0X%. In order to avoid biases due to uneven sampling, samples were normalized to 1,625 sequences per samples [Schloss, reducing effects]. All 16S rRNA gene sequence data and metadata are available through the Sequence Read Archive under accession XXXXXX.
 
-***Statistical Analysis & Modeling*** Across all data, we set a relative abundance threshold of an average of 1% in at least one experimental group. The 44 OTUs that met this cutoff were included in the training of the model. We used the "randomForest" package in R to build a regression-based random forest model to predict *C. difficile* colonization levels on day 1 based on the microbiome data from day 0. All statistical analyses were conducted using R version 3.1.2. 
+***Statistical Analysis & Modeling*** All analyses were conducted using R version 3.1.2. Complete analysis scripts are available at the online repository for this study (https://github.com/SchlossLab/Schubert_AbxD01_mBio_2015).
+
+Need text about...
+* correlation analysis
+* comparison of titration levels
+* For the random forest you use 1% within each treatment group, for the correlation you state using 0.1 and 0.01% across all samples. Need to stay consistent.
+* statistical methods used to differentiate the abundances of OTUs in the titrations
+
+Random forest regression models were constructed using the randomForest R package using XX,000 trees [ref]. The model was constructed using the relative abundance of those OTUs that had an average relative abundance within any antibiotic treatment group of 1%. This resulted in 44 OTUs. The regression was performed using the log10 transformation of the number of CFU per gram of fecal material as the dependent variable.
 
 
 ### Results
 
-***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] all have decreased resistance against this pathogen. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics (**Table 1**) to differentially alter the microbiota and assess their resistance to *C. difficile* colonization. 16S rRNA gene sequencing of the fecal communities sampled at the time of *C. difficile* inoculation revealed distinct and reproducible microbiota structures (**Figure 1**). The community structures of the beta-lactam-treated mice (i.e. cefoperazone and ampicillin) were not significantly different from each other (AMOVA, p=0.-36). Clindamycin-treated microbiotas were significantly different from all other treatment groups (AMOVA, p=0.001) and were characterized by the predominance of *Enterobacteriaceae*. Of all groups significantly different from the untreated microbiota, the levels of *Enterobacteriaceae* increased with all treatments except with streptomycin. Vancomycin-treated communities saw the largest bloom in *Akkermansia*. In addition, the ciprofloxacin-treated microbiota were the only group that was not significantly different from untreated mice (AMOVA, p=0.09). Subsequently, 24 hours after inoculation *C. difficile* was undetectable in the untreated mice or the ciprofloxacin-treated mice; however it had successfully colonized the mice in all other treatment groups to similarly high levels (10<sup>7</sup>-10<sup>8</sup> CFU/g) (**Figure 1**). We calculated the diversity of all of the communities using the Inverse Simpson (**Supplemental Figure 1**) and Shannon indices (data not shown) and observed a significant negative correlation with subsequent *C. difficile* colonization (both p<0.001). These results suggest that multiple microbiota structures are capable of being colonized by *C. difficile* and that diversity may be an important factor in resistance to invasion.
+***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] had decreased resistance against this pathogen. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics (**Table 1**) to differentially alter the microbiota and assess their resistance to *C. difficile* colonization. 16S rRNA gene sequencing of the fecal communities sampled at the time of *C. difficile* inoculation revealed distinct and reproducible microbiota structures (**Figure 1**). The community structures of the beta-lactam-treated mice (i.e. cefoperazone and ampicillin) were not significantly different from each other (AMOVA, p=XXX0.36XXX). Clindamycin-treated microbiotas were significantly different from all other treatment groups (AMOVA, p=XXX0.001XXX) and were characterized by the predominance of *Enterobacteriaceae*. Of all groups significantly different from the untreated microbiota, the levels of *Enterobacteriaceae* increased with all treatments except with streptomycin. Vancomycin-treated communities saw the largest bloom in *Akkermansia*. In addition, the ciprofloxacin-treated microbiota were the only group that was not significantly different from untreated mice (AMOVA, XXXp=0.09XXX). Subsequently, 24 hours after inoculation *C. difficile* was undetectable in the untreated mice or the ciprofloxacin-treated mice; however it had successfully colonized the mice in all other treatment groups to similarly high levels (10<sup>7</sup>-10<sup>8</sup> CFU/g) (**Figure 1**). We calculated the diversity of all of the communities using the Inverse Simpson and Shannon indices and observed a significant negative correlation with subsequent *C. difficile* colonization (both **Supplemental Figure 1**; p<XXX0.001XXX). These results demonstrate that a variety of non-overlapping community structures can be sensitive to *C. difficile* colonization.
 
 --------
 
 ![**Figure 1.**](Figure1/figure1.png)
 
-**Figure 1. Microbiota structures following diverse antibiotic treatments.** This figure shows the average percent relative abundances for family level phylotypes found in each experimental group on the day of *C. difficile* challenge. Each row depicts a different antibiotic perturbation. The level *C. difficile* colonization found 24 hours post microbiota sampling is plotted in the top right corner. Each represented phylum is a different shade of gray. Error bars depict standard error of the mean. 
+**Figure 1. Microbiota structures following diverse antibiotic treatments.** This figure shows the average percent relative abundances for family level phylotypes found in each experimental group on the day of *C. difficile* challenge. Each row depicts a different antibiotic perturbation. The level *C. difficile* colonization found 24 hours post microbiota sampling is indicated in the top right for each treatment. Error bars indicate standard error of the mean.
 
 --------
 
 ![**Supplemental Figure 1.**](supplemental/sfigure1.png)
 
-**Supplemental Figure 1. Diversity is nevatively correlated with *C. difficile* levels.** This figure shows the relationship between the inverse simpson diversity index of microbiotas of each experimental group on day 0 and *C. difficile* CFU/g feces on day 1. Spearman's rho is plotted in the top right corner. 
+**Supplemental Figure 1. The inverse of Simpson's diversity index for the community on day 0 is negatively correlated with *C. difficile* colonization on day 1.** Spearman's rho is plotted in the top right corner.
 
 --------
 
 > ### CFU stats comparison
-> To compare CFU levels: 
+> To compare CFU levels:
 
 ```{r, eval=TRUE}
 
@@ -93,8 +104,8 @@ anova(lm(data$nextDayCFU ~ data$expgroup)) #perform anova across experimental gr
 
 #Which groups are different? Ciprofloxacin was clearly lower
 data <- data[ which(data$expgroup != '2cipro'), ] #remove ciprofloxacin to see now if there's a difference in remaining groups
-anova(lm(data$nextDayCFU ~ data$expgroup)) 
-              
+anova(lm(data$nextDayCFU ~ data$expgroup))
+
 ```
 
 > ### Amova to compare resulting community structures
@@ -107,10 +118,10 @@ amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist,
 
 ```
 > This results in the file called "abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.amova" located in the github folder. The results of these are summarized in "amova8expgroups.xlsx".
-> 
+>
 > ### Figure 1: Bargraph
-> 
-> This figure was built using the R script called "stacked.barcharts.r", which contains the stackedbarcharts() funciton in the abxD01 folder.The input files are listed in Github. The graph can be sorted 2 ways either by the untreated's decreasing relabund (sortbyphyl=FALSE), or by the most abundant within each phylum (sortbyphyl=TRUE). For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name. 
+>
+> This figure was built using the R script called "stacked.barcharts.r", which contains the stackedbarcharts() funciton in the abxD01 folder.The input files are listed in Github. The graph can be sorted 2 ways either by the untreated's decreasing relabund (sortbyphyl=FALSE), or by the most abundant within each phylum (sortbyphyl=TRUE). For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name.
 > The parameters I changed in the r script were:
 
 ```{r, eval=FALSE, warning=FALSE}
@@ -122,9 +133,9 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.2.subsa
 ```
 
 > Files saved as "topdose2_tx1_sorted_10x20.pdf" and "topdose2_tx2_sorted_10x20.pdf".
-> 
+>
 > ### Supplemental Figure 1: correlation plot of diversity with *C. difficile*
-> 
+>
 > For the correlation calculations see the next section of the results.
 > Figure making:
 
@@ -133,7 +144,7 @@ stackedbarcharts(file="~/Documents/Github/abxD01/Figure1/abxD01.final.tx.2.subsa
 summary.single(calc=invsimpson-shannon, shared=abxD01.final.an.unique_list.shared, subsample=1625)
 
 ```
-> Using these results, I selected the samples within the original antibiotic set.  Then I calculated the spearman correlation of *C. difficile* CFU/g feces on day 1 with the level of diversity found in the community on day 0 (day of challenge). Both inverse simpson and shannon indices were included. 
+> Using these results, I selected the samples within the original antibiotic set.  Then I calculated the spearman correlation of *C. difficile* CFU/g feces on day 1 with the level of diversity found in the community on day 0 (day of challenge). Both inverse simpson and shannon indices were included.
 
 
 ```{r, eval=FALSE}
@@ -148,7 +159,7 @@ count <- 1
 for(i in 4:5){
   cor.spear[count] <- cor.test(diversity[,3],diversity[,i], method="spearman")$estimate
   pval.spear[count] <- cor.test(diversity[,3],diversity[,i], method="spearman")$p.value
-  count <- count + 1 
+  count <- count + 1
 }
 corr.results <- as.matrix(cbind(cor.spear, pval.spear))
 rownames(corr.results) <- names(diversity)[4:5]
@@ -184,11 +195,11 @@ legend.labels.top <- c(control = "Control",
             amp.5 = "Ampicillin",
             metro1 = "Metronidazole")
 
-par(mar=c(5, 5, 1, 1) +0.1, mgp=c(3, 1, 0)) 
+par(mar=c(5, 5, 1, 1) +0.1, mgp=c(3, 1, 0))
 par(mfrow=c(1,1))
 
-plot(diversity$invsimpson[diversity$expgroup=="control"], 
-     diversity$nextDayCFU[diversity$expgroup=="control"], 
+plot(diversity$invsimpson[diversity$expgroup=="control"],
+     diversity$nextDayCFU[diversity$expgroup=="control"],
      pch=pch.top[1], col=colors.top[1], xlim=c(0, 25), ylim=c(0,10),  
      cex=1.5, yaxt="n",  xaxt="n", cex.lab=1,
      ylab=as.expression("Log " ~ italic("C. difficile") ~ " CFU/g feces"), xlab="Inverse Simpson Index")
@@ -198,7 +209,7 @@ axis(2, las=1, cex.axis=1, at=seq(0,10, by=1))
 
 for(i in 2:(length(unique(diversity$expgroup)))){
   points(diversity$invsimpson[diversity$expgroup==names(legend.labels.top)[i]],
-         diversity$nextDayCFU[diversity$expgroup==names(legend.labels.top)[i]], 
+         diversity$nextDayCFU[diversity$expgroup==names(legend.labels.top)[i]],
          pch=pch.top[i], col=colors.top[i], cex=1.5)
 }
 
@@ -209,18 +220,18 @@ legend("topright", inset=0.05, legend=legend.labels.top, pch=pch.top, col=colors
 
 --------
 
-***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each species-level OTU on the day of inoculation with the level of *C. difficile* colonization 24 hours later across all treatment groups (Figure 2). Of the significant OTUs (p<0.05) with an average abundance greater than 0.1%, OTUs with negative a correlation were associated with providing resistance against *C. difficile* (N=40) and those with a positive correlation were associated with susceptibility (N=7). Among various bacterial families, three were consistently negatively correlated with *C. difficile* colonization: *Porphyromonadaceae* (ρaverage= -0.63), *Lachnospiraceae* (ρaverage= -0.51), *Ruminococcaceae* (ρaverage= -0.53). OTUs from the *Proteobacteria* phylum had strong positive relationships with *C. difficile* colonization. These included OTUs associated with the *Pseudomonas* (ρ= 0.31) and *Escherichia* (ρ= 0.56) genera. Other notable OTUs that were found at the extremes of the distribution of correlation scores included those affiliated with the genus *Lactobacillus* (family *Lactobacillaceae*; OTU23, ρ= -0.73), *Alistipes* (family *Rickenellaceae*; OTU20, ρ= -0.78), *Enterorhabdus* (phylum *Actinobacterium*, family *Coriobacteriaceae*; OTU29, ρ= -0.70), and *Streptococcus* (family *Streptococcaceae*; OTU78, ρ= 0.36). Overall, these results suggest that several larger groups of related OTUs, particularly within the *Firmicutes* and *Bacteroidetes* phyla, may participate in colonization resistance against *C. difficile*, while members of the *Proteobacteria* phylum may be involved in susceptibility.
+***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each species-level OTU on the day of inoculation with the level of *C. difficile* colonization 24 hours later (Figure 2). <needs help> Of the OTUs with an average abundance greater than 0.1%, OTUs with negative a correlation were associated with providing resistance against *C. difficile* (N=XXX40XXX) and those with a positive correlation were associated with susceptibility (N=XXX7XXX) (p<XXX0.05XXX).</needs help> Among various bacterial families, three were consistently negatively correlated with *C. difficile* colonization: *Porphyromonadaceae* (ρ<sub>average</sub>=XXX-0.63XXX), *Lachnospiraceae* (ρ<sub>average</sub>=XXX-0.51XXX), *Ruminococcaceae* (ρ<sub>average</sub>=XXX-0.53XXX). OTUs from the *Proteobacteria* phylum had strong positive relationships with *C. difficile* colonization. These included OTUs associated with the genera *Pseudomonas* (ρ=XXX0.31XXX) and *Escherichia* (ρ=XXX0.56XXX). Other notable OTUs that were found at the extremes of the distribution of correlation scores included those affiliated with the genus *Lactobacillus* (family *Lactobacillaceae*; OTU23, ρ=XXX-0.73XXX), *Alistipes* (family *Rickenellaceae*; OTU20, ρ=XXX-0.78XXX), *Enterorhabdus* (phylum *Actinobacterium*, family *Coriobacteriaceae*; OTU29, ρ=XXX-0.70XXX), and *Streptococcus* (family *Streptococcaceae*; OTU78, ρ=XXX0.36XXX). Overall, these results suggest that several larger groups of related OTUs, particularly within the *Firmicutes* and *Bacteroidetes* phyla, may participate in colonization resistance against *C. difficile*, while members of the *Proteobacteria* phylum may be involved in susceptibility.
 
 --------
 
 ![**Figure 2.**](Figure2/figure2_9x6.5.png)
 
-**Figure 2. Broader taxonomic groups share similar relationships with *C. difficile*.** Species level OTUs (3% cutoff) found on day 0 were correlated with the level of *C. difficile* CFU/g feces on day 1 using Spearman’s rank based correlation coefficient. Only OTUs with an average abundance of at least 0.05% across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant (p<0.05). OTUs were grouped by family. Asterisk * indicates unclassified at family level.
+**Figure 2. Broader taxonomic groups share similar relationships with *C. difficile*.** Species level OTUs (3% cutoff) found on day 0 were correlated with the level of *C. difficile* CFU/g feces on day 1 using Spearman’s rank based correlation coefficient. Only OTUs with an average abundance of at least <needs help>0.05%<needs help> across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant after controlling for multiple comparisons using the Benjimani-Hochberg correction (p<0.05). OTUs are grouped by family. An asterisk (*) indicates that the OTU was unclassified at the family level.
 
 --------
 
 > ### Correlation Calculations
-> 
+>
 > The required file is located on Github.
 
 ```{r, eval=TRUE, warning=FALSE}
@@ -255,14 +266,14 @@ print(results[1:dim(results)[1],])
 ```
 
 > ### Figure 2: Stipchart
-> 
-> This figure shows the correlation analysis of bacterial species present on Day 0 with *C. difficile* levels on Day 1 using the original set of antibiotic groups. 
-> 
-> Necessary files are on github, and it was made using the following code: 
+>
+> This figure shows the correlation analysis of bacterial species present on Day 0 with *C. difficile* levels on Day 1 using the original set of antibiotic groups.
+>
+> Necessary files are on github, and it was made using the following code:
 
 ```{r, eval=FALSE}
 
-##Paper Figure: correlations for topdose 
+##Paper Figure: correlations for topdose
 otuCorrs<-read.csv("~/Documents/Github/abxD01/Figure2/corr_avgAbove0.001_topdose2_stripchart.csv", header=T)
 
 pch <- c(6,6,6,6, 1,1, 1, 1, 1, 1, 1, 1,0, 0, 9, 2, 2, 4)
@@ -272,7 +283,7 @@ axis(1, cex.axis=1, at=(1:nlevels(otuCorrs$family)), labels=FALSE)
 family.labels <- unique(otuCorrs[order(otuCorrs$graphOrder), "family"])
 text(1:nlevels(otuCorrs$family)+.3, par("usr")[3]-0.05, label=(family.labels), xpd=NA, pos=2, srt=45, cex=1)
 axis(2, cex.axis=1, at=seq(-1,+1, by=.1), las=1)
-color_transparent <- adjustcolor("black", alpha.f = 0.3) 
+color_transparent <- adjustcolor("black", alpha.f = 0.3)
 abline(v=c(1:nlevels(otuCorrs$family)), col=color_transparent)
 abline(h=0, col="dark gray", lwd=2)
 abline(h=c(0.25, 0.5, 0.75, -0.25, -0.5, -0.75), col=color_transparent, lwd=2, lty="dashed")
@@ -283,22 +294,19 @@ leg<-legend("top",  legend=phylum.labels, pch=c(6, 1, 0, 9, 2, 4), cex=1, bty="o
 
 > Figure saved as "corr_avgAbove0.001_topdose2_10x10.pdf".
 
-***Smaller perturbations of the microbiota result in maintenance of colonization resistance.*** <transition>
-Because most of our original treatments resulted in similarly high levels of *C. difficile*, we hypothesized that applying smaller antibiotic perturbations to the microbiota would result in reduced sensitivity to *C. difficile*, as we observed in the ciprofloxacin treated mice. To test this, we titrated the doses of cefoperazone, streptomycin, and vancomycin given to mice (Supplemental Table 1). Colonization levels decreased significantly in all mice receiving titrated doses in support of our hypothesis. *C. difficile* levels were significantly different between all titration groups within the cefoperazone (p<0.03) and streptomycin treated microbiotas (p<0.01), displaying a greater range of colonization resistance profiles (Figure 3). Next, we hypothesized that the populations we previously identified as being associated with protection against colonization would be elevated in the mice with decreased colonization and those associated with susceptibility would be less abundant.
-
-The titrated antibiotic doses clearly resulted in distinct community structures that were variations of the original dose (Figure 3). The cefoperazone titrations resulted in a shift in dominance from the *Bacteroidetes* to the *Firmicutes* phylum with increasing antibiotic dose. Most notable was the increase in OTUs associated with resistance including the *Porphyromonadaceae* and *Alistipes* and a reduction in OTUs associated with susceptibility including members of the *Proteobacteria*, *Clostridium*, and *Staphylococcus*. The relative abundance of other OTUs associated with protection including the *Lactobacillus*, *Lachnospiraceae*, and *Ruminococcaceae* did not change as expected based on the initial correlation analysis; however, these OTUs were present at levels similar to the untreated mice. The streptomycin titrations did not result in profound shifts in the overall community structure, but did yield increased resistance. Rather, there were individual populations that were gained or lost across the gradient. Notably, mice receiving the lowest dose retained significantly higher levels of *Alistipes* and *Anaeroplasma* (p<0.05), which we previously found to be strongly associated with colonization resistance. The relative abundances of the *Porphyromonodaceae*, *Lachnospiraceae*, *Ruminococcaceae* were unchanged, but were present at similarly high levels to those found in the untreated mice. Although the vancomycin titration yielded a number of large changes in the abundance of individual populations, there was no recovery of colonization resistance. The relative abundance of many of the populations associated with resistance (*Porphyromonadaceae*, *Lachnospiraceae*, *Anaeroplasma*) increased with decreased vancomycin dosage; however, with the exception of the *Lactobacillus* populations, they did not reach the levels observed in the untreated mice. In addition, all of the vancomycin-treated mice had high levels of OTUs affiliated with the *Akkermansia* and *Enterobacteriaceae*. Together, these results suggest that individual populations are not sufficient to provide colonization resistance. Rather, resistance is likely a product of the overall composition of the community.
+***Smaller perturbations of the microbiota result in maintenance of colonization resistance.*** All but the ciprofloxacin treatment resulted in similarly high levels of *C. difficile*. Therefore, we hypothesized that titrating the dose of antibiotics given to the mice would result in a reduced perturbation to the microbiota and a reduced sensitivity to *C. difficile*. We titrated the doses of cefoperazone, streptomycin, and vancomycin given to the mice (Supplemental Table 1). Colonization levels decreased significantly in all mice receiving titrated doses in support of our hypothesis (Figure 3). *C. difficile* levels were significantly different between all titration groups within the cefoperazone (p<XXX0.03XXX) and streptomycin treated mice (p<XXX0.01XXX). For each of the antibiotics we titrated, reduced dosages resulted in reduced colonization by *C. difficile*. By sequencing the 16S rRNA genes from feces collected on day 0 from these mice, we sought to validate the relationships we observed with the full dosage. Titrating cefoperazone resulted in a shift in dominance from the *Bacteroidetes* to the *Firmicutes* phylum with increasing antibiotic dose. Most notable was the increase in the relative abundance of OTUs associated with resistance including the *Porphyromonadaceae* and *Alistipes* and a reduction in OTUs associated with susceptibility including members of the *Proteobacteria*, *Clostridium*, and *Staphylococcus*. The relative abundance of other OTUs associated with protection including the *Lactobacillus*, *Lachnospiraceae*, and *Ruminococcaceae* did not change as expected based on the initial correlation analysis; however, these OTUs were present at levels similar to the untreated mice. The at the lowest streptomycin titration, mice retained significantly higher abundances of *Alistipes* and *Anaeroplasma* (p<0.05), which we found to be strongly associated with colonization resistance. The relative abundances of the *Porphyromonodaceae*, *Lachnospiraceae*, *Ruminococcaceae* were unchanged, but were present at similarly high levels to those found in the untreated mice. Although the vancomycin titration yielded a number of large changes in the abundance of individual populations, there was no recovery of colonization resistance. The relative abundance of many of the populations associated with resistance (*Porphyromonadaceae*, *Lachnospiraceae*, *Anaeroplasma*) increased with decreased vancomycin dosage; however, with the exception of the *Lactobacillus* populations, they did not reach the levels observed in the untreated mice. In addition, all of the vancomycin-treated mice had high levels of OTUs affiliated with the *Akkermansia* and *Enterobacteriaceae*. Together, these results suggest that individual populations are not sufficient to provide colonization resistance. Rather, resistance is likely a product of the overall composition of the community.
 
 --------
 
 ![**Figure 3.**](Figure3/figure3.png)
 
-**Figure 3. TITLE.** This figure shows the average percent relative abundances for family level phylotypes found on the day of *C. difficile* challenge in each titration group. Each row depicts a different antibiotic that was titrated. High, medium, and low antibiotic doses are represented by black, grey, and white colored bars respectively. The specific dose amount is shown for each antibiotic. Error bars show the standard error of the mean. 
+**Figure 3. The average percent relative abundances for family level phylotypes found on the day of *C. difficile* challenge in each titration group.** Each row depicts a different antibiotic that was titrated. High, medium, and low antibiotic doses are represented by black, grey, and white colored bars respectively. The specific dose amount is shown for each antibiotic. Error bars show the standard error of the mean.
 
 --------
 
 > ### CFU stats comparison
-> 
-> For comparison of the CFU's among titration groups: 
+>
+> For comparison of the CFU's among titration groups:
 
 ```{r, eval=TRUE}
 file<-read.csv("~/Documents/Github/abxD01/Figure3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
@@ -322,14 +330,14 @@ diffs(vanc)
 ```
 
 > ### Figure 3: Barchart
-> 
+>
 > This figure shows the effect of titrating antibiotics on the community as well as the resulting *C. difficile* levels.  
-> 
+>
 > The file/fileIDS should be matched by the titration.
 > Input files on github:
 > 1. abxD01.final.tx.2.subsample.alltitrations.forlogscale.csv
 > 2. alltitrations_tx2_barchart_ids.csv
-> 
+>
 > Uses functions in R scripts folder: stacked.barcharts.r, findStatLetters.r, barplotBeside.r
 
 ```{r, eval=FALSE}
@@ -338,26 +346,26 @@ stackedbarcharts(file = "~/Documents/Github/abxD01/Figure3/abxD01.final.tx2.subs
 
 ```
 
-***Allowing recovery of specific bacteria restores colonization resistance.*** Several antibiotic perturbation studies have demonstrated that given time perturbed communities can return to a “healthy” state in which resistance to *C. difficile* is restored []. For each antibiotic treatment, a control group of mice receiving antibiotics without inoculation of *C. difficile* was maintained. The microbiota’s of animals treated with metronidazole underwent a drastic shift in the microbiota structure with an additional 5 days of recovery. We observed changes in relative abundance of several OTUs that we previously observed had strong relationships with subsequent *C. difficile* colonization (Figure 2). Notably there were significant increases (p<0.05) in overall abundance of the levels of *Porphyromonadaceae*, *Ruminococcaceae*, and *Lachnospiraceae* to levels similar to untreated microbiota, and significant decreases (p<0.05) in levels of *Enterobacteriaceae*. Based on these changes, we hypothesized that delaying *C. difficile* challenge to allow these potentially important changes in microbiota structure to occur would lead to a decrease in colonization. On Day 1 post challenge of these recovered mice, we observed a significant decrease in *C. difficile* level of CFU/g feces (p<0.0001). These results strengthen the importance of *Porphyromonadaceae*, *Lachnospiraceae*, *Ruminococcaceae*, and *Enterobacteriaceae* in setting up the right environment of negatively and positively correlated bacteria to affect the outcome of *C. difficile* colonization. 
-
-Additionally, we assessed the resistance of ampicillin treated mice given five extra days of recovery prior to *C. difficile* challenge. The shift in the microbiome with ampicillin recovery was not as prounounced as seen with recovery of metronidazole treated animals. These communities had significantly reduced levels of bacteria correlated with *C. difficile* protection, including *Bacteroides*, *Alistipes*, and *Ruminoccocaceae* compared with untreated animals (p<0.05). Importantly, the level of *Enterobacteriaceae* was not significantly reduced with additional recovery time. Given the smaller changes towards a protective baseline state, it was not all that surprising that we were unable to detect significant changes in subsequent *C. difficile* levels (p=0.12). 
+***Allowing recovery of specific bacterial populations restores colonization resistance.*** Several studies have demonstrated that perturbed communities can return to a "healthy" state in which resistance to *C. difficile* is restored [refs]. We allowed the microbiota of the mice that received the full metronidazole and ampicillin treatment to recover an additional five days. We again sought to test the relationships that we identified in the correlation-based analysis using animals with the partially recovered microbiota. On Day 1 post challenge of the metronidazole-treated mice who were allowed to recover five extra days, we observed a significant decrease in *C. difficile* level of CFU per g feces (p<XXX0.0001XXX). Within their microbiota there were significant increases (p<XXX0.05XXX) in overall abundances of *Porphyromonadaceae*, *Ruminococcaceae*, and *Lachnospiraceae* to abundances similar to those of untreated mice, and significant decreases (p<XXX0.05XXX) in levels of *Enterobacteriaceae*. In contrast, the ampicillin-treated mice that were given five extra days of recovery prior to *C. difficile* challenge did not experience an increase in colonization resistance. Inspection of their microbiota indicated that they still had significantly reduced levels of bacteria correlated with *C. difficile* protection, including *Bacteroides*, *Alistipes*, and *Ruminoccocaceae* compared with untreated animals (p<XXX0.05XXX). Importantly, the level of *Enterobacteriaceae* was not significantly reduced with additional recovery time. Given the smaller changes towards a protective baseline state, it was not all that surprising that we were unable to detect significant changes in subsequent *C. difficile* levels (p=XXX0.12XXX). Together, these results strengthen the importance of *Porphyromonadaceae*, *Lachnospiraceae*, *Ruminococcaceae*, and *Enterobacteriaceae* in setting up the right environment of negatively and positively correlated bacteria to affect the outcome of *C. difficile* colonization.
 
 --------
 
 ![**Figure 4.**](Figure4/figure4.png)
 
-**Figure 4. TITLE.** This figure shows the average percent relative abundances for family level phylotypes found on the day of *C. difficile* challenge in each experimental group. Each row depicts a different antibiotic that was allowed to recover. Black bars represent untreated animals. Grey bars represent animals given 1 day of recovery off antibiotics as in Figure 1. White bars represent animals given a total of 6 recovery days (5 additional days). Error bars show standard error of the mean.
+**Figure 4. Changes in the average relative abundance for family level phylotypes durin the period of recovery prior to challenge with *C. difficile*.** Each row depicts a different antibiotic that was allowed to recover. Black bars represent untreated animals. Grey bars represent animals given 1 day of recovery off antibiotics as in Figure 1. Error bars indicate the standard error of the mean.
 
 --------
+
+> How is this relevant? - PDS
 
 ![**Supplemental Figure 2.**](supplemental/sfigure2ab.png)
 
-**Supplemental Figure 2. Changes between untreated and recovery days.** A) The average thetaYC distance between pretreatment (day -11) and recovery days (days -5 through -1) is represented by circles connected by solid lines. Dashed lines with the same symbol indicate individual mice from the same cage. Antibiotic treatment is indicated by color. B) The average level of the inverse simpson diversity index is plotted by antibiotic treatment across time. Error bars show standard error of the mean. Mice were challenged with *C. difficile* on day 0. 
+**Supplemental Figure 2. Changes between untreated and recovery days.** A) The average thetaYC distance between pretreatment (day -11) and recovery days (days -5 through -1) is represented by circles connected by solid lines. Dashed lines with the same symbol indicate individual mice from the same cage. Antibiotic treatment is indicated by color. B) The average level of the inverse simpson diversity index is plotted by antibiotic treatment across time. Error bars show standard error of the mean. Mice were challenged with *C. difficile* on day 0.
 
 --------
-
+> How is this relevant? - PDS
 > ### Supplemental Figure 2A: Differences between recovery days' thetayc
- 
+
 ```{r, eval=FALSE}
 file <- "~/Desktop/mothur/abxD01/abxD01.final.an.unique_list.0.03.recovery.vancomycin.thetayc.0.03.lt.ave.dist"
 diffs <- getDistDiffs(file=file)
@@ -421,8 +429,8 @@ transpose <-t(recov.diversity)
 colors <- c(amp="#6600FF",
             metro="#FF00DBFF")
 par(mar=c(5, 5, 0.5, 0.5), las = 2, mgp=c(3, 1, 0))
-bp <- barplot(transpose[c("amp.avg", "metro.avg"), ], beside=T, ylim=c(0, 15), 
-              ylab="Inverse Simpson Diversity", xlab="", 
+bp <- barplot(transpose[c("amp.avg", "metro.avg"), ], beside=T, ylim=c(0, 15),
+              ylab="Inverse Simpson Diversity", xlab="",
               col=colors, xaxt='n' )
 xticks <- apply(bp, 2, mean)
 axis(1, at=xticks, label=c(-11, -5:0), las=1)
@@ -441,7 +449,7 @@ with (
   , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
 )
 
-legend("topright",inset=0.08, legend=c("Ampicillin", "Metronidazole"), 
+legend("topright",inset=0.08, legend=c("Ampicillin", "Metronidazole"),
        col=colors, pch=15, bty="n", y.intersp=1.5, pt.cex = 2.5, cex=1.2)
 
 
@@ -471,13 +479,13 @@ diffs(amp)
 ```
 
 > ### Figure 4: Barchart
-> 
+>
 > This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole and ampicillin.
-> 
+>
 > Input files on github folder Figure 5:
 > 1. abxD01.final.tx.2.subsample.alldelay.forlogscale.csv
 > 2. alldelay_tx2_barchart_ids.csv
-> 
+>
 > Uses functions in R scripts folder: stacked.barcharts.r, findStatLetters.r, barplotBeside.r
 
 ```{r, eval=FALSE}
@@ -486,7 +494,7 @@ stackedbarcharts(file = "~/Documents/Github/abxD01/Figure4/abxD01.final.tx.2.sub
 
 ```
 
-***Modeling microbiota data can predict C. difficile colonization outcomes.*** Given our ability to make general predictions of *C. difficile* colonization based on the microbiota, we next designed a model to calculate expected colonization levels given the relative abundance of a subset of OTUs. Combining the three datasets (Table 1, Supplemental Table 1 and 2), we set a 1% relative abundance threshold, eliminating OTUs that on average were not present at this level in at least one of the 16 experimental groups. In total, there were 44 OTUs utilized for building a random forest regression model. This model fit the data with an R2 of 0.98 (Figure 5A). We identified OTUs that contributed most to increased accuracy of the model using random forest’s feature selection (Figure 5B). Many of the top contributing OTUs includes members of the *Porphyromonadaceae* family, *Alistipes*, *Lachnospiraceae*, *Lactobacillus*, and *Escherichia* taxa. The relationship between these OTUs and *C. difficile* is shown in Figure 5C. *Escherichia* had the largest positive correlation with *C. difficile* levels of any bacterial species.  This finding was consistent across susceptible antibiotic treated communities except for streptomycin treated communities, which altogether lacked *Enterobacteriaceae* spp. OTUs 3 and 39 (*Porphyromonadaceae* and *Lachnospiraceae*, respectively), were the two most important features in accurately predicting subsequent *C. difficile* levels. In fact, a model built with only these two features was able to account for 79% of the variance observed. Together these results suggest that colonization resistance is likely conferred by *porphyromonadaceae*, *Alistipes*, and *lachnospiraceae* and a loss in these bacteria, concurrently with a gain of *Escherichia*, can result in increased susceptibility to infection.  
+***The composition of the microbiota on day 0 is predictive of C. difficile colonization levels on day 1.*** Given our ability to make qualitative predictions of *C. difficile* colonization based on the microbiota, we next designed a statistical model to calculate expected colonization levels given the relative abundance of a subset of OTUs. We used a regression-based random forest machine learning algorithm to predict the level of *C. difficile* colonization observed in the three sets of experiments based on the composition of the microbiota at the time of challenge. The model explained XXX98.0XXX% of the variation in the observed *C. difficile* colonization levels (Figure 5). Many of the OTUs that contributed the most to the quality of the fit included members of the *Porphyromonadaceae*, *Alistipes*, *Lachnospiraceae*, *Lactobacillus*, and *Escherichia*. These results further validate the observations from the correlation-based analysis. Together these results suggest that colonization resistance is likely conferred by *porphyromonadaceae*, *Alistipes*, and *lachnospiraceae* and a loss in these bacteria, concurrently with a gain of *Escherichia*, can result in increased susceptibility to infection. <needs help>Interestingly, the relationship between these OTUs and colonization resistance was not a simple dichotomous or linear relationship. For example, among the streptomycin-treated mice which altogether lacked the *Enterobacteriaceae*, *Porphyromonadaceae* (OTU 3) and *Lachnospiraceae* (OTU 39), were the two most important features in accurately predicting subsequent *C. difficile* levels. In fact, a model built with only these two features was able to account for 79% of the variance observed. </needs help>
 
 --------
 
@@ -494,7 +502,7 @@ stackedbarcharts(file = "~/Documents/Github/abxD01/Figure4/abxD01.final.tx.2.sub
 
 ![**Figure 5C.**](Figure5/figure5c.png)
 
-**Figure 5. Random forest model to predict *C. difficile* colonization levels based on the microbiota.** a) The fit of the random forest model by experimental group. The dashed line represents the y=x line. b) The 15 OTUs with the highest percent increase in mean squared error when dropped from the model. c) The percent relative abundance of the top 8 OTUs from (b) on day 0 are plotted against the log<sub>10</sub> *C. difficile* CFU/g feces.
+**Figure 5. Random forest model to predict *C. difficile* colonization levels based on the microbiota.** (A) The fit of the random forest model by experimental group. The dashed line represents the y=x line. (B) The 15 OTUs with the highest percent increase in mean squared error when dropped from the model. (C) The percent relative abundance of the top 8 OTUs from (B) on day 0 are plotted against the log<sub>10</sub> *C. difficile* CFU/g feces.
 
 --------
 
@@ -506,12 +514,12 @@ data<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.s
 means <- as.data.frame(matrix(nrow=nlevels(data$expgroup), ncol=0))
 row.names(means) <- levels(data$expgroup)
 for(i in 3:length(data)){
-  
+
   df <- aggregate( data[,i] ~ data$expgroup, data=data, mean )
   names(df)[2] <- names(data)[i]
-  
+
   means <- as.data.frame(cbind( means, df[,2]))
-  names(means)[dim(means)[2]] <- names(data)[i] 
+  names(means)[dim(means)[2]] <- names(data)[i]
 }
 
 means <- rbind(means, max=-1)
@@ -538,12 +546,12 @@ numOTUxThreshold <- as.data.frame(cbind(numOTUxThreshold, set))
 names(numOTUxThreshold)[1] <- "threshold"
 numOTUxThreshold <- cbind(numOTUxThreshold, numOTU=NA)
 for( i in 1:(length(set)) ) {
-  
+
   test <- meanOTU[ , meanOTU[19,] >= set[i] ]
   #test2 <- sum( meanOTU[19,] >= set[i] )
-  
+
   numOTUxThreshold[i, 2] <- length(test)
-  
+
 }
 
 plot(numOTUxThreshold$numOTU ~ numOTUxThreshold$threshold, xlab="Avg % RelAbund Threshold", ylab="# OTUs included")
@@ -552,7 +560,7 @@ abline(h=seq(1,300, by=10), col="light gray")
 ```
 
 > This feeds into the next analysis section.
-> 
+>
 > ### Random forest results
 
 ```{r, eval=TRUE}
@@ -576,7 +584,7 @@ cols <- c(which(names(all)=="Group"), which(names(all)=="nextDayCFU"), cols)
 toptitdel <- all[,cols]
 library(randomForest)
 
-toptitdel.rf <- randomForest(nextDayCFU ~ ., 
+toptitdel.rf <- randomForest(nextDayCFU ~ .,
                            data = toptitdel[,-1],  outscale=TRUE,
                            importance=TRUE, proximity=TRUE,
                            keep.forest=TRUE, ntree=5000
@@ -629,7 +637,7 @@ colors <- c(control = "black",
           metro1 = color[7],
           metro1d = color[7])
 
-# topdose is all circles, middle dose is square, 
+# topdose is all circles, middle dose is square,
 # low dose is upward pointing triangle, delayed is starburst
 pch <- c(control = 1,
          cipro = 16,
@@ -675,20 +683,20 @@ plot.new()
 par(mar=c(0.5, 0.5, 0.5, 0.5))
 legend("bottomright", legend=legend.labels, pch=pch, col=colors, pt.cex=1.5,  cex=1, bty="n", ncol = 2, text.width=0.4)
 
-par(mar=c(5, 5, 0.5, 0.5) +0.1, mgp=c(3, 1, 0), las=1) 
-plot(results[results[,1]=="control",2], 
-     results[results[,1]=="control",3], 
-     main="", 
-     ylab=expression(paste("Predicted Log ", italic("C. difficile"), " CFU/g Feces")), 
-     xlab=expression(paste("Actual Log ", italic("C. difficile"), " CFU/g Feces")), 
+par(mar=c(5, 5, 0.5, 0.5) +0.1, mgp=c(3, 1, 0), las=1)
+plot(results[results[,1]=="control",2],
+     results[results[,1]=="control",3],
+     main="",
+     ylab=expression(paste("Predicted Log ", italic("C. difficile"), " CFU/g Feces")),
+     xlab=expression(paste("Actual Log ", italic("C. difficile"), " CFU/g Feces")),
      ylim=c(0,9), xlim=c(0,9), xaxt='n', yaxt='n', cex=1.5)
 abline(a=0, b=1, lty="dashed", lwd=2, col="black")
 axis(1, at = c(0:9), labels=c(0:9))
 axis(2, at = c(0:9), labels=c(0:9))
 
 for(i in 2:(length(legend.labels))){
-  points(results[results[,1]==names(legend.labels)[i],2], 
-         results[results[,1]==names(legend.labels)[i],3], 
+  points(results[results[,1]==names(legend.labels)[i],2],
+         results[results[,1]==names(legend.labels)[i],3],
          col=colors[i], pch=pch[i], cex=1.5)
 }
 
@@ -717,7 +725,7 @@ abline(h=c(1:15), lty="dashed", col='black')
 ```{r, eval=TRUE}
 test3.39 <- toptitdel[,c("Group","nextDayCFU","Otu00003", "Otu00039")]
 
-rf.test3.39 <- randomForest(nextDayCFU ~ ., 
+rf.test3.39 <- randomForest(nextDayCFU ~ .,
                            data = test3.39[,-1],  outscale=TRUE,
                            importance=TRUE, proximity=TRUE,
                            keep.forest=TRUE, ntree=5000
@@ -769,7 +777,7 @@ print(correl)
 ```
 
 > From this file I selected the top 8 OTUs identified by random forest's increase in mean squared error measurement to graph (next section).
-> 
+>
 > ### Figure 5C: OTU abundance vs. *C. difficile* abundance
 
 ```{r, eval=FALSE}
@@ -792,8 +800,9 @@ graphOTUxCD(otus = topimp.otus, ids = graphID, corrs = topimp.corrs)
 	-combo of loss of good bugs, and gain of bad—a model of infection
 -tie back to mbio paper, with enterobacteriaceae they are screwed
 -modeling—not much done for CDI, link back to humans, shows we could model risk as they come in—put towards end with the larger picture
-We designed statistical models based on a data set of varied antibiotic perturbations of the murine microbiota and their subsequent CR levels against *C. difficile*. Though antibiotic administration induced unique microbiota structures, colonization resistance was similarly low against *C. difficile*. 
+We designed statistical models based on a data set of varied antibiotic perturbations of the murine microbiota and their subsequent CR levels against *C. difficile*. Though antibiotic administration induced unique microbiota structures, colonization resistance was similarly low against *C. difficile*.
 These models incorporated all combinations of top candidate species-level OTUs. We then tested our top model’s ability to use new abundance information on a specific subset of the microbiota to predict the subsequent *C. difficile* colonization level, which was experimentally validated. These results greatly expand our knowledge of various perturbations and their subsequent effects on microbiota structure and function (colonization resistance ability). Furthermore modeling important/key bacterial subsets of the community we can build models to assess CDI risk.
+
 
 -----------
 
@@ -816,7 +825,7 @@ Furthermore, the ability of *C. difficile* to colonize a community does not appe
 
 Previous work characterizing the microbiome’s of human and mouse hosts in the context of CDI provide glimpses into potentially protective and alternatively susceptible community structures, i.e. which bacteria are present and their abundance. Cross-sectional investigations have characterized the microbiota of patients in the hospital with and without a *C. difficile* infection (CDI) and compared to healthy controls. These studies found patients with *C. difficile* tended to have a reduction in numbers of Clostridiales Incertae Sedis XI (Vincent et al), Lachnospiraceae, Ruminococcaceae, and Bacteroides (Schubert et al). These studies however lack the baseline healthy state of the microbiota, which preclude them from assessing risk of *C. difficile*. Murine models of CDI have the advantage of observing the specific changes that occur before and after controlled perturbations and the introduction of *C. difficile*. Communities with low levels of CR were associated with blooms in either Lactobacillaceae (cefoperazone-induced) (Theriot, 2014, bassis, 2014), Proteobacteria (induced by either clinda+5abx cocktail, clinda alone, or tigecycline) (Reeves, 2011, Buffie, 2011, Bassis 2014). Lachnospiraceae is associated with resistance to *C. difficile* infection (Reeves 2011) and has been directly shown to decrease colonization through mono-colonization studies in germfree mice (Reeves 2012).
 
-Even fewer studies attempt to model these observational changes in the microbiome following perturbation. Using the time series data gathered from the *C. difficile* challenge of clindamycin-treated mice (Buffie 2011), a Lotka-Volterra dyamics-based framework was built which incorporates both time and accounts for external perturbations (Stein 2013). They identified a subset of their network, containing Blautia, Akkermansia, and Coprobacillus, as having a negative relationship with *C. difficile*, while alternatively Enterococcus had a positive relationship. 
+Even fewer studies attempt to model these observational changes in the microbiome following perturbation. Using the time series data gathered from the *C. difficile* challenge of clindamycin-treated mice (Buffie 2011), a Lotka-Volterra dyamics-based framework was built which incorporates both time and accounts for external perturbations (Stein 2013). They identified a subset of their network, containing Blautia, Akkermansia, and Coprobacillus, as having a negative relationship with *C. difficile*, while alternatively Enterococcus had a positive relationship.
 
 ------------------
 
@@ -825,7 +834,7 @@ o  How relates to other studies
 •	Antunes et al (finlay)—abx treatment on intestinal metabalome
 •	Sekirov—antibiotic induced perturbations of intestinal microbiota
 •	 “Change in the compostion alone of the intestinal microbiota (in the absence of significant changes in total numbers of intestinal microbes) prior to Salmonella serovar Typhimurium infection was sufficient to make mice more susceptible to Salmonella serovar Typhimurium, indicating that different subsets of the microbiota may play protective roles or enhance susceptibility to enteric infections.”
-•	Streptomycin and vancomycin doses were administered to mice prior to challenge with another gastrointestinal pathogen Salmonella enterica serovar Typhymurium (Sekirov 2008).  This study showed ___. Changes in community composition were dose dependent. 
+•	Streptomycin and vancomycin doses were administered to mice prior to challenge with another gastrointestinal pathogen Salmonella enterica serovar Typhymurium (Sekirov 2008).  This study showed ___. Changes in community composition were dose dependent.
 •	Strep increases bacteroidetes (CFB), vanc increases firms and then proteo (with increasing dose)
 •	Reeves/theriot/robinson—clindamycin/cef/cocktail/antbiotic administration alters the community structure
 •	Croswell—prolonge impact of abx on intestinal microbial ecology salmonella
@@ -835,13 +844,13 @@ o  How relates to other studies
 •	Theriot?—at least the metabolome paper—before and after with metabolites and cef, also does she look at anything taxonomically? yup
 
 Many of the relationships we observed in our study between specific bacteria and *C. difficile* are supported in the literature. –see my comments in this section
-Within the Porphyromonadaceae, only OTU505 had a significant positive relationship with subsequent *C. difficile* colonization (ρ= +0.21), which by blastn shares 99% identity with Coprobacter fastidiosus. Similarly within the Lachnospiraceae family, only one OTU had a positive relationship with *C. difficile* colonization (OTU174, ρ= +0.22). The Lachnospiraceae group also contained an OTU that had an exceptionally strong negative correlation (OTU39, ρ= +0.77). The Clostridia class was largely composed of the order Clostridiales (n=6), of which only one had a positive relationship with *C. difficile* colonization (OTU154, ρ= +0.26). 
+Within the Porphyromonadaceae, only OTU505 had a significant positive relationship with subsequent *C. difficile* colonization (ρ= +0.21), which by blastn shares 99% identity with Coprobacter fastidiosus. Similarly within the Lachnospiraceae family, only one OTU had a positive relationship with *C. difficile* colonization (OTU174, ρ= +0.22). The Lachnospiraceae group also contained an OTU that had an exceptionally strong negative correlation (OTU39, ρ= +0.77). The Clostridia class was largely composed of the order Clostridiales (n=6), of which only one had a positive relationship with *C. difficile* colonization (OTU154, ρ= +0.26).
 
 
 Several broader groups of bacteria can work together (in some combination) to provide CR …possible that proteobacteria in general are bad …These results indicate that many related species within the larger/broader bacterial groups may be able to serve in providing colonization resistance against *C. difficile*.
-Other taxons in Figure 3 had more species specific correlations. For instance the Actinobacteria phylum included Enterorhabdus (OTU29, ρ= -0.70), Coriobacteriaceae (OTU50, ρ= -0.50), Bifodbacterium (OTU22, ρ= -0.34), Actinomyces (OTU58, ρ= +0.23). The Lactobacillales group is divided into two negatively correlated Lactobacillus OTUs (OTUs 23, 21, ρ= -0.73, -0.40 respectively) and two positively correlated Streptococcus OTUs (OTUs 78, 79). Similarly, the Bacteroidales group included species at both extremes, for example, an Alistipes (OTU20, ρ= -0.78) and a Bacteroides species (OTU44, ρ= +0.34). [END sent, all the other bad bugs look more like random smaller level taxonomic classification divisions, as in it’s a genus/species level effect type deal] 
+Other taxons in Figure 3 had more species specific correlations. For instance the Actinobacteria phylum included Enterorhabdus (OTU29, ρ= -0.70), Coriobacteriaceae (OTU50, ρ= -0.50), Bifodbacterium (OTU22, ρ= -0.34), Actinomyces (OTU58, ρ= +0.23). The Lactobacillales group is divided into two negatively correlated Lactobacillus OTUs (OTUs 23, 21, ρ= -0.73, -0.40 respectively) and two positively correlated Streptococcus OTUs (OTUs 78, 79). Similarly, the Bacteroidales group included species at both extremes, for example, an Alistipes (OTU20, ρ= -0.78) and a Bacteroides species (OTU44, ρ= +0.34). [END sent, all the other bad bugs look more like random smaller level taxonomic classification divisions, as in it’s a genus/species level effect type deal]
 --functional redundancy? Across related large groups like porphyros?
---mostly Firmicutes—better competitors with cdiff? Because similar nutrients resources? 
+--mostly Firmicutes—better competitors with cdiff? Because similar nutrients resources?
 Also functional redundancy with a highly diverse community… not just about who possibly but also ab being diverse—emphasizes community as a whole
 
 OTU39—Eubacterium ventriosum (94%), eubacterium rectale (93%), roseburia intestinalis/hominis/faecis (93%) (positively correlated to differences observed in discordant MZ twins for BMI—more abundant in higher BMI siblings… these are all butyrate producers, also capable of degrading fiber)
@@ -859,7 +868,7 @@ o	Limitations
 •	Porphyromonadaceae is more prevalent in mice… so might not be as relevant for humans
 •	Different strains of cdiff have different microbiota requirements to protect?
 •	Doesn’t get at function… ?
-•	Collect more data to continue to improve our microbiome modeling abilities, 
+•	Collect more data to continue to improve our microbiome modeling abilities,
 
 
 o	Contribution to the field, positive spins
@@ -876,14 +885,13 @@ The final paragraph should highlight the main conclusion(s), and provide some in
 The human microbiome is complex; it has been observed that there is no identifiable “core” microbiome that all humans share (Turnbaugh 2009). It’s been observed that there is a high level of interindividual variation among healthy individuals’ microbiomes (Costello 2009). Thus the definition of a healthy microbiome is one that encompasses a wide range of microbiota structures, each one evolved with their host. It’s highly likely there is no one size fits all solution for the treatment or prevention of CDI. Thus characterizing the relationships within the microbiome are important in the context of a community. Need more studies that look at the level of the community as a whole in CR over the effect of single bugs.  Examples of papers looking at combinations/subsets of bacteria in CR
 
 
-	It makes sense that many bacteria would play a role in colonization resistance and that it is more about the community composition as a whole given that interindividual differences is so great.  Two people share no more than __% of their microbiomes.  They are unique to individuals and yet all these different profiles of microbiotas are capable of colonization resistance.  People do not get *C. difficile* infections without first being exposed to some major purturbation of their microbiome, namely antibiotics.  Thus many structures of the microbiome, and many distinct bacterial populations must be capable of contributing to resistance.  Identifying/cataloguing a comprehensive profile of those bacteria with potential roles in CR would be an initial step towards personalized/individualized treatments with known mixtures of protective bacteria. 
-Bacteria within a community setting may act differently in the context of other bacterial species. 
+	It makes sense that many bacteria would play a role in colonization resistance and that it is more about the community composition as a whole given that interindividual differences is so great.  Two people share no more than __% of their microbiomes.  They are unique to individuals and yet all these different profiles of microbiotas are capable of colonization resistance.  People do not get *C. difficile* infections without first being exposed to some major purturbation of their microbiome, namely antibiotics.  Thus many structures of the microbiome, and many distinct bacterial populations must be capable of contributing to resistance.  Identifying/cataloguing a comprehensive profile of those bacteria with potential roles in CR would be an initial step towards personalized/individualized treatments with known mixtures of protective bacteria.
+Bacteria within a community setting may act differently in the context of other bacterial species.
 
 
 
-[using this time model for the metro… I wonder if it doesn’t work because of the time difference in the amount of recovery time? I’m picturing sort of an echo/ripple effect where at first the waves, or changes, are really large and then over time that rate of change of the community slows and the changes less pronounced/smaller. In this context the metro communities were at a stage farther along in the echo, meaning changes not happening as fast. Whereas the measurements we’ve taken and are using to make predictions are from the community at a time when you expect more/bigger/faster changes. So then the results are calculated assuming one rate but actually in a different (slower). 
-By this image, the initial strength of the perturbation matters too.] 
+[using this time model for the metro… I wonder if it doesn’t work because of the time difference in the amount of recovery time? I’m picturing sort of an echo/ripple effect where at first the waves, or changes, are really large and then over time that rate of change of the community slows and the changes less pronounced/smaller. In this context the metro communities were at a stage farther along in the echo, meaning changes not happening as fast. Whereas the measurements we’ve taken and are using to make predictions are from the community at a time when you expect more/bigger/faster changes. So then the results are calculated assuming one rate but actually in a different (slower).
+By this image, the initial strength of the perturbation matters too.]
 
 
 --also somewhere, ecoli are typically on avg (__% of the community, typically wayyyy outnumbered… whats the avg relabund of all those CR OTUs in an untreated mouse, how does that compare to the abundance of those bacteria I’ve implicated in –CR) …point is that Proteobacteria are usually outnumbered… don’t have a chance, gut is suited to bact/firm (which not surprisingly make up the major players in CR).. I bet those other outlier bad bugs are also in low abund in untreated mice (?). but when the gut environment changes for w/e reason, can give those rarer bad ones/proteo/esp e. coli a chance to take hold. They could just be individually opportunistic or work synergistically with cdiff. If individually opportunistic, it might be that they are facing pretty much a common enemy which is the lach/rum/clos/porphs and end up having similar techniques/niches as a result of that common enemy. Working synergistically—eg. b. theta sialidase where it cleaves off resources for cdiff.
-
