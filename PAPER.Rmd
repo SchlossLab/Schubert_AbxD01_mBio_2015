@@ -509,7 +509,11 @@ stackedbarcharts(file = "~/Documents/Github/abxD01/Figure4/abxD01.final.tx.2.sub
 > ### Evaluating cutoffs for OTU inclusion in Random Forest model
 
 ```{r, eval=TRUE}
-data<-read.csv("~/Desktop/mothur/abxD01/model/abxD01.final.an.unique_list.0.03.subsample.shared.toptitdel.noNewUntr.logtrans.filter16mintot.grouped.csv", header=T)
+
+dataFile <- "~/Documents/Github/abxD01/results/figures/Figure5/abxD01.final.an.unique_list.0.03.subsample.shared.toptitdel.noNewUntr.logtrans.filter16mintot.grouped.highvancD0.csv"
+
+data<-read.csv(file=dataFile, header=T)
+
 
 means <- as.data.frame(matrix(nrow=nlevels(data$expgroup), ncol=0))
 row.names(means) <- levels(data$expgroup)
@@ -684,8 +688,8 @@ par(mar=c(0.5, 0.5, 0.5, 0.5))
 legend("bottomright", legend=legend.labels, pch=pch, col=colors, pt.cex=1.5,  cex=1, bty="n", ncol = 2, text.width=0.4)
 
 par(mar=c(5, 5, 0.5, 0.5) +0.1, mgp=c(3, 1, 0), las=1)
-plot(results[results[,1]=="control",2],
-     results[results[,1]=="control",3],
+plot(fit.results[fit.results[,1]=="control",2],
+     fit.results[fit.results[,1]=="control",3],
      main="",
      ylab=expression(paste("Predicted Log ", italic("C. difficile"), " CFU/g Feces")),
      xlab=expression(paste("Actual Log ", italic("C. difficile"), " CFU/g Feces")),
@@ -695,8 +699,8 @@ axis(1, at = c(0:9), labels=c(0:9))
 axis(2, at = c(0:9), labels=c(0:9))
 
 for(i in 2:(length(legend.labels))){
-  points(results[results[,1]==names(legend.labels)[i],2],
-         results[results[,1]==names(legend.labels)[i],3],
+  points(fit.results[fit.results[,1]==names(legend.labels)[i],2],
+         fit.results[fit.results[,1]==names(legend.labels)[i],3],
          col=colors[i], pch=pch[i], cex=1.5)
 }
 
@@ -796,8 +800,6 @@ graphOTUxCD(otus = topimp.otus, ids = graphID, corrs = topimp.corrs)
 ### Discussion
 
 -community effect—have other things to compensate—highlight examples –streptomycin blue triangles—where low lachno but no cdiff so what else is protecting? Not one otu that explains it all… just cus low levels doesn’t screw you, also see recovered points in 5C-angela, sonnenburg-need other thingsssss
-  -fig2—there are like larger groups in protection/susceptibility
-	-combo of loss of good bugs, and gain of bad—a model of infection
 -tie back to mbio paper, with enterobacteriaceae they are screwed
 -modeling—not much done for CDI, link back to humans, shows we could model risk as they come in—put towards end with the larger picture
 We designed statistical models based on a data set of varied antibiotic perturbations of the murine microbiota and their subsequent CR levels against *C. difficile*. Though antibiotic administration induced unique microbiota structures, colonization resistance was similarly low against *C. difficile*.
@@ -810,19 +812,12 @@ Through our antibiotic perturbation experiments we identified a panel of bacteri
 
 Throughout our analysis, we observed examples of the significance of the microbiome as a whole over any individual bacterial species in contributing to resistance. Correlation analysis identified whole families with significant negative or positive relationships with *C. difficile*. However, correlation analysis alone was insuficient in identifying all informative bacteria. Random forest modeling allowed us to identify several bacterial OTUs that did not have significant correlations with *C. difficile* yet improved model accuracy. *Turicibacter* and *Akkermansia*, for example, both had non-significant correlations with *C .difficile* yet were more important for model accuracy over OTUs with stronger correlations (*Figure 5BC*). While these bacteria may not have important direct effects on *C. difficile*, they may interact positively or negatively with bacteria that do have strong relationships with *C. difficile*. Through the model analysis, we observed that no single bacteria was able to consistently explain the subsequent level of *C. difficile* observed. For example, the *Porphyromonadaceae* OTU3, along with the *Lachnospiraceae* OTU39, were the two most important OTUs in the model with strong negative correlations with *C. difficile*. The majority of microbiotas which had over 1% relative abundance of OTU3 had no detectable *C. difficile* (*Figure 5C*). However, a small group of microbiotas with greater than 1% OTU3 abundance, which included several streptomycin (0.1 mg/ml) treated, ampicillin treated (both 1 and 6 days recovery), and cefoperazone treated (both 0.1 mg/ml and 0.3 mg/ml) microbiotas, were not fully protected by the presence of this OTU alone and ranged in *C. difficile* levels from 10<sup>2</sup> to 10<sup>6</sup> CFU/g feces. Similarly, having low amounts of one "protective" bacteria such as *Lachnospriaceae* OTU39 does not automatically render the host susceptible to colonization. For instance streptomycin treated (0.1 mg/ml) mice did not harbor *Lachnospiraceae* OTU39, yet had undetectable levels of *C. difficile*. Thus the loss or absence of one protective bacterial species can be compensated by others, either related species or others with functional redundancy (as in redundancy in their protective abilities). 
 
-Furthermore, the dynamics of *C. difficile* colonization does not appear to be dependent soley on the loss of protective species. Both *Escherichia* OTU11 and *Streptococcus* OTU78 were positively correlated with *C. difficile* colonization and important in the random forest model. Notably, *Escherichia* OTU11 was among the strongest positively correlated OTUs with *C. difficile* across all antibiotic treatments, except for streptomycin. In fact, while streptomycin treatment (5 mg/ml) lead to high *C. difficile* colonization, these communities had very little, if any, *Escherichia* OTU11. This demostrates that while *Escherichia* may aid in colonization of *C. difficile*, it is not essential. These observations lead to a model of colonization by *C. difficile* in which antibiotic perturbation leads to loss of protective species. 
-
-
-
- Understanding how individual bacterial populations live in the context of a community is important for not only determining mechanisms but also for informing novel therapies.
-
-In the context of antibiotic perturbation however, widespread loss of protective bacteria allows the growth of bacteria which otherwise are outcompeted, including many *Proteobacteria* (*E. coli*).
-
-Furthermore, the ability of *C. difficile* to colonize a community does not appear to be dependent soley on the loss of protective species.  Rather, it seems likely that as protective species are lost, advantageous bacteria such as *E. coli* can colonize quickly and adapt, which in turn also promotes a favorable environment for *C. dfficile* colonization. Many members of the proteobacteria---attributes: grow quickly, wide array of nutrient sources, more generalists. Examples of e.coli causing inflammation, which can help pathogens in some instances where bad for resident good bugs. Also e. coli using nutrients within mucus (?) or at least contributing to loss of oxygen near epithelium, which can also let pathogens get closer and colonize.. cause further damage (by toxins, etc)... 
+Furthermore, the dynamics of *C. difficile* colonization does not appear to be dependent soley on the loss of protective species. Both *Escherichia* OTU11 and *Streptococcus* OTU78 were positively correlated with *C. difficile* colonization and important in the random forest model. Notably, *Escherichia* OTU11 was among the strongest positively correlated OTUs with *C. difficile* across all antibiotic treatments, except for streptomycin. In fact, while streptomycin treatment (5 mg/ml) lead to high *C. difficile* colonization, these communities had very little, if any, *Escherichia* OTU11. This demostrates that while *Escherichia* may aid in colonization of *C. difficile*, it is not essential. These observations lead to a model of colonization by *C. difficile* in which antibiotic perturbation leads to loss of protective species. This in turn eliminates competition, frees resources, and eliminates direct or indirect inhibitory effects of bacterial products (e.g. bacteriocins or short chain fatty acids) made by these protective bacteria. While this may be suitable enough for *C. difficile* to colonize, other opportunistic species such as *Escherichia coli* and other *Proteobacteria* may also take advantage of these microbiota perturbations. Increased colonization by these bacteria can increase inflammation, produce a new profile of metabolites and bacterial products, reduce the mucus layer,  and deoxygenate the microoxic tiers nearing the epithelium. These changes in the gut milieu may be advantageous for *C. difficile* and other gut pathogens. Inflammation, for instance, has been shown to be advantageous for *Salmonella tyhpumurium* to further disrupt the indigenous microbiota []. Inflammation also leads to a shift in the availability of resources, such as nitrites, which can be used as an alternative resource by *Salmonella typhimurium* []. *E.coli* is capable of using resources found in the mucus layer while simultaneously deoxygenating this region []. This reduces the spatial protection of the mucus layer, allowing bacteria, including strictly anaerobic bacteria, and bacterial products (e.g. toxins) to more readily reach the epithelial layer.  
 
 
 
 
+Understanding how individual bacterial populations live in the context of a community is important for not only determining mechanisms but also for informing novel therapies.
 
 Previous work characterizing the microbiome’s of human and mouse hosts in the context of CDI provide glimpses into potentially protective and alternatively susceptible community structures, i.e. which bacteria are present and their abundance. Cross-sectional investigations have characterized the microbiota of patients in the hospital with and without a *C. difficile* infection (CDI) and compared to healthy controls. These studies found patients with *C. difficile* tended to have a reduction in numbers of Clostridiales Incertae Sedis XI (Vincent et al), Lachnospiraceae, Ruminococcaceae, and Bacteroides (Schubert et al). These studies however lack the baseline healthy state of the microbiota, which preclude them from assessing risk of *C. difficile*. Murine models of CDI have the advantage of observing the specific changes that occur before and after controlled perturbations and the introduction of *C. difficile*. Communities with low levels of CR were associated with blooms in either Lactobacillaceae (cefoperazone-induced) (Theriot, 2014, bassis, 2014), Proteobacteria (induced by either clinda+5abx cocktail, clinda alone, or tigecycline) (Reeves, 2011, Buffie, 2011, Bassis 2014). Lachnospiraceae is associated with resistance to *C. difficile* infection (Reeves 2011) and has been directly shown to decrease colonization through mono-colonization studies in germfree mice (Reeves 2012).
 
