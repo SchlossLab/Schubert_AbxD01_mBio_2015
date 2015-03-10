@@ -7,7 +7,7 @@
 # Coming off the sequencer, the fastq file names were pretty inconsistent. This
 # script renames the fastq files. It was run on the fastq files prior to moving
 # the files into the data/raw folder.
-# 
+#
 ################################################################################
 
 
