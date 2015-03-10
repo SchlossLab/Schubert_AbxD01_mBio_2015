@@ -119,20 +119,24 @@ mv 362D8_S171_L001_R2_001.fastq 008-362D8_S171_L001_R2_001.fastq
 mv 362D9_S178_L001_R1_001.fastq 008-362D9_S178_L001_R1_001.fastq
 mv 362D9_S178_L001_R2_001.fastq 008-362D9_S178_L001_R2_001.fastq
 
+#mv mock1_S26_L001_R1_001.fastq mock1_S26_L001_R1_001.fastq
+#mv mock1_S26_L001_R1_001.fastq mock1_S26_L001_R2_001.fastq
 #mv mock2_S27_L001_R1_001.fastq mock2_S27_L001_R1_001.fastq
 #mv mock2_S27_L001_R2_001.fastq mock2_S27_L001_R2_001.fastq
-mv mock_S192_L001_R1_001.fastq mock1_S192_L001_R1_001.fastq
-mv mock_S192_L001_R2_001.fastq mock1_S192_L001_R2_001.fastq
-mv mock_S357_L001_R1_001.fastq mock3_S357_L001_R1_001.fastq
-mv mock_S357_L001_R2_001.fastq mock3_S357_L001_R2_001.fastq
-mv mock_S96_L001_R1_001.fastq mock4_S96_L001_R1_001.fastq
-mv mock_S96_L001_R2_001.fastq mock4_S96_L001_R2_001.fastq
-mv Mock_S287_L001_R1_001.fastq mock5_S287_L001_R1_001.fastq
-mv Mock_S287_L001_R2_001.fastq mock5_S287_L001_R2_001.fastq
-mv Mock_S288_L001_R1_001.fastq mock6_S288_L001_R1_001.fastq
-mv Mock_S288_L001_R2_001.fastq mock6_S288_L001_R2_001.fastq
-mv Mock_S384_L001_R1_001.fastq mock7_S384_L001_R1_001.fastq
-mv Mock_S384_L001_R2_001.fastq mock7_S384_L001_R2_001.fastq
+mv mock_S192_L001_R1_001.fastq mock3_S192_L001_R1_001.fastq
+mv mock_S192_L001_R2_001.fastq mock3_S192_L001_R2_001.fastq
+mv mock_S357_L001_R1_001.fastq mock4_S357_L001_R1_001.fastq
+mv mock_S357_L001_R2_001.fastq mock4_S357_L001_R2_001.fastq
+mv mock_S96_L001_R1_001.fastq mock5_S96_L001_R1_001.fastq
+mv mock_S96_L001_R2_001.fastq mock5_S96_L001_R2_001.fastq
+mv Mock_S287_L001_R1_001.fastq mock6_S287_L001_R1_001.fastq
+mv Mock_S287_L001_R2_001.fastq mock6_S287_L001_R2_001.fastq
+mv Mock_S288_L001_R1_001.fastq mock7_S288_L001_R1_001.fastq
+mv Mock_S288_L001_R2_001.fastq mock7_S288_L001_R2_001.fastq
+mv Mock_S384_L001_R1_001.fastq mock8_S384_L001_R1_001.fastq
+mv Mock_S384_L001_R2_001.fastq mock8_S384_L001_R2_001.fastq
+mv Mock_S192_L001_R1_001.fastq mock9_S192_L001_R1_001.fastq
+mv Mock_S192_L001_R2_001.fastq mock9_S192_L001_R2_001.fastq
 
 
 #this counts the number of fastq files from each animal/cage combination
