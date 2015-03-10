@@ -55,5 +55,25 @@ spread_sheet$recovDays <- as.numeric(spread_sheet$recovDays)
 spread_sheet$sample[duplicated(spread_sheet$sample)]
 #[1] "021-3D-1" "117-4-D4"
 
+#sample name suggests it came from Day -1 when it came from day 1
 spread_sheet[spread_sheet$sample=="021-3D-1" & spread_sheet$day==1,"sample"] <- "021-3D1"
+
+#sample name suggests it came from Day 4 when it came from day 5
 spread_sheet[spread_sheet$sample=="117-4-D4" & spread_sheet$day==5,"sample"] <- "117-4-D5"
+
+spread_sheet$sample[duplicated(spread_sheet$sample)]
+#spread_sheet$sample[duplicated(spread_sheet$sample)]
+
+#make rownames the same as the sample names
+rownames(spread_sheet) <- spread_sheet$sample
+spread_sheet <- spread_sheet[,-1]
+
+# Now we need to make sure that our sample names match the names in the list of
+# corrected fastq file names
+
+#the files all start with the correct cage number
+sum(grepl("^\\d{1,2}-", rownames(spread_sheet)))
+#0
+
+#remove the dash between the animal number and the D that appears in some smaple names
+rownames(spread_sheet) <- gsub("^(\\d{3}-\\d)-D", "\\1D", rownames(spread_sheet))
