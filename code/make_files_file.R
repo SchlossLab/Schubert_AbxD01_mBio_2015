@@ -47,3 +47,11 @@ find_files <- function(stub, files=fastqs){
 
 files_lines <- lapply(samples, find_files)
 write(unlist(files_lines), "data/process/abxD0.files")
+
+
+r1_mock <- fastqs[grep("mock.*R1.*fastq", fastqs)]
+r2_mock <- fastqs[grep("mock.*R2.*fastq", fastqs)]
+stub_mock <- gsub("(.*)_S.*", "\\1", r1_mock)
+
+lines_mock <- apply(cbind(stub_mock, r1_mock, r2_mock), 1, paste, collapse="\t")
+write(lines_mock, "data/process/abxD0.files", append=T)
