@@ -84,7 +84,7 @@ rownames(spread_sheet) <- gsub("^(\\d{3}-\\d)-D", "\\1D", rownames(spread_sheet)
 #samples and that they are named the same in the metadata (here) and the
 #sequence data
 
-fastq <- scan("data/raw/clean_fastqs.txt", what="")
+fastq <- scan("data/raw/clean_fastqs.txt", what="", quiet=TRUE)
 stub <- gsub("(.*)_S.*", "\\1", fastq)
 unique_stubs <- unique(stub)
 mocks <- grepl("mock", unique_stubs)
@@ -99,7 +99,7 @@ rownames(spread_sheet)[!(rownames(spread_sheet) %in% sample_stub)]
 
 
 sample_stub[!(sample_stub %in% rownames(spread_sheet))]
-[1] "007-1D1" "008-1D1"
+#[1] "007-1D1" "008-1D1"
 
 
 # we can take care of these last two...
@@ -107,7 +107,7 @@ rownames(spread_sheet)[rownames(spread_sheet) == "0071D1"] <- "007-1D1"
 rownames(spread_sheet)[rownames(spread_sheet) == "0081D1"] <- "008-1D1"
 
 sample_stub[!(sample_stub %in% rownames(spread_sheet))]
-character(0)
+#character(0)
 
 rownames(spread_sheet)[!(rownames(spread_sheet) %in% sample_stub)]
 #[1] "021-3D1" "103-3D2" "088-2D4"
