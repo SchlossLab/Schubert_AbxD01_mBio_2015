@@ -1,5 +1,29 @@
 #Functions for modeling
 
+
+cleanSampleNames <- function(names){
+  ids <- c()
+  leng<-length(names)
+  
+  for(i in 1:leng){
+    if(names[i]=="0071D1"){
+      new.id <- "007-1D1"
+    } else{ 
+      dash <- regexpr("-D",names[i])
+      new.id <- paste0(substr(names[i], 1, dash-1), substr(names[i], dash+1, 100))
+    }
+    ids[i] <- new.id
+  }
+  return(ids)
+}
+
+
+
+
+
+
+
+
 ##########################################################################
 # Inputs 
 # Assumes the data input has columns "Group nextDayCFU  Otu1  Otu2 ..."
