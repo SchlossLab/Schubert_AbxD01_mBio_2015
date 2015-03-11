@@ -95,19 +95,11 @@ mock_stub <- unique_stubs[mocks]
 
 #all of the sample names in the spreadsheet have a fastq file
 rownames(spread_sheet)[!(rownames(spread_sheet) %in% sample_stub)]
-#[1] "021-3D1"  "021-3D3"  "021-3D5"  "021-4D6"  "111-1D1"  "111-1D10"
-#[7] "111-1D4"  "111-1D7"  "111-2D1"  "111-2D4"  "111-2D7"  "111-4D1"
-#[13] "111-4D4"  "117-4D5"  "117-5D1"  "103-3D2"  "116-1D7"  "116-2D7"
-#[19] "088-2D4"  "0071D1"   "0081D1"
+#[1] "021-3D1" "103-3D2" "088-2D4" "0071D1"  "0081D1"
 
 
 sample_stub[!(sample_stub %in% rownames(spread_sheet))]
-#[1] "007-1D1"   "008-1D1"   "087-2D6"   "088-1D-6"  "088-2D-6"  "088-4D-6"
-#[7] "089-1D-6"  "102-1D-11" "102-5D0"   "107-1D-5"  "108-2D-1"  "109-1D-5"
-#[13] "109-2D5"   "109-3D-11" "109-3D6"   "109-4D-11" "600-1D0"   "600-1D-1"
-#[19] "600-2D0"   "600-2D-3"  "600-2D-4"  "600-2D-5"  "600-2D-6"  "600-4D-1"
-#[25] "600-4D-3"  "600-4D-5"  "603-1D3"   "603-1D6"   "603-2D-1"  "626-2D10"
-#[31] "626-2D4"
+[1] "007-1D1" "008-1D1"
 
 
 # we can take care of these last two...
@@ -115,15 +107,10 @@ rownames(spread_sheet)[rownames(spread_sheet) == "0071D1"] <- "007-1D1"
 rownames(spread_sheet)[rownames(spread_sheet) == "0081D1"] <- "008-1D1"
 
 sample_stub[!(sample_stub %in% rownames(spread_sheet))]
-#[1] "087-2D6"   "088-1D-6"  "088-2D-6"  "088-4D-6"  "089-1D-6"  "102-1D-11"
-#[7] "102-5D0"   "107-1D-5"  "108-2D-1"  "109-1D-5"  "109-2D5"   "109-3D-11"
-#[13] "109-3D6"   "109-4D-11" "600-1D0"   "600-1D-1"  "600-2D0"   "600-2D-3"
-#[19] "600-2D-4"  "600-2D-5"  "600-2D-6"  "600-4D-1"  "600-4D-3"  "600-4D-5"
-#[25] "603-1D3"   "603-1D6"   "603-2D-1"  "626-2D10"  "626-2D4"
-
+character(0)
 
 rownames(spread_sheet)[!(rownames(spread_sheet) %in% sample_stub)]
-#[1] "021-3D1"  "021-3D3"  "021-3D5"  "021-4D6"  "111-1D1"  "111-1D10"
-#[7] "111-1D4"  "111-1D7"  "111-2D1"  "111-2D4"  "111-2D7"  "111-4D1"
-#[13] "111-4D4"  "117-4D5"  "117-5D1"  "103-3D2"  "116-1D7"  "116-2D7"
-#[19] "088-2D4"
+#[1] "021-3D1" "103-3D2" "088-2D4"
+# these final three samples failed to yield any sequence reads when we sequenced them
+
+write.table(spread_sheet, file="data/process/abx_cdiff_metadata.tsv", sep="\t", quote=F)
