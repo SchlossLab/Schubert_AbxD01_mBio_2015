@@ -77,7 +77,7 @@ $(REFS)HMP_MOCK.v4.fasta : $(REFS)HMP_MOCK.fasta $(REFS)silva.v4.align
 ################################################################################
 
 data/raw/get_data : code/get_fastqs.sh data/process/abxD0.files
-	bash code/get_fastqs.sh data/raw/abxD0.files;\
+	bash code/get_fastqs.sh data/process/abxD0.files;\
 	touch data/raw/get_data
 
 BASIC_STEM = data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster
