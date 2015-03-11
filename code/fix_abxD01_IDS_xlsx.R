@@ -10,7 +10,7 @@
 # * data/raw/abx_D01IDS.xlsx
 #
 # Output...
-# * data/process/abxD01_IDS.txt
+# * data/process/abx_cdiff_metadata.tsv
 #
 ################################################################################
 
