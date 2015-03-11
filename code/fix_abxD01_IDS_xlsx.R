@@ -4,7 +4,7 @@
 #
 # This script will convert Alyx's original abxD01_IDS.xlsx file into a text file
 # where the sample names correspond to the fastq sequence names. We are using
-# the file that Alyx sent to Pat on 2015-02-03
+# the file that Alyx sent to Pat on 2015-03-11
 #
 # Dependencies...
 # * data/raw/abx_D01IDS.xlsx
