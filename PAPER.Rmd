@@ -55,16 +55,7 @@ The purpose of this investigation was to expand our current knowledge of the eff
 
 ***Sequence Curation*** These sequences were curated using mothur as previously described (Kozich JJ et al and Schloss PD et al). Sequences were binned into operational taxonomic units (OTUs) using a 3% dissimilarity cutoff. Taxonomic assignments were determined by using a naïve Bayesian classifier with the Ribosomal Database Project (RDP) training set (version 9) requiring an 80% bootstrap confidence score. In parallel to the fecal samples, we also sequeced a mock community where we knew the true sequence of the 16S rRNA gene sequences. Analysis of the mock community data indicated that the error rate following our cuation procedure was 0.0X%. In order to avoid biases due to uneven sampling, samples were normalized to 1,625 sequences per samples [Schloss, reducing effects]. All 16S rRNA gene sequence data and metadata are available through the Sequence Read Archive under accession XXXXXX.
 
-***Statistical Analysis & Modeling*** All analyses were conducted using R version 3.1.2. Complete analysis scripts are available at the online repository for this study (https://github.com/SchlossLab/Schubert_AbxD01_mBio_2015).
-
-Need text about...
-* correlation analysis
-* comparison of titration levels
-* For the random forest you use 1% within each treatment group, for the correlation you state using 0.1 and 0.01% across all samples. Need to stay consistent.
-* statistical methods used to differentiate the abundances of OTUs in the titrations
-
-Random forest regression models were constructed using the randomForest R package using XX,000 trees [ref]. The model was constructed using the relative abundance of those OTUs that had an average relative abundance within any antibiotic treatment group of 1%. This resulted in 44 OTUs. The regression was performed using the log10 transformation of the number of CFU per gram of fecal material as the dependent variable.
-
+***Statistical Analysis & Modeling*** All analyses were conducted using R version 3.1.2. OTUs were considered for analysis if their average relative abundance within any treatment group was at least 1% (43 OTUs). Spearman rank correlation analysis was performed with a Benjamini and Hochberg adjustment between OTU counts or diversity levels and *C. difficile* CFU/g feces. Comparison of bacterial levels among titration groups or delayed groups of the same antibiotic was performed using the Kruskall-Wallis rank sum test followed by pairwise Wilcoxon rank sum tests with a Benjamini and Hochberg adjustment. Comparison of log10 transformed *C. difficile* CFU/g feces between experimental groups was calculated using ANOVA and subsequently pairwise T tests with a Benjamini and Hochberg adjustment. Random forest regression models were constructed using the randomForest R package using 5,000 trees [ref]. The regression was performed using the log10 transformation of the number of CFU/g fecal material as the dependent variable and the 43 OTUs as predictor variables. Complete analysis scripts are available at the online repository for this study (https://github.com/SchlossLab/Schubert_AbxD01_mBio_2015).
 
 ### Results
 
