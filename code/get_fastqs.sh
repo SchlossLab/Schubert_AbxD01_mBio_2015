@@ -22,8 +22,7 @@ FILES_FILE=$1
 
 
 # where are the raw fastqs?
-ORIG_LOCATION=/mnt/EXT/Schloss-data/alyx/abxD01/
-
+ORIG_LOCATION=/mnt/EXT/Schloss-data/cdiff_fastqs
 
 
 # where are we putting the fastqs?
