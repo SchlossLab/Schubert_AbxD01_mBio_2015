@@ -132,9 +132,9 @@ $(BASIC_STEM).pick.pick.pick.error.summary : code/get_error.batch\
 	mothur code/get_error.batch
 
 
-# rarefy the number of reads to 2000 sequences per library for the alpha and beta diversity analyses and modeling
+# rarefy the number of reads to 1625 sequences per library for the alpha and beta diversity analyses and modeling
 $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary $(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.ave.dist : $(BASIC_STEM).pick.pick.pick.an.unique_list.shared
-	mothur "#dist.shared(shared=$^, calc=thetayc, subsample=2000, iters=100); summary.single(shared=$^, subsample=2000, calc=nseqs-sobs-shannon-invsimpson, iters=100); sub.sample(shared=$^, size=2000)";\
+	mothur "#dist.shared(shared=$^, calc=thetayc, subsample=1625, iters=100); summary.single(shared=$^, subsample=1625, calc=nseqs-sobs-shannon-invsimpson, iters=100); sub.sample(shared=$^, size=1625)";\
 	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.groups.summary;\
 	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.thetayc.0.03.lt.dist;\
 	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.thetayc.0.03.lt.std.dist;\
