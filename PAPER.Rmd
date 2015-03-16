@@ -91,7 +91,23 @@ The purpose of this investigation was to expand our current knowledge of the eff
 
 ### Results
 
-***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] had decreased resistance against this pathogen. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics (**Table 1**) to differentially alter the microbiota and assess their resistance to *C. difficile* colonization. 16S rRNA gene sequencing of the fecal communities sampled at the time of *C. difficile* inoculation revealed distinct and reproducible microbiota structures (**Figure 1**). The community structures of the beta-lactam-treated mice (i.e. cefoperazone and ampicillin) were not significantly different from each other (AMOVA, p=XXX0.36XXX). Clindamycin-treated microbiotas were significantly different from all other treatment groups (AMOVA, p=XXX0.001XXX) and were characterized by the predominance of *Enterobacteriaceae*. Of all groups significantly different from the untreated microbiota, the levels of *Enterobacteriaceae* increased with all treatments except with streptomycin. Vancomycin-treated communities saw the largest bloom in *Akkermansia*. In addition, the ciprofloxacin-treated microbiota were the only group that was not significantly different from untreated mice (AMOVA, XXXp=0.09XXX). Subsequently, 24 hours after inoculation *C. difficile* was undetectable in the untreated mice or the ciprofloxacin-treated mice; however it had successfully colonized the mice in all other treatment groups to similarly high levels (10<sup>7</sup>-10<sup>8</sup> CFU/g) (**Figure 1**). We calculated the diversity of all of the communities using the Inverse Simpson and Shannon indices and observed a significant negative correlation with subsequent *C. difficile* colonization (both **Supplemental Figure 1**; p<XXX0.001XXX). These results demonstrate that a variety of non-overlapping community structures can be sensitive to *C. difficile* colonization.
+```{r amova_analysis}
+amova <- scan(file="data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova", what="", sep="\n", quiet=T)
+
+comparison_line <- amova[(1:length(amova)) %% 6 == 1]
+comparison <- gsub("\t.*", "", comparison_line)
+
+pvalue_line <- amova[(1:length(amova)) %% 6 == 0]
+pvalue <- gsub("p-value: ", "", pvalue_line)
+pvalue <- gsub("\\*", "", pvalue)
+pvalue <- gsub("<", "", pvalue)
+pvalue <- as.numeric(pvalue)
+sig <- p.adjust(pvalue, method="BH")
+```
+
+***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] had decreased resistance against this pathogen. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics (**Table 1**) to differentially alter the microbiota and assess their resistance to *C. difficile* colonization. 16S rRNA gene sequencing of the fecal communities sampled at the time of *C. difficile* inoculation revealed distinct and reproducible microbiota structures (**Figure 1**). The ciprofloxacin-treated microbiota were the only group that was not significantly different from untreated mice (AMOVA, p=`r round(sig[comparison=="cipro-no_abx"], 2)`). Subsequently, 24 hours after inoculation *C. difficile* was undetectable in the untreated mice or the ciprofloxacin-treated mice; however it had successfully colonized the mice in all other treatment groups to similarly high levels (10<sup>7</sup>-10<sup>8</sup> CFU/g). With the exception of the community structures found in the beta-lactam-treated mice (i.e. cefoperazone and ampicillin; AMOVA, p=`r round(sig[comparison=="amp-cef"], 2)`) all of the other comparisons were significantly different from each other and from the untreated controls (AMOVA, all p<`r round(max(sig[sig<0.05]), 2)`).
+
+We calculated the diversity of all of the communities using the Inverse Simpson and Shannon indices and observed a significant negative correlation with subsequent *C. difficile* colonization (both **Supplemental Figure 1**; p<XXX0.001XXX). These results demonstrate that a variety of non-overlapping community structures can be sensitive to *C. difficile* colonization.
 
 --------
 
@@ -124,17 +140,6 @@ anova(lm(data$nextDayCFU ~ data$expgroup))
 
 ```
 
-> ### Amova to compare resulting community structures
-> Amova calculation in mothur to determine the uniqueness of each community structure:
->
-
-```
-dist.shared(shared=abxD01.final.an.unique_list.0.03.topdose2.shared, calc=thetayc-jclass, subsample=1625)
-amova(phylip=abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.dist, design=topdose_design_byABX.txt, iters=1000000)
-
-```
-> This results in the file called "abxD01.final.an.unique_list.0.03.topdose2.thetayc.0.03.lt.ave.amova" located in the github folder. The results of these are summarized in "amova8expgroups.xlsx".
->
 > ### Figure 1: Bargraph
 >
 > This figure was built using the R script called "stacked.barcharts.r", which contains the stackedbarcharts() funciton in the abxD01 folder.The input files are listed in Github. The graph can be sorted 2 ways either by the untreated's decreasing relabund (sortbyphyl=FALSE), or by the most abundant within each phylum (sortbyphyl=TRUE). For each treatment, the resulting *C. difficile* CFU/g Feces is also labeled on the Y axis below the treatment name.
