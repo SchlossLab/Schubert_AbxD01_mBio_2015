@@ -1,0 +1,3 @@
+set.dir(input=data/process, output=data/process)
+dist.shared(shared=abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.topdose.shared, calc=thetayc, iters=100, subsample=T)
+amova(phylip=current, design=abx_topdose.design, iters=100000)
