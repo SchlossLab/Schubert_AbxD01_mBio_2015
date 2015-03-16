@@ -25,3 +25,6 @@ local({
   r["CRAN"] <- "http://cran.cnr.berkeley.edu/"
   options(repos = r)
 })
+
+#don't treat strings in tables as factors
+options(stringsAsFactors = FALSE)
