@@ -91,6 +91,15 @@ The purpose of this investigation was to expand our current knowledge of the eff
 
 ### Results
 
+```{r top_dose_cfu_analysis}
+cfu <- read.table(file="data/process/abxD1.counts")
+cfu_top_dose <- cfu[cfu$experiment == "top_dose" & cfu$abx != "control",]
+cfu_top_dose_summary <-aggregate(cfu_top_dose$CFU, by=list(cfu_top_dose$abx), summary)
+treatments <- cfu_top_dose_summary$Group.1
+cfu_top_dose_summary <- format(cfu_top_dose_summary$x, scientific=T, digits=2)
+rownames(cfu_top_dose_summary) <- treatments
+```
+
 ```{r amova_analysis}
 amova <- scan(file="data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova", what="", sep="\n", quiet=T)
 
@@ -102,12 +111,16 @@ pvalue <- gsub("p-value: ", "", pvalue_line)
 pvalue <- gsub("\\*", "", pvalue)
 pvalue <- gsub("<", "", pvalue)
 pvalue <- as.numeric(pvalue)
+
+comparison <- comparison[-1]
+pvalue <- pvalue[-1]
+
 sig <- p.adjust(pvalue, method="BH")
 ```
 
-***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] had decreased resistance against this pathogen. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics (**Table 1**) to differentially alter the microbiota and assess their resistance to *C. difficile* colonization. 16S rRNA gene sequencing of the fecal communities sampled at the time of *C. difficile* inoculation revealed distinct and reproducible microbiota structures (**Figure 1**). The ciprofloxacin-treated microbiota were the only group that was not significantly different from untreated mice (AMOVA, p=`r round(sig[comparison=="cipro-no_abx"], 2)`). Subsequently, 24 hours after inoculation *C. difficile* was undetectable in the untreated mice or the ciprofloxacin-treated mice; however it had successfully colonized the mice in all other treatment groups to similarly high levels (10<sup>7</sup>-10<sup>8</sup> CFU/g). With the exception of the community structures found in the beta-lactam-treated mice (i.e. cefoperazone and ampicillin; AMOVA, p=`r round(sig[comparison=="amp-cef"], 2)`) all of the other comparisons were significantly different from each other and from the untreated controls (AMOVA, all p<`r round(max(sig[sig<0.05]), 2)`).
+***Levels of colonization resistance are associated with the initial structure of the gut microbiota.*** In mouse models of CDI, the baseline, untreated murine microbiota is completely resistant to *C. difficile* colonization. It was previously shown that C57Bl/6 mice treated with cefoperazone [], clindamycin [], or clindamycin in combination with a five antibiotic cocktail [] had decreased colonization resistance. To further characterize structural shifts in the microbiota associated with this loss of protective function, we chose a panel of seven representatives from six classes of antibiotics to differentially alter the microbiota and assess their resistance to *C. difficile* colonization (**Table 1**). On the day after the mice were challenged with *C. difficile* we enumerated the density of *C. difficile* in the animals' feces. We observed reproducibly high levels of *C. difficile* colonization in mice treated with cefoperazone, metronidazole, and streptomycin. We observed variable levels of *C. difficile* colonization in mice treated with amipicilin. Only one of six mice receiving vancomycin was colonized with *C. difficile* and none of the mice that received ciprofloxacin were colonized. We next sequenced the 16S rRNA genes from the fecal communities sampled at the time of *C. difficile* challenge to characterize the populations within untreated mice that provided for colonization resistance. The antibiotic treatments resulted in distinct and reproducible microbiota structures (**Figure 1**; AMOVA, P<`r round(max(sig[grepl("control", comparison)]), 2)`). In addition, all of the other comparisons were significantly different from each other (AMOVA, P<`r round(max(sig[!grepl("control", comparison)]), 2)`). These results indicate that perturbing the gut microbiota with antibiotics resulted in non-overlapping community structures that yielded significant variation in susceptibility to colonization when challenged with *C. difficile*.
 
-We calculated the diversity of all of the communities using the Inverse Simpson and Shannon indices and observed a significant negative correlation with subsequent *C. difficile* colonization (both **Supplemental Figure 1**; p<XXX0.001XXX). These results demonstrate that a variety of non-overlapping community structures can be sensitive to *C. difficile* colonization.
+
 
 --------
 
@@ -122,23 +135,6 @@ We calculated the diversity of all of the communities using the Inverse Simpson 
 **Supplemental Figure 1. The inverse of Simpson's diversity index for the community on day 0 is negatively correlated with *C. difficile* colonization on day 1.** Spearman's rho is plotted in the top right corner.
 
 --------
-
-> ### CFU stats comparison
-> To compare CFU levels:
-
-```{r, eval=TRUE}
-
-file<-read.csv("~/Documents/Github/abxD01/Figure1/abxD01.final.tx.1.subsample.relabund.topdose2.forlogscale.csv", header=T)
-
-data <- file[ which(file$expgroup != '1untr'), ] #choose experimental groups
-data$nextDayCFU<-log10(data$nextDayCFU+1) #log transform CFUs
-anova(lm(data$nextDayCFU ~ data$expgroup)) #perform anova across experimental groups for CFU
-
-#Which groups are different? Ciprofloxacin was clearly lower
-data <- data[ which(data$expgroup != '2cipro'), ] #remove ciprofloxacin to see now if there's a difference in remaining groups
-anova(lm(data$nextDayCFU ~ data$expgroup))
-
-```
 
 > ### Figure 1: Bargraph
 >
