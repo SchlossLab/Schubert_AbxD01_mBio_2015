@@ -168,7 +168,7 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : 
 
 write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova
 				$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
-				data/process/abx_cdiff_metadata.tsv
+				data/process/abxD1.counts
 
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
 #
