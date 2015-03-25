@@ -144,11 +144,14 @@ $(BASIC_STEM).pick.pick.pick.error.summary : code/get_error.batch\
 # rarefy the number of reads to 1625 sequences per library for the alpha and beta diversity analyses and modeling
 $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary $(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.ave.dist : $(BASIC_STEM).pick.pick.pick.an.unique_list.shared
 	mothur "#dist.shared(shared=$^, calc=thetayc, subsample=1625, iters=100); summary.single(shared=$^, subsample=1625, calc=nseqs-sobs-shannon-invsimpson, iters=100); sub.sample(shared=$^, size=1625)";\
-	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.groups.summary;\
-	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.thetayc.0.03.lt.dist;\
-	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.thetayc.0.03.lt.std.dist;\
-	rm data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.*.rabund
+	rm $(BASIC_STEM).pick.pick.pick.an.unique_list.groups.summary;\
+	rm $(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.dist;\
+	rm $(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.std.dist;\
+	rm $(BASIC_STEM).pick.pick.pick.an.unique_list.*.rabund
 
+# rarefy the number of reads to 1625 sequences per library for the barcarts
+$(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared : $(BASIC_STEM).pick.v4.wang.pick.pick.tx.shared
+		mothur "#sub.sample(shared=$^, size=1625)";
 
 
 # let's do the amova analysis using the top dose samples
@@ -166,9 +169,16 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : 
 #
 ################################################################################
 
+results/figures/figure1.pdf : code/build_figure1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD0.counts
+	R -e "source('code/build_figure1.R')"
+
+
+
+
 write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova
 				$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
-				data/process/abxD1.counts
+				data/process/abxD1.counts\
+				$(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared
 
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
 #
