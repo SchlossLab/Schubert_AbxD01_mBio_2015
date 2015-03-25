@@ -15,12 +15,12 @@ names(abx_cfu) <- top_dose_med$Group.1
 # read in the shared file and get the relative abundance
 shared_file <- read.table(file="data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.pick.tx.5.subsample.shared", header=T, row.names=2)
 shared_file <- shared_file[,!(colnames(shared_file) %in% c("label", "numOtus"))]
-n_seqs <- apply(shared_top_dose, 1, sum)[1]
-rel_abund <- shared_top_dose/n_seqs
+n_seqs <- apply(shared_file, 1, sum)[1]
+rel_abund <- shared_file/n_seqs
 
 
 # need to figure out which samples made it through the pipeline and look at those
-overlap <- which(rownames(rel_abund) %in% rownames(counts_file))
+overlap <- rownames(rel_abund)[which(rownames(rel_abund) %in% rownames(top_dose))]
 rel_abund <- rel_abund[overlap,]
 rel_abund <- 100 * rel_abund
 top_dose <- top_dose[overlap,]
