@@ -70,7 +70,7 @@ control_metadata$abx <- rep("control", length(control_samples))
 #make new metadata file
 new_metadata <- rbind(day1_metadata, control_metadata)
 new_metadata <- new_metadata[,!(colnames(new_metadata) %in% "delayed")]
-
+rownames(new_metadata) <- gsub("D1", "D0", rownames(new_metadata))
 
 #output metadata file
 write.table(new_metadata, file="data/process/abxD1.counts", quote=FALSE, sep="\t")
