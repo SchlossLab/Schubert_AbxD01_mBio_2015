@@ -152,8 +152,7 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).
 
 
 # let's do the amova analysis using the top dose samples
-#data/process/abx_topdose.design $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.shared : data/process/abx_cdiff_metadata.tsv $(BASIC_STEM).pick.pick.pick.an.unique_list.shared code/prep_for_top_dose_amova.R
-data/process/abx_topdose.design : data/process/abx_cdiff_metadata.tsv code/prep_for_top_dose_amova.R
+data/process/abx_topdose.design $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.shared : data/process/abxD1.counts $(BASIC_STEM).pick.pick.pick.an.unique_list.shared code/prep_for_top_dose_amova.R
 	R -e "source('code/prep_for_top_dose_amova.R')"
 
 $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : data/process/abx_topdose.design $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.shared code/run_shared_to_amova.batch
