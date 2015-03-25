@@ -76,12 +76,21 @@ $(REFS)HMP_MOCK.v4.fasta : $(REFS)HMP_MOCK.fasta $(REFS)silva.v4.align
 #
 ################################################################################
 
+# need to get the fastq files. probably should replace this chunk eventually
+# with pulling data off of the SRA
 data/raw/get_data : code/get_fastqs.sh data/process/abxD0.files
 	bash code/get_fastqs.sh data/process/abxD0.files;\
 	touch data/raw/get_data
 
 BASIC_STEM = data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster
 
+
+# need to get the CFU on the day after antibiotic treatment along with the
+# part of the experiment that each sample belongs to
+
+data/process/abxD1.counts : code/make_counts_file.R data/process/abxD0.files\
+							data/process/abx_cdiff_metadata.tsv
+	R -e "source('code/make_counts_file.R')"
 
 
 # here we go from the raw fastq files and the files file to generate a fasta,
@@ -143,7 +152,8 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).
 
 
 # let's do the amova analysis using the top dose samples
-data/process/abx_topdose.design $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.shared : data/process/abx_cdiff_metadata.tsv $(BASIC_STEM).pick.pick.pick.an.unique_list.shared code/prep_for_top_dose_amova.R
+#data/process/abx_topdose.design $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.shared : data/process/abx_cdiff_metadata.tsv $(BASIC_STEM).pick.pick.pick.an.unique_list.shared code/prep_for_top_dose_amova.R
+data/process/abx_topdose.design : data/process/abx_cdiff_metadata.tsv code/prep_for_top_dose_amova.R
 	R -e "source('code/prep_for_top_dose_amova.R')"
 
 $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : data/process/abx_topdose.design $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.shared code/run_shared_to_amova.batch
@@ -158,11 +168,11 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : 
 ################################################################################
 
 write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova
-
-
+				$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
+				data/process/abx_cdiff_metadata.tsv
 
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
-#$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
+#
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.ave.dist\
 #$(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy\
 #$(BASIC_STEM).pick.v4.wang.pick.pick.tx.shared\
