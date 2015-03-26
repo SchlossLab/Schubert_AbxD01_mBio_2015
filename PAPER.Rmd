@@ -124,85 +124,24 @@ sig <- p.adjust(pvalue, method="BH")
 
 
 ```{r top_dose_correlation}
+corr_data <- read.table(file="data/process/top_dose_corr.tsv", header=T)
+families <- gsub(".*;", "", corr_data$taxonomy)
+ave_corr_family_agg <- aggregate(corr_data$sig_corrs, by=list(families), function(x){ c(mean(x), length(x))})
+ave_corr_family <- round(ave_corr_family_agg$x[,1], 2)
+names(ave_corr_family) <- ave_corr_family_agg$Group.1
 
-
+N_family <- round(ave_corr_family_agg$x[,2], 2)
+names(N_family) <- ave_corr_family_agg$Group.1
 ```
 
-***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each OTU that had an average abundance greater than 0.1% on the day of inoculation with the level of *C. difficile* colonization 24 hours later (Figure 2).
+***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each OTU that had an average abundance greater than 0.1% on the day of inoculation with the level of *C. difficile* colonization 24 hours later (Figure 2). OTUs associated with providing resistance against *C. difficile* (N=`r sum(corr_data$sig_corrs < 0)`) outnumbered those with associated associated with susceptibility (N=`r sum(corr_data$sig_corrs > 0)`). Among various bacterial families, three were consistently associated with *C. difficile* resistance: *Porphyromonadaceae* (ρ<sub>average</sub>=`r ave_corr_family["Porphyromonadaceae"]`, N=`r N_family["Porphyromonadaceae"]` OTUs), *Lachnospiraceae* (ρ<sub>average</sub>=`r ave_corr_family["Lachnospiraceae"]`, N=`r N_family["Lachnospiraceae"]` OTUs), and *Ruminococcaceae* (ρ<sub>average</sub>=`r ave_corr_family["Ruminococcaceae"]`, N=`r N_family["Ruminococcaceae"]` OTUs). Two OTUs from the *Proteobacteria* had a significant association with *C. difficile* colonization. These included OTUs associated with the genera *Pseudomonas* (ρ=`r round(corr_data[families=="Pseudomonadaceae","sig_corrs"], 2)`) and *Escherichia* (ρ=`r round(corr_data[families=="Enterobacteriaceae","sig_corrs"], 2)`). Overall, these results suggest that several large groups of related OTUs, particularly within the *Firmicutes* and *Bacteroidetes*, may participate in colonization resistance against *C. difficile*, while members of the *Proteobacteria* phylum may be involved in susceptibility.
 
-OTUs with negative a correlation were associated with providing resistance against *C. difficile* (N=XXX40XXX) and those with a positive correlation were associated with susceptibility (N=XXX7XXX) (p<XXX0.05XXX).</needs help> Among various bacterial families, three were consistently negatively correlated with *C. difficile* colonization: *Porphyromonadaceae* (ρ<sub>average</sub>=XXX-0.63XXX), *Lachnospiraceae* (ρ<sub>average</sub>=XXX-0.51XXX), *Ruminococcaceae* (ρ<sub>average</sub>=XXX-0.53XXX). OTUs from the *Proteobacteria* phylum had strong positive relationships with *C. difficile* colonization. These included OTUs associated with the genera *Pseudomonas* (ρ=XXX0.31XXX) and *Escherichia* (ρ=XXX0.56XXX). Other notable OTUs that were found at the extremes of the distribution of correlation scores included those affiliated with the genus *Lactobacillus* (family *Lactobacillaceae*; OTU23, ρ=XXX-0.73XXX), *Alistipes* (family *Rickenellaceae*; OTU20, ρ=XXX-0.78XXX), *Enterorhabdus* (phylum *Actinobacterium*, family *Coriobacteriaceae*; OTU29, ρ=XXX-0.70XXX), and *Streptococcus* (family *Streptococcaceae*; OTU78, ρ=XXX0.36XXX). Overall, these results suggest that several larger groups of related OTUs, particularly within the *Firmicutes* and *Bacteroidetes* phyla, may participate in colonization resistance against *C. difficile*, while members of the *Proteobacteria* phylum may be involved in susceptibility.
 
---------
 
-![**Figure 2.**](results/figures/Figure2/figure2_9x6.5.png)
 
-**Figure 2. Broader taxonomic groups share similar relationships with *C. difficile*.** Species level OTUs (3% cutoff) found on day 0 were correlated with the level of *C. difficile* CFU/g feces on day 1 using Spearman’s rank based correlation coefficient. Only OTUs with an average abundance of at least <needs help>0.05%<needs help> across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant after controlling for multiple comparisons using the Benjimani-Hochberg correction (p<0.05). OTUs are grouped by family. An asterisk (*) indicates that the OTU was unclassified at the family level.
 
---------
 
-> ### Correlation Calculations
->
-> The required file is located on Github.
 
-```{r, eval=TRUE, warning=FALSE}
-
-meta <- read.table('~/Documents/Github/abxD01/Figure2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.txt',header=T)
-#meta<-meta[1:96] #change based on number of OTUs above .05%, then add 2 for first two cols
-c<-1
-otu <- c()
-cor.spear <- c()
-pval.spear <- c()
-cor.ken = c()
-pval.ken = c()
-for(i in 3:length(meta)){
-  otu[c] <- colnames(meta[i])
-  cor.spear[c] <- cor.test(meta[,2],meta[,i], method="spearman")$estimate
-  pval.spear[c] <- cor.test(meta[,2],meta[,i], method="spearman")$p.value
-  cor.ken[c] <- cor.test(meta[,2],meta[,i], method="kendall")$estimate #good to see because kendall handles ties
-  pval.ken[c] <- cor.test(meta[,2],meta[,i], method="kendall")$p.value #but only works if this is tao-b and not tao-a which im not sure about
-  c <- c+1
-}
-
-pval.spear<-p.adjust(pval.spear, method='BH') #adjust for multiple comparisons
-pval.ken<-p.adjust(pval.ken, method='BH') #adjust for multiple comparisons
-
-results = NULL
-results <- matrix(c(otu, cor.spear, pval.spear, cor.ken, pval.ken), ncol=5)
-colnames(results) <- c('otu','corSpear','pvalSpear', "corKen", "pvalKen")
-results <- results[order(results[,3]),]  #order by pvalue column=3
-#write.table(results[1:dim(results)[1],], file="~/Documents/Github/abxD01/Figure2/abxD01.final.an.unique_list.0.03.subsample.filter16mintotal.shared.correl.topdose2.results.txt", sep="\t", row.names=FALSE)
-print(results[1:dim(results)[1],])
-
-```
-
-> ### Figure 2: Stipchart
->
-> This figure shows the correlation analysis of bacterial species present on Day 0 with *C. difficile* levels on Day 1 using the original set of antibiotic groups.
->
-> Necessary files are on github, and it was made using the following code:
-
-```{r, eval=FALSE}
-
-##Paper Figure: correlations for topdose
-otuCorrs<-read.csv("~/Documents/Github/abxD01/Figure2/corr_avgAbove0.001_topdose2_stripchart.csv", header=T)
-
-pch <- c(6,6,6,6, 1,1, 1, 1, 1, 1, 1, 1,0, 0, 9, 2, 2, 4)
-par(mar=c(8, 6, 2, 2) +0.1, mgp=c(4, 1, 0)) #default is 5.1 4.1 4.1 2.1 [bottom, left, top, right space], mgp=c(3, 1, 0) [label line location for x/y location labels, tick mark labels location, tick mark locations]
-stripchart(otuCorrs$corr ~ otuCorrs$graphOrder, vertical=TRUE, ylab="Spearman Correlation", ylim=c(-1, 1), cex.axis=1, cex=2, pch=pch, lwd=2, col="black",  method="jitter",  jitter=.2, cex.lab=1.1, yaxt="n", xaxt="n")
-axis(1, cex.axis=1, at=(1:nlevels(otuCorrs$family)), labels=FALSE)
-family.labels <- unique(otuCorrs[order(otuCorrs$graphOrder), "family"])
-text(1:nlevels(otuCorrs$family)+.3, par("usr")[3]-0.05, label=(family.labels), xpd=NA, pos=2, srt=45, cex=1)
-axis(2, cex.axis=1, at=seq(-1,+1, by=.1), las=1)
-color_transparent <- adjustcolor("black", alpha.f = 0.3)
-abline(v=c(1:nlevels(otuCorrs$family)), col=color_transparent)
-abline(h=0, col="dark gray", lwd=2)
-abline(h=c(0.25, 0.5, 0.75, -0.25, -0.5, -0.75), col=color_transparent, lwd=2, lty="dashed")
-phylum.labels <- unique(otuCorrs[order(otuCorrs$graphOrder), "phyl"])
-leg<-legend("top",  legend=phylum.labels, pch=c(6, 1, 0, 9, 2, 4), cex=1, bty="o", horiz=TRUE, pt.cex=1, text.width=2.5)
-
-```
-
-> Figure saved as "corr_avgAbove0.001_topdose2_10x10.pdf".
 
 ***Smaller perturbations of the microbiota result in maintenance of colonization resistance.*** All but the ciprofloxacin treatment resulted in similarly high levels of *C. difficile*. Therefore, we hypothesized that titrating the dose of antibiotics given to the mice would result in a reduced perturbation to the microbiota and a reduced sensitivity to *C. difficile*. We titrated the doses of cefoperazone, streptomycin, and vancomycin given to the mice (Supplemental Table 1). Colonization levels decreased significantly in all mice receiving titrated doses in support of our hypothesis (Figure 3). *C. difficile* levels were significantly different between all titration groups within the cefoperazone (p<XXX0.03XXX) and streptomycin treated mice (p<XXX0.01XXX). For each of the antibiotics we titrated, reduced dosages resulted in reduced colonization by *C. difficile*. By sequencing the 16S rRNA genes from feces collected on day 0 from these mice, we sought to validate the relationships we observed with the full dosage. Titrating cefoperazone resulted in a shift in dominance from the *Bacteroidetes* to the *Firmicutes* phylum with increasing antibiotic dose. Most notable was the increase in the relative abundance of OTUs associated with resistance including the *Porphyromonadaceae* and *Alistipes* and a reduction in OTUs associated with susceptibility including members of the *Proteobacteria*, *Clostridium*, and *Staphylococcus*. The relative abundance of other OTUs associated with protection including the *Lactobacillus*, *Lachnospiraceae*, and *Ruminococcaceae* did not change as expected based on the initial correlation analysis; however, these OTUs were present at levels similar to the untreated mice. The at the lowest streptomycin titration, mice retained significantly higher abundances of *Alistipes* and *Anaeroplasma* (p<0.05), which we found to be strongly associated with colonization resistance. The relative abundances of the *Porphyromonodaceae*, *Lachnospiraceae*, *Ruminococcaceae* were unchanged, but were present at similarly high levels to those found in the untreated mice. Although the vancomycin titration yielded a number of large changes in the abundance of individual populations, there was no recovery of colonization resistance. The relative abundance of many of the populations associated with resistance (*Porphyromonadaceae*, *Lachnospiraceae*, *Anaeroplasma*) increased with decreased vancomycin dosage; however, with the exception of the *Lactobacillus* populations, they did not reach the levels observed in the untreated mice. In addition, all of the vancomycin-treated mice had high levels of OTUs affiliated with the *Akkermansia* and *Enterobacteriaceae*. Together, these results suggest that individual populations are not sufficient to provide colonization resistance. Rather, resistance is likely a product of the overall composition of the community.
 
@@ -722,4 +661,9 @@ Furthermore, the dynamics of *C. difficile* colonization does not appear to be i
 We have shown across several different types of perturbations that we can accurately predict the resistance levels of these communities to *C. difficile*. This has great applications for predicting patient risk of CDI in the hospital. Furthermore, this analysis can be used to inform the design of personalized medicine, whether through tailoring probiotic or antibiotic regimens. Future studies are needed to examine of the human-specific bacteria in colonization resistance and also to examine the changes in models necessary to account for physiological differences between *C. difficile* strains. <End sentence is weak.>
 
 
+
+**Figure Legends**
+
 **Figure 1. Antibiotic treatments result in significant alterations to the structure of the microbiome and variation in colonization resistance.** The median percent relative abundances of the most abundant phyla found in each experimental group on the day of *C. difficile* challenge. Each bargraph depicts a different antibiotic perturbation. The median level *C. difficile* colonization found 24 hours post microbiota sampling is indicated in the top right for each treatment. Error bars indicate the interquartile range.
+
+**Figure 2. Broader taxonomic groups share similar relationships with *C. difficile* colonization.** The relative abundance of OTUs found on the day that mice were challenged with *C. difficile* spores were correlated with the level of C. difficile CFU/g feces 24 hours later. Only OTUs with an average abundance of at least 0.1% across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant after controlling for multiple comparisons using the Benjimani-Hochberg correction (P<0.05). OTUs are grouped by the taxonomic family that its sequences classified as or the next deeper classification that provided a classification. The letters in the parentheses correspond to the phylum that the taxa belongs to. B: Bacteroidetes, F: Firmicutes, P: Proteobacteria, V: Verrucomicrobia, A: Actinobacteria, T: Tenericutes.
