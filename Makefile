@@ -173,12 +173,18 @@ results/figures/figure1.pdf : code/build_figure1.R $(BASIC_STEM).pick.v4.wang.pi
 	R -e "source('code/build_figure1.R')"
 
 
+results/figures/figure2.pdf data/process/top_dose_corr.tsv : code/build_figure2.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD0.counts
+	R -e "source('code/build_figure2.R')"
+
 
 
 write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova
 				$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
 				data/process/abxD1.counts\
-				$(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared
+				$(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared\
+				data/process/top_dose_corr.tsv\
+				results/figures/figure1.pdf\
+				results/figures/figure2.pdf
 
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
 #

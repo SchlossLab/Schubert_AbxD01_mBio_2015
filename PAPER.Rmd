@@ -123,91 +123,14 @@ sig <- p.adjust(pvalue, method="BH")
 
 
 
---------
+```{r top_dose_correlation}
 
-
---------
-
-![**Supplemental Figure 1.**](results/figures/supplemental/sfigure1.png)
-
-**Supplemental Figure 1. The inverse of Simpson's diversity index for the community on day 0 is negatively correlated with *C. difficile* colonization on day 1.** Spearman's rho is plotted in the top right corner.
-
---------
-
-```{r, eval=FALSE}
-
-diversity<-read.csv("~/Documents/Github/abxD01/supplemental/topdose_diversity.csv",  header=T)
-diversity$nextDayCFU <- log((diversity$nextDayCFU+1), 10)
-
-#correlation of top dose
-pval.spear <- c()
-cor.spear <- c()
-count <- 1
-for(i in 4:5){
-  cor.spear[count] <- cor.test(diversity[,3],diversity[,i], method="spearman")$estimate
-  pval.spear[count] <- cor.test(diversity[,3],diversity[,i], method="spearman")$p.value
-  count <- count + 1
-}
-corr.results <- as.matrix(cbind(cor.spear, pval.spear))
-rownames(corr.results) <- names(diversity)[4:5]
-
-# Plot inverse simpson vs. C. difficile levels
-color<-rainbow(7)
-colors.top <- c(control = "black",
-          cipro = color[1],
-          clinda = "#FFCC00",
-          vanc.625 = "#00CC00",
-          strep5 = "#33FFFF",
-          cef.5 = color[5],
-          amp.5 = "#6600FF",
-          metro1 = color[7])
-
-# shapes
-pch.top <- c(control = 1,
-         cipro = 16,
-         clinda = 16,
-         vanc.625 = 16,
-         strep5 = 16,
-         cef.5 = 16,
-         amp.5 = 16,
-         metro1 = 16)
-
-#these are needed for the legend
-legend.labels.top <- c(control = "Control",
-            cipro = "Ciprofloxacin",
-            clinda = "Clindamycin",
-            vanc.625 = "Vancomycin",
-            strep5 = "Streptomycin",
-            cef.5 = "Cefoperazone",
-            amp.5 = "Ampicillin",
-            metro1 = "Metronidazole")
-
-par(mar=c(5, 5, 1, 1) +0.1, mgp=c(3, 1, 0))
-par(mfrow=c(1,1))
-
-plot(diversity$invsimpson[diversity$expgroup=="control"],
-     diversity$nextDayCFU[diversity$expgroup=="control"],
-     pch=pch.top[1], col=colors.top[1], xlim=c(0, 25), ylim=c(0,10),  
-     cex=1.5, yaxt="n",  xaxt="n", cex.lab=1,
-     ylab=as.expression("Log " ~ italic("C. difficile") ~ " CFU/g feces"), xlab="Inverse Simpson Index")
-
-axis(1, las=1, cex.axis=1, at=seq(0,25, by=5))
-axis(2, las=1, cex.axis=1, at=seq(0,10, by=1))
-
-for(i in 2:(length(unique(diversity$expgroup)))){
-  points(diversity$invsimpson[diversity$expgroup==names(legend.labels.top)[i]],
-         diversity$nextDayCFU[diversity$expgroup==names(legend.labels.top)[i]],
-         pch=pch.top[i], col=colors.top[i], cex=1.5)
-}
-
-legend("topright", inset=0.05, legend=legend.labels.top, pch=pch.top, col=colors.top,  pt.cex=1.5, cex=1, bty="n", y.intersp=1.5)
 
 ```
 
+***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each OTU that had an average abundance greater than 0.1% on the day of inoculation with the level of *C. difficile* colonization 24 hours later (Figure 2).
 
---------
-
-***Correlation analysis reveals potentially protective bacteria.*** To identify bacterial taxa that could be associated with resistance or susceptibility to *C. difficile*, we measured the correlation between the relative abundance of each species-level OTU on the day of inoculation with the level of *C. difficile* colonization 24 hours later (Figure 2). <needs help> Of the OTUs with an average abundance greater than 0.1%, OTUs with negative a correlation were associated with providing resistance against *C. difficile* (N=XXX40XXX) and those with a positive correlation were associated with susceptibility (N=XXX7XXX) (p<XXX0.05XXX).</needs help> Among various bacterial families, three were consistently negatively correlated with *C. difficile* colonization: *Porphyromonadaceae* (ρ<sub>average</sub>=XXX-0.63XXX), *Lachnospiraceae* (ρ<sub>average</sub>=XXX-0.51XXX), *Ruminococcaceae* (ρ<sub>average</sub>=XXX-0.53XXX). OTUs from the *Proteobacteria* phylum had strong positive relationships with *C. difficile* colonization. These included OTUs associated with the genera *Pseudomonas* (ρ=XXX0.31XXX) and *Escherichia* (ρ=XXX0.56XXX). Other notable OTUs that were found at the extremes of the distribution of correlation scores included those affiliated with the genus *Lactobacillus* (family *Lactobacillaceae*; OTU23, ρ=XXX-0.73XXX), *Alistipes* (family *Rickenellaceae*; OTU20, ρ=XXX-0.78XXX), *Enterorhabdus* (phylum *Actinobacterium*, family *Coriobacteriaceae*; OTU29, ρ=XXX-0.70XXX), and *Streptococcus* (family *Streptococcaceae*; OTU78, ρ=XXX0.36XXX). Overall, these results suggest that several larger groups of related OTUs, particularly within the *Firmicutes* and *Bacteroidetes* phyla, may participate in colonization resistance against *C. difficile*, while members of the *Proteobacteria* phylum may be involved in susceptibility.
+OTUs with negative a correlation were associated with providing resistance against *C. difficile* (N=XXX40XXX) and those with a positive correlation were associated with susceptibility (N=XXX7XXX) (p<XXX0.05XXX).</needs help> Among various bacterial families, three were consistently negatively correlated with *C. difficile* colonization: *Porphyromonadaceae* (ρ<sub>average</sub>=XXX-0.63XXX), *Lachnospiraceae* (ρ<sub>average</sub>=XXX-0.51XXX), *Ruminococcaceae* (ρ<sub>average</sub>=XXX-0.53XXX). OTUs from the *Proteobacteria* phylum had strong positive relationships with *C. difficile* colonization. These included OTUs associated with the genera *Pseudomonas* (ρ=XXX0.31XXX) and *Escherichia* (ρ=XXX0.56XXX). Other notable OTUs that were found at the extremes of the distribution of correlation scores included those affiliated with the genus *Lactobacillus* (family *Lactobacillaceae*; OTU23, ρ=XXX-0.73XXX), *Alistipes* (family *Rickenellaceae*; OTU20, ρ=XXX-0.78XXX), *Enterorhabdus* (phylum *Actinobacterium*, family *Coriobacteriaceae*; OTU29, ρ=XXX-0.70XXX), and *Streptococcus* (family *Streptococcaceae*; OTU78, ρ=XXX0.36XXX). Overall, these results suggest that several larger groups of related OTUs, particularly within the *Firmicutes* and *Bacteroidetes* phyla, may participate in colonization resistance against *C. difficile*, while members of the *Proteobacteria* phylum may be involved in susceptibility.
 
 --------
 
