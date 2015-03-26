@@ -105,6 +105,9 @@ tax_labels <- paste(family_levels, phylum_levels)
 
 
 pdf(file="results/figures/figure2.pdf", width=6.5, height=4.0)
+
+    set.seed("6201976")
+
     par(mar=c(10,6,0.5,0.5))
 
     plot(NA, xlim=c(1,length(tax_labels)), ylim=c(-0.8, 0.8), axes=F, xlab="", ylab="")
