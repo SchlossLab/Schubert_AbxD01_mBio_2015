@@ -1,6 +1,22 @@
-#data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.pick.tx.5.subsample.shared
-#data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.pick.tx.5.cons.taxonomy
-#data/process/abxD0.counts
+################################################################################
+#
+# build_figure1.R
+#
+# This script builds Figure 1, which is a barchart of the median relative
+# abundance of each phylum found in the mice treated with the top dose of
+# antibiotics as well as the untreated control mice. Also included is the
+# number of CFU per gram of feces.
+#
+# Dependencies...
+#   * data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.pick.tx.5.subsample.shared
+#   * data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.pick.tx.5.cons.taxonomy
+#   * data/process/abxD1.counts
+#
+# Output...
+#   * results/figures/figure1.pdf
+#
+################################################################################
+
 
 
 # read in the metadata file
