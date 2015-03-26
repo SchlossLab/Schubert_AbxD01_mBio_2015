@@ -129,4 +129,4 @@ dev.off()
 
 
 # output the correlation data
-write.table(file="data/process/top_dose_corr.tsv", cbind(taxonomy=gsub("\\d", "", sig_taxonomy), sig_corrs), quote=F, row.names=F, sep="\t")
+write.table(file="data/process/top_dose_corr.tsv", cbind(taxonomy=gsub("\\d", "", sig_taxonomy), sig_corrs), quote=F, row.names=T, sep="\t")
