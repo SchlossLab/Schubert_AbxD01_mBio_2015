@@ -166,7 +166,7 @@ cairo_pdf(file="results/figures/figure4.pdf", width=7.5, height=4.125)
     arrows(x0=q, y0=as.matrix(metro_cfu_med), y1=as.matrix(metro_cfu_lci), angle=90, length=0.05)
     axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
     box()
-    #wilcox.test(metro_metadata$CFU~metro_metadata$experiment)
+    #wilcox.test(metro_metadata$CFU~metro_metadata$experiment, alternative="less")
     text(x=2, y=rep(4e8), labels=c("*"), cex=2)
 
 
@@ -180,8 +180,8 @@ cairo_pdf(file="results/figures/figure4.pdf", width=7.5, height=4.125)
     arrows(x0=q, y0=as.matrix(amp_cfu_med), y1=as.matrix(amp_cfu_lci), angle=90, length=0.05)
     axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
     box()
-    #wilcox.test(amp_metadata$CFU~amp_metadata$experiment)
-    text(x=2, y=4e8, labels=c("NS"))
+    #wilcox.test(amp_metadata$CFU~amp_metadata$experiment, alternative="less")
+    text(x=2, y=4e8, labels=c("*"), cex=2)
 
 
     mtext(side=4, "C. difficile colonization (CFU/g)", line=3, at=1e10)
