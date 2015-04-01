@@ -39,12 +39,16 @@ otu_hyp_test <- function(otu, dose){
     kruskal.test(otu, g=factor(dose))$p.value
 }
 
-# limit the analysis to those OTUs that have an average relative abundance over
-# 1% across all samples within an antibiotic grouping
+# limit the analysis to those OTUs that have an median relative abundance over
+# 1% within each antibiotic dose
+
 cef <- rel_abund[titration$abx == "cef",]
-cef_abund <- apply(cef, 2, median) > 1.0
-cef_abund_good <- cef[,cef_abund]
 cef_metadata <- titration[titration$abx == "cef",]
+
+cef_med <- aggregate(cef, by=list(cef_metadata$dose), median)[,-1]
+cef_abund <- apply(cef_med, 2, max) > 5.0
+
+cef_abund_good <- cef[,cef_abund]
 cef_p_value <- rep(NA, ncol(cef_abund_good))
 for(i in 1:ncol(cef_abund_good)){
     cef_p_value[i] <- otu_hyp_test(cef_abund_good[,i], cef_metadata$dose)
@@ -56,9 +60,12 @@ cef_sig_otus <- colnames(cef_abund_good[,cef_p_value<0.05])
 
 
 vanc <- rel_abund[titration$abx == "vanc",]
-vanc_abund <- apply(vanc, 2, median) > 1.0
-vanc_abund_good <- vanc[,vanc_abund]
 vanc_metadata <- titration[titration$abx == "vanc",]
+
+vanc_med <- aggregate(vanc, by=list(vanc_metadata$dose), median)[,-1]
+vanc_abund <- apply(vanc_med, 2, max) > 3.0
+
+vanc_abund_good <- vanc[,vanc_abund]
 vanc_p_value <- rep(NA, ncol(vanc_abund_good))
 for(i in 1:ncol(vanc_abund_good)){
     vanc_p_value[i] <- otu_hyp_test(vanc_abund_good[,i], vanc_metadata$dose)
@@ -72,9 +79,12 @@ vanc_sig_otus <- colnames(vanc_abund_good[,vanc_p_value<0.05])
 
 
 strep <- rel_abund[titration$abx == "strep",]
-strep_abund <- apply(strep, 2, median) > 1.0
-strep_abund_good <- strep[,strep_abund]
 strep_metadata <- titration[titration$abx == "strep",]
+
+strep_med <- aggregate(strep, by=list(strep_metadata$dose), median)[,-1]
+strep_abund <- apply(strep_med, 2, max) > 3.0
+
+strep_abund_good <- strep[,strep_abund]
 strep_p_value <- rep(NA, ncol(strep_abund_good))
 for(i in 1:ncol(strep_abund_good)){
     strep_p_value[i] <- otu_hyp_test(strep_abund_good[,i], strep_metadata$dose)
@@ -83,7 +93,7 @@ strep_p_value <- p.adjust(strep_p_value, method="BH")
 strep_sig_otus <- colnames(strep_abund_good[,strep_p_value<0.05])
 
 sig_otus <- sort(unique(c(strep_sig_otus, cef_sig_otus, vanc_sig_otus)))
-
+x_max <- length(sig_otus)*4-0.5
 
 # let's get the taxonomy data so that we have the string from the kingdom to
 # the family level name or whatever the next level up is that provided a robust
@@ -117,17 +127,18 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
     cef_uci <- aggregate(sig_cef, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
     cef_lci <- aggregate(sig_cef, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
 
-    z <- barplot(as.matrix(cef_med), beside=T, names.arg=rep("", ncol(cef_med)), ylim=c(0,23), xlim=c(1.5,39.5), axes=F, col=c("black", "gray", "white"))
+    z <- barplot(as.matrix(cef_med), beside=T, names.arg=rep("", ncol(cef_med)), ylim=c(0,23), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(cef_med), y1=as.matrix(cef_uci), angle=90, length=0.02)
     arrows(x0=z, y0=as.matrix(cef_med), y1=as.matrix(cef_lci), angle=90, length=0.02)
 
+    text(x=z[2,sig_otus %in% cef_sig_otus], y=-1, labels="*", cex=2, xpd=TRUE)
 
-    abline(v=seq(4.5, 39.5, 4), col="gray")
+    abline(v=seq(4.5, length(sig_otus)*4-0.5, 4), col="gray")
     axis(2, las=1)
     box()
     text(x=0, y=26, label="Cefoperazone", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=32, y=20, legend=paste(levels(factor(cef_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
+    legend(x=x_max*0.85, y=20, legend=paste(levels(factor(cef_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
 
 
     sig_strep <- strep[,sig_otus]
@@ -135,17 +146,19 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
     strep_uci <- aggregate(sig_strep, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
     strep_lci <- aggregate(sig_strep, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
 
-    z <- barplot(as.matrix(strep_med), beside=T, names.arg=rep("", ncol(strep_med)), ylim=c(0,65), xlim=c(1.5,39.5), axes=F, col=c("black", "gray", "white"))
+    z <- barplot(as.matrix(strep_med), beside=T, names.arg=rep("", ncol(strep_med)), ylim=c(0,65), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(strep_med), y1=as.matrix(strep_uci), angle=90, length=0.02)
     arrows(x0=z, y0=as.matrix(strep_med), y1=as.matrix(strep_lci), angle=90, length=0.02)
 
-    abline(v=seq(4.5, 39.5, 4), col="gray")
+    text(x=z[2,sig_otus %in% strep_sig_otus], y=-3, labels="*", cex=2, xpd=TRUE)
+
+    abline(v=seq(4.5, length(sig_otus)*4-0.5, 4), col="gray")
     axis(2, las=1, at=seq(0,60,15))
     mtext(side=2, "Relative abundance (%)", line=3)
     box()
     text(x=0, y=73, label="Streptomycin", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
-    legend(x=32, y=60, legend=paste(levels(factor(strep_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
+    legend(x=x_max*0.85, y=60, legend=paste(levels(factor(strep_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
 
 
     sig_vanc <- vanc[,sig_otus]
@@ -153,18 +166,20 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
     vanc_uci <- aggregate(sig_vanc, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
     vanc_lci <- aggregate(sig_vanc, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
 
-    z <- barplot(as.matrix(vanc_med), beside=T, names.arg=rep("", ncol(vanc_med)), ylim=c(0,65), xlim=c(1.5,39.5), axes=F, col=c("black", "gray", "white"))
+    z <- barplot(as.matrix(vanc_med), beside=T, names.arg=rep("", ncol(vanc_med)), ylim=c(0,65), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(vanc_med), y1=as.matrix(vanc_uci), angle=90, length=0.02)
     arrows(x0=z, y0=as.matrix(vanc_med), y1=as.matrix(vanc_lci), angle=90, length=0.02)
 
-    abline(v=seq(4.5, 39.5, 4), col="gray")
+    text(x=z[2,sig_otus %in% vanc_sig_otus], y=-3, labels="*", cex=2, xpd=TRUE)
+
+    abline(v=seq(4.5, length(sig_otus)*4-0.5, 4), col="gray")
     axis(2, las=1, at=seq(0,60,15))
     box()
     text(x=0, y=73, label="Vancomycin", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=32, y=60, legend=paste(levels(factor(vanc_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
+    legend(x=x_max*0.83, y=60, legend=paste(levels(factor(vanc_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
 
-    text(x=apply(z, 2, mean)+1, y=par("usr")[1]-5, xpd=NA, label=label, pos=2, srt=70, cex=1.2)
+    text(x=apply(z, 2, mean)+1, y=par("usr")[1]-10, xpd=NA, label=label, pos=2, srt=70, cex=1.2)
 
     plot.new()
 
