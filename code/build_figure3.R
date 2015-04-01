@@ -175,6 +175,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
 
     plot.new()
 
+    par(mar=c(0.5,0.5,0.5,5))
 
     cef_cfu_med <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), median)[,-1]+0.1
     cef_cfu_uci <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]+0.1
@@ -183,7 +184,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
     z <- barplot(as.matrix(cef_cfu_med)+1, beside=T, ylim=c(1, 2e8), log="y", axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(cef_cfu_med), y1=as.matrix(cef_cfu_uci), angle=90, length=0.05)
     arrows(x0=z, y0=as.matrix(cef_cfu_med), y1=as.matrix(cef_cfu_lci), angle=90, length=0.05)
-    axis(2, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(expression(10^1), expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
+    axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
     box()
 
 
@@ -195,10 +196,10 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
     z <- barplot(as.matrix(strep_cfu_med)+1, beside=T, ylim=c(1, 2e8), log="y",  axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(strep_cfu_med), y1=as.matrix(strep_cfu_uci), angle=90, length=0.05)
     arrows(x0=z, y0=as.matrix(strep_cfu_med), y1=as.matrix(strep_cfu_lci), angle=90, length=0.05)
-    axis(2, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(expression(10^1), expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
+    axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
     box()
 
-    mtext(side=2, "C. difficile colonization (CFU/g)", line=3)
+    mtext(side=4, "C. difficile colonization (CFU/g)", line=3)
 
 
     vanc_cfu_med <- aggregate(vanc_metadata$CFU, by=list(vanc_metadata$dose), median)[,-1]+0.1
@@ -208,7 +209,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
     z <- barplot(as.matrix(vanc_cfu_med)+1, beside=T, ylim=c(1, 2e8), log="y",  axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(vanc_cfu_med), y1=as.matrix(vanc_cfu_uci), angle=90, length=0.05)
     arrows(x0=z, y0=as.matrix(vanc_cfu_med), y1=as.matrix(vanc_cfu_lci), angle=90, length=0.05)
-    axis(2, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(expression(10^1), expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
+    axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
     box()
 
     text(x=z+0.3, y=par("usr")[1]-0.5, xpd=NA, label=c("Low", "Medium","High"), pos=2, srt=70, cex=1.2)
