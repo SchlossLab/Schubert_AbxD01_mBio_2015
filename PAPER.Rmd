@@ -152,62 +152,16 @@ cef.test <- pairwise.t.test(log(cef$CFU+1), factor(cef$dose), method="BH")
 
 ```
 
-***Reduced perturbation of the microbiota increases colonization resistance.*** Based on the *C. difficile* colonization levels in our seven antibiotic treatments, we hypothesized that reducing the dose of antibiotics that the mice received would result in a reduced perturbation to the microbiota and a reduced sensitivity to *C. difficile*. In addition to the previous treatments, we treated mice with cefoperazone (0.3 and 0.1 mg/mL), streptomycin (0.5 and 0.1 mg/mL), and vancomycin (0.3 and 0.1 mg/mL). These antibiotics were selected because they are thought to target a broad spectrum of bacteria (i.e. cefoperazone), Gram-negative (i.e. streptomycin) and Gram-positive (i.e.  vancomycin) bacteria. Vancomycin was also selected because although the community was quite different from untreated mice, we did not observe high levels of colonization and we anticipated that lower doses might result in a community structure that would result in colonization. As expected, colonization levels decreased significantly in all mice receiving reduced doses of cefoperazone (P<`r round(max(cef.test$p.value, na.rm=T), 2)`) and streptomycin (P<`r round(max(strep.test$p.value, na.rm=T), 2)`; Figure 3). Although the 0.625 mg/mL dose of vancomycin did not result in colonization, the 0.3 and 0.1 mg/mL doses of vancoymicin resulted in similarly high levels of colonization (P=`r round(vanc.test$p.value["0.3","0.1"], 2)`).
-
-
-Titrating cefoperazone resulted in a shift in dominance from the *Bacteroidetes* to the *Firmicutes* phylum with increasing antibiotic dose. Most notable was the increase in the relative abundance of OTUs associated with resistance including the *Porphyromonadaceae* and *Alistipes* and a reduction in OTUs associated with susceptibility including members of the *Proteobacteria*, *Clostridium*, and *Staphylococcus*. The relative abundance of other OTUs associated with protection including the *Lactobacillus*, *Lachnospiraceae*, and *Ruminococcaceae* did not change as expected based on the initial correlation analysis; however, these OTUs were present at levels similar to the untreated mice.
-
-The at the lowest streptomycin titration, mice retained significantly higher abundances of *Alistipes* and *Anaeroplasma* (p<0.05), which we found to be strongly associated with colonization resistance. The relative abundances of the *Porphyromonodaceae*, *Lachnospiraceae*, *Ruminococcaceae* were unchanged, but were present at similarly high levels to those found in the untreated mice.
-
-Although the vancomycin titration yielded a number of large changes in the abundance of individual populations, there was no recovery of colonization resistance. The relative abundance of many of the populations associated with resistance (*Porphyromonadaceae*, *Lachnospiraceae*, *Anaeroplasma*) increased with decreased vancomycin dosage; however, with the exception of the *Lactobacillus* populations, they did not reach the levels observed in the untreated mice. In addition, all of the vancomycin-treated mice had high levels of OTUs affiliated with the *Akkermansia* and *Enterobacteriaceae*.
-
-Together, these results suggest that individual populations are not sufficient to provide colonization resistance. Rather, resistance is likely a product of the overall composition of the community.
+***Reduced perturbation of the microbiota increases colonization resistance.*** Based on the *C. difficile* colonization levels in our seven antibiotic treatments, we hypothesized that reducing the dose of antibiotics that the mice received would result in a reduced perturbation to the microbiota and a reduced sensitivity to *C. difficile*. In addition to the previous treatments, we treated mice with cefoperazone (0.3 and 0.1 mg/mL), streptomycin (0.5 and 0.1 mg/mL), and vancomycin (0.3 and 0.1 mg/mL). These antibiotics were selected because they are thought to target a broad spectrum of bacteria (i.e. cefoperazone), Gram-negative (i.e. streptomycin) and Gram-positive (i.e. vancomycin) bacteria. Vancomycin was also selected because although the community was quite different from untreated mice, we observed high levels of colonization in only one mouse. We anticipated that lower doses might result in a community structure that would result in colonization. As expected, colonization levels decreased significantly in all mice receiving reduced doses of cefoperazone (P<`r round(max(cef.test$p.value, na.rm=T), 2)`). Reducing the dose of cefoperazone in the animals' drinking water resulted in significant decreases in the relative abundance of an OTU associated with the genus *Escherichia* (OTU 4) and increases in the relative abundances of an OTU associated with the family *Porphyromonadaceae* (OTU 9) and an OTU associated with the genus *Pseudomonas* (OTU 65; Figure 3). The dose response for these three OTUs qualitatively followed what we had expected based on the correlation-based analysis. Reducing the dose of streptomycin significantly reduced the colonization levels (P<`r round(max(strep.test$p.value, na.rm=T), 2)`; Figure 3). These changes matched the correlations that we observed across all of the antibiotic treatments. Reducing the dose of streptomycin in the drinking water resulted in significant changes in the relative abundance of OTUs associated with the *Porphyromonadaceae* (OTUs 2, 3, 5, 9, 10, 13), *Allistipes* (OTU 11), and *Bacteroidales* (OTU 17). Interestingly, the OTUs that classified as members of the *Porphyromonadaceae* family did not all follow the same dose response. Of the 8 OTUs that changed with dose of streptomycin, 5 followed the response predicted from the correlation-based analysis (OTUs 5, 9, 10, 11, and 13), 1 contradicted the expected response (OTU 3), and 2 had a mixed response (OTUs 2 and 17). Although the 0.625 mg/mL dose of vancomycin did not result in colonization, the 0.3 and 0.1 mg/mL doses of vancoymicin resulted in similarly high levels of colonization (P=`r round(vanc.test$p.value["0.3","0.1"], 2)`). Seven OTUs were differentially represented across the three vancomycin doses. Surprisingly, even though the colonization levels did not significantly differ between the mice receiving 0.1 and 0.3 mg/mL of vancomycin in their drinking water, four of the OTUs that had significantly different relative abundances were only found in the lower dose. Three of these were affiliated with members of the *Porphyromonadaceae* (OTUs 2, 3, and 5) and one was affiliated with a member of the genus *Bacteroides* (OTU 1). Two OTUs affiliated with the *Akkermansia* (OTU 6) and *Lactobacillus* (OTU8) genera increased with increasing dose and a third OTU affiliated with *Escherichia* (OTU 4) had a mixed response to the dose level. Together, these results suggest that although individual populations were occasionally predictive of colonization levels, they were not sufficient to consistently predict colonization resistance. In light of such results, resistance is likely a product of the overall composition of the community.
 
 
 
 
 
-> ### CFU stats comparison
->
-> For comparison of the CFU's among titration groups:
 
-```{r, eval=TRUE}
-file<-read.csv("~/Documents/Github/abxD01/Figure3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", header=T)
-file<-file[!grepl("untr", file$expgroup),]
-file$nextDayCFU <- log10(file$nextDayCFU+1)
 
-cef <- file[file$abx=="Cefoperazone", 3:4]
-strep <- file[file$abx=="Streptomycin", 3:4]
-vanc <- file[file$abx=="Vancomycin", 3:4]
 
-diffs <- function(data){
-  data.aov<-aov(data$nextDayCFU ~ data$expgroup)
-  anova(data.aov)
-  pairwise.t.test(data$nextDayCFU, data$expgroup, p.adjust="BH")
-}
 
-diffs(cef)
-diffs(strep)
-diffs(vanc)
-
-```
-
-> ### Figure 3: Barchart
->
-> This figure shows the effect of titrating antibiotics on the community as well as the resulting *C. difficile* levels.  
->
-> The file/fileIDS should be matched by the titration.
-> Input files on github:
-> 1. abxD01.final.tx.2.subsample.alltitrations.forlogscale.csv
-> 2. alltitrations_tx2_barchart_ids.csv
->
-> Uses functions in R scripts folder: stacked.barcharts.r, findStatLetters.r, barplotBeside.r
-
-```{r, eval=FALSE}
-
-stackedbarcharts(file = "~/Documents/Github/abxD01/Figure3/abxD01.final.tx2.subsample.alltitrations.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure3/alltitrations_tx2_barchart_ids.csv", excludeGroup="untr", divide = TRUE)
-
-```
 
 ***Allowing recovery of specific bacterial populations restores colonization resistance.*** Several studies have demonstrated that perturbed communities can return to a "healthy" state in which resistance to *C. difficile* is restored [refs]. We allowed the microbiota of the mice that received the full metronidazole and ampicillin treatment to recover an additional five days. We again sought to test the relationships that we identified in the correlation-based analysis using animals with the partially recovered microbiota. On Day 1 post challenge of the metronidazole-treated mice who were allowed to recover five extra days, we observed a significant decrease in *C. difficile* level of CFU per g feces (p<XXX0.0001XXX). Within their microbiota there were significant increases (p<XXX0.05XXX) in overall abundances of *Porphyromonadaceae*, *Ruminococcaceae*, and *Lachnospiraceae* to abundances similar to those of untreated mice, and significant decreases (p<XXX0.05XXX) in levels of *Enterobacteriaceae*. In contrast, the ampicillin-treated mice that were given five extra days of recovery prior to *C. difficile* challenge did not experience an increase in colonization resistance. Inspection of their microbiota indicated that they still had significantly reduced levels of bacteria correlated with *C. difficile* protection, including *Bacteroides*, *Alistipes*, and *Ruminoccocaceae* compared with untreated animals (p<XXX0.05XXX). Importantly, the level of *Enterobacteriaceae* was not significantly reduced with additional recovery time. Given the smaller changes towards a protective baseline state, it was not all that surprising that we were unable to detect significant changes in subsequent *C. difficile* levels (p=XXX0.12XXX). Together, these results strengthen the importance of *Porphyromonadaceae*, *Lachnospiraceae*, *Ruminococcaceae*, and *Enterobacteriaceae* in setting up the right environment of negatively and positively correlated bacteria to affect the outcome of *C. difficile* colonization.
 
