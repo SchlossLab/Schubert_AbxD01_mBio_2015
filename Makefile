@@ -172,7 +172,6 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : 
 results/figures/figure1.pdf : code/build_figure1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD0.counts
 	R -e "source('code/build_figure1.R')"
 
-
 results/figures/figure2.pdf data/process/top_dose_corr.tsv : code/build_figure2.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD0.counts
 	R -e "source('code/build_figure2.R')"
 
@@ -187,7 +186,7 @@ write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.l
 				results/figures/figure1.pdf\
 				results/figures/figure2.pdf\
 				results/figures/figure3.pdf
-				
+
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
 #
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.ave.dist\
