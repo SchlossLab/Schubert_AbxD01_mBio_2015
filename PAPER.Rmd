@@ -156,162 +156,34 @@ cef.test <- pairwise.t.test(log(cef$CFU+1), factor(cef$dose), method="BH")
 
 
 
+```{r delay}
+cfu <- read.table(file="data/process/abxD1.counts")
+delay <- cfu[cfu$abx %in% c("metro", "amp"),]
+
+metro <- delay[delay$abx=="metro",]
+metro_test <- wilcox.test(metro$CFU~factor(metro$experiment), alternative="less")
+metro_med_cfu <- aggregate(metro$CFU, by=list(metro$experiment), median)$x
+metro_delay <- metro[metro$experiment=="delay",]
 
 
-
-
-
-
-
-***Allowing recovery of specific bacterial populations restores colonization resistance.*** Several studies have demonstrated that perturbed communities can return to a "healthy" state in which resistance to *C. difficile* is restored [refs]. We allowed the microbiota of the mice that received the full metronidazole and ampicillin treatment to recover an additional five days. We again sought to test the relationships that we identified in the correlation-based analysis using animals with the partially recovered microbiota. On Day 1 post challenge of the metronidazole-treated mice who were allowed to recover five extra days, we observed a significant decrease in *C. difficile* level of CFU per g feces (p<XXX0.0001XXX). Within their microbiota there were significant increases (p<XXX0.05XXX) in overall abundances of *Porphyromonadaceae*, *Ruminococcaceae*, and *Lachnospiraceae* to abundances similar to those of untreated mice, and significant decreases (p<XXX0.05XXX) in levels of *Enterobacteriaceae*. In contrast, the ampicillin-treated mice that were given five extra days of recovery prior to *C. difficile* challenge did not experience an increase in colonization resistance. Inspection of their microbiota indicated that they still had significantly reduced levels of bacteria correlated with *C. difficile* protection, including *Bacteroides*, *Alistipes*, and *Ruminoccocaceae* compared with untreated animals (p<XXX0.05XXX). Importantly, the level of *Enterobacteriaceae* was not significantly reduced with additional recovery time. Given the smaller changes towards a protective baseline state, it was not all that surprising that we were unable to detect significant changes in subsequent *C. difficile* levels (p=XXX0.12XXX). Together, these results strengthen the importance of *Porphyromonadaceae*, *Lachnospiraceae*, *Ruminococcaceae*, and *Enterobacteriaceae* in setting up the right environment of negatively and positively correlated bacteria to affect the outcome of *C. difficile* colonization.
-
---------
-
-![**Figure 4.**](results/figures/Figure4/figure4.png)
-
-**Figure 4. Changes in the average relative abundance for family level phylotypes durin the period of recovery prior to challenge with *C. difficile*.** Each row depicts a different antibiotic that was allowed to recover. Black bars represent untreated animals. Grey bars represent animals given 1 day of recovery off antibiotics as in Figure 1. Error bars indicate the standard error of the mean.
-
---------
-
-> How is this relevant? - PDS
-
-![**Supplemental Figure 2.**](results/figures/supplemental/sfigure2ab.png)
-
-**Supplemental Figure 2. Changes between untreated and recovery days.** A) The average thetaYC distance between pretreatment (day -11) and recovery days (days -5 through -1) is represented by circles connected by solid lines. Dashed lines with the same symbol indicate individual mice from the same cage. Antibiotic treatment is indicated by color. B) The average level of the inverse simpson diversity index is plotted by antibiotic treatment across time. Error bars show standard error of the mean. Mice were challenged with *C. difficile* on day 0.
-
---------
-> How is this relevant? - PDS
-> ### Supplemental Figure 2A: Differences between recovery days' thetayc
-
-```{r, eval=FALSE}
-file <- "~/Desktop/mothur/abxD01/abxD01.final.an.unique_list.0.03.recovery.vancomycin.thetayc.0.03.lt.ave.dist"
-diffs <- getDistDiffs(file=file)
-
-#metadata <- read.delim(file="~/Desktop/mothur/abxD01/searchme.txt", header = T, stringsAsFactors=F)
-metadata$sample[1951] <- "007-1D1" # ID was messed up
-names(metadata)[3] <- "group"
-
-
-par(mfrow=c(2, 1))
-par(mar=c(3, 5, 0.5, 0.5), las=2, mgp=c(3, 1, 0))
-plot.dist.from(dist.from = diffs)
-
-# Arrange diversity data for supplemental figure 2B
-
-diversity <- read.delim(file="~/Desktop/mothur/abxD01/abxD01.final.an.unique_list.groups.ave-std.summary", sep="\t", header=T, stringsAsFactors=F)
-
-diversity$group[2046] <- "007-1D1"
-diversity$group[124] <- "007-1D1"
-
-div.ind <- match(diversity$group[diversity$method=="ave"], metadata$sample)
-div.group <- metadata$group[div.ind]
-div.time <- metadata$time[div.ind]
-div.abx <- metadata$abx[div.ind]
-div.day <- metadata$day[div.ind]
-
-delay.invsimp <- diversity$invsimpson[div.time=="delayed" & diversity$method=="ave"]
-delay.shannon <- diversity$shannon[div.time=="delayed" & diversity$method=="ave"]
-delay.abx <- div.abx[div.time=="delayed" & diversity$method=="ave"]
-delay.day <- div.day[div.time=="delayed" & diversity$method=="ave"]
-delay.group <- div.group[div.time=="delayed" & diversity$method=="ave"]
-
-delay.diversity <- cbind(group=delay.group, day=delay.day, abx=delay.abx, invsimp=delay.invsimp, shannon=delay.shannon)
-
-recov.diversity <- matrix(nrow=7)
-row.names(recov.diversity) <- c(-11, -5:0)
-
-amp.div <- matrix(nrow=7, ncol=2)
-row.names(amp.div) <- c(-11, -5:0)
-colnames(amp.div) <- c("amp.avg", "amp.se")
-library(plotrix)
-for(j in 1:7){
-  matches <- delay.diversity[,3]=="amp" & delay.diversity[,2]==row.names(amp.div)[j]
-  amp.div[j, "amp.avg"] <- mean(as.numeric(delay.diversity[matches, "invsimp"]))
-  amp.div[j, "amp.se"] <- std.error(as.numeric(delay.diversity[matches, "invsimp"]))
-}
-
-metro.div <- matrix(nrow=7, ncol=2)
-row.names(metro.div) <- c(-11, -5:0)
-colnames(metro.div) <- c("metro.avg", "metro.se")
-for(j in 1:7){
-  matches <- delay.diversity[,3]=="metro" & delay.diversity[,2]==row.names(metro.div)[j]
-  metro.div[j, "metro.avg"] <- mean(as.numeric(delay.diversity[matches, "invsimp"]))
-  metro.div[j, "metro.se"] <- std.error(as.numeric(delay.diversity[matches, "invsimp"]))
-}
-
-recov.diversity <- cbind(amp.div, metro.div)
-
-# Plot for second part of supplemental figure 2
-transpose <-t(recov.diversity)
-colors <- c(amp="#6600FF",
-            metro="#FF00DBFF")
-par(mar=c(5, 5, 0.5, 0.5), las = 2, mgp=c(3, 1, 0))
-bp <- barplot(transpose[c("amp.avg", "metro.avg"), ], beside=T, ylim=c(0, 15),
-              ylab="Inverse Simpson Diversity", xlab="",
-              col=colors, xaxt='n' )
-xticks <- apply(bp, 2, mean)
-axis(1, at=xticks, label=c(-11, -5:0), las=1)
-mtext(text = expression(paste("Days Pre-", italic("C. difficile"), " Challenge")), side = 1, line = 3, cex = 1.5, las=0)
-abline(v=mean(xticks[1:2]), lty="dashed", lwd=3)
-box()
-
-x <- c(bp[1,], bp[2,])
-y <- as.numeric(c(transpose[1,], transpose[3,]))
-se <- as.numeric(c(transpose[2,], transpose[4,]))
-d <- as.data.frame( cbind(x=x, y=y, se=se  ) )
-
-library(Hmisc)
-with (
-  data = d
-  , expr = errbar(x, y, y+se, y-se, add=T, pch=".", cap=.01)
-)
-
-legend("topright",inset=0.08, legend=c("Ampicillin", "Metronidazole"),
-       col=colors, pch=15, bty="n", y.intersp=1.5, pt.cex = 2.5, cex=1.2)
-
-
+amp <- delay[delay$abx=="amp",]
+amp_test <- wilcox.test(amp$CFU~factor(amp$experiment), alternative="less")
 ```
 
 
+***Allowing recovery of specific bacterial populations restores colonization resistance.***
+In the experiments we have described thus far, we have allowed the gut microbiota to recover for 24 hrs before challenging them with *C. difficile*. Several studies have demonstrated that perturbed communities can return to a "healthy" state in which resistance to *C. difficile* is restored [refs]. To test the effect of recovery on colonization and gain greater insights into the populations that confer colonization resistance, we allowed the microbiota of the mice that received the full metronidazole and ampicillin treatment to recover an additional five days. Among the metronidazole-treated mice, those that recovered longer had a `r format(metro_med_cfu[2]/metro_med_cfu[1], sci=T)` reduction in colonization (P<0.001; Figure 4). In addition, of the `r nrow(metro_delay)` mice that experienced the longer recovery period, `r sum(metro_delay$CFU==0)` had no detectable *C. difficile* 24 hours after challenge. We detected six OTUs that were differentially represented in the two sets of metronidazole-treated mice (Figure 4). Most notable among these was an OTU associated with the the family *Porphyromonadaceae* (OTU 3) and the genus *Escherichia* (OTU 4). The relative abundance of the former increased with the delay and the relative abundance of the latter decreased. Based on the correlation analysis, the trajectories of the relative abundances for these OTUs matched the observed colonization levels. Similar to the metronidazole-treated mice, the ampicillin-treated mice that were allowed to recover an additional five days before challenge had a significant decrease in colonization (P=`r round(amp_test$p.value, 2)`). Again, we observed a similar increase and decrease in relative abundance for the *Porphyromonadaceae* (OTU 3) and *Escherichia* (OTU 4) OTUs.
 
-> ### Statistical comparison of delayed and on time CFU results
+```{r random_forest}
 
-```{r, eval=TRUE}
-file<-read.csv("~/Documents/Github/abxD01/Figure4/abxD01.final.tx2.subsample.alldelay.relabund.csv", header=T)
-file<-file[file$expgroup!="1untr",]
-file$nextDayCFU <- log10(file$nextDayCFU+1)
-
-metro <- file[file$abx=="Metronidazole", 3:4]
-amp <- file[file$abx=="Ampicillin", 3:4]
-
-diffs <- function(data){
-  data.aov<-aov(data$nextDayCFU ~ data$expgroup)
-  print(anova(data.aov))
-  pairwise.t.test(data$nextDayCFU, data$expgroup, p.adjust="BH")
 }
 
-diffs(metro)
-diffs(amp)
 
-```
 
-> ### Figure 4: Barchart
->
-> This figure shows the difference between the Day 0's in the delayed and original treatments for metronidazole and ampicillin.
->
-> Input files on github folder Figure 5:
-> 1. abxD01.final.tx.2.subsample.alldelay.forlogscale.csv
-> 2. alldelay_tx2_barchart_ids.csv
->
-> Uses functions in R scripts folder: stacked.barcharts.r, findStatLetters.r, barplotBeside.r
+***The composition of the microbiota on day 0 is predictive of *C. difficile* colonization levels on day 1.*** The three sets of experiments demonstrated that in certain contexts individual OTUs could be associated with *C. difficile* colonization, but in other contexts they were not. For example, the OTU affiliated with *Escherichia* (OTU 4) was associated with high levels of colonization in the ampicillin, metronidazole, and cefoperazone-treated mice; however, it was not detected in the streptomycin-treated mice although *C. difficile was able to colonize those mice to high levels. This suggests that colonization is a phenotype that is driven by multiple populations that act independently and possibly in concert to resist colonization. Therefore, we used a regression-based random forest machine learning algorithm to predict the level of *C. difficile* colonization observed in the three sets of experiments based on the composition of the microbiota at the time of challenge. The model explained XXX98.0XXX% of the variation in the observed *C. difficile* colonization levels (Figure 5).
 
-```{r, eval=FALSE}
 
-stackedbarcharts(file = "~/Documents/Github/abxD01/Figure4/abxD01.final.tx.2.subsample.alldelay.forlogscale.csv", fileIDS = "~/Documents/Github/abxD01/Figure4/alldelay_tx2_barchart_ids.csv", divide = TRUE)
-
-```
-
-***The composition of the microbiota on day 0 is predictive of C. difficile colonization levels on day 1.*** Given our ability to make qualitative predictions of *C. difficile* colonization based on the microbiota, we next designed a statistical model to calculate expected colonization levels given the relative abundance of a subset of OTUs. We used a regression-based random forest machine learning algorithm to predict the level of *C. difficile* colonization observed in the three sets of experiments based on the composition of the microbiota at the time of challenge. The model explained XXX98.0XXX% of the variation in the observed *C. difficile* colonization levels (Figure 5). Many of the OTUs that contributed the most to the quality of the fit included members of the *Porphyromonadaceae*, *Alistipes*, *Lachnospiraceae*, *Lactobacillus*, and *Escherichia*. These results further validate the observations from the correlation-based analysis. Together these results suggest that colonization resistance is likely conferred by *porphyromonadaceae*, *Alistipes*, and *lachnospiraceae* and a loss in these bacteria, concurrently with a gain of *Escherichia*, can result in increased susceptibility to infection. <needs help>Interestingly, the relationship between these OTUs and colonization resistance was not a simple dichotomous or linear relationship. For example, among the streptomycin-treated mice which altogether lacked the *Enterobacteriaceae*, *Porphyromonadaceae* (OTU 3) and *Lachnospiraceae* (OTU 39), were the two most important features in accurately predicting subsequent *C. difficile* levels. In fact, a model built with only these two features was able to account for 79% of the variance observed. </needs help>
+Many of the OTUs that contributed the most to the quality of the fit included members of the *Porphyromonadaceae*, *Alistipes*, *Lachnospiraceae*, *Lactobacillus*, and *Escherichia*. These results further validate the observations from the correlation-based analysis. Together these results suggest that colonization resistance is likely conferred by *porphyromonadaceae*, *Alistipes*, and *lachnospiraceae* and a loss in these bacteria, concurrently with a gain of *Escherichia*, can result in increased susceptibility to infection. <needs help>Interestingly, the relationship between these OTUs and colonization resistance was not a simple dichotomous or linear relationship. For example, among the streptomycin-treated mice which altogether lacked the *Enterobacteriaceae*, *Porphyromonadaceae* (OTU 3) and *Lachnospiraceae* (OTU 39), were the two most important features in accurately predicting subsequent *C. difficile* levels. In fact, a model built with only these two features was able to account for 79% of the variance observed. </needs help>
 
 --------
 
@@ -637,3 +509,10 @@ We have shown across several different types of perturbations that we can accura
 **Figure 2. Broader taxonomic groups share similar relationships with *C. difficile* colonization.** The relative abundance of OTUs found on the day that mice were challenged with *C. difficile* spores were correlated with the level of C. difficile CFU/g feces 24 hours later. Only OTUs with an average abundance of at least 0.1% across all original treatments were considered in the correlation analysis. All correlations shown in this graph are significant after controlling for multiple comparisons using the Benjimani-Hochberg correction (P<0.05). OTUs are grouped by the taxonomic family that its sequences classified as or the next deeper classification that provided a classification. The letters in the parentheses correspond to the phylum that the taxa belongs to. B: Bacteroidetes, F: Firmicutes, P: Proteobacteria, V: Verrucomicrobia, A: Actinobacteria, T: Tenericutes.
 
 **Figure 3. The average percent relative abundances for family level phylotypes found on the day of *C. difficile* challenge in each titration group.** Each row depicts a different antibiotic that was titrated. High, medium, and low antibiotic doses are represented by black, grey, and white colored bars respectively. The specific dose amount is shown for each antibiotic. Error bars show the standard error of the mean.
+
+**Figure 4. Changes in the average relative abundance for family level phylotypes durin the period of recovery prior to challenge with *C. difficile*.** Each row depicts a different antibiotic that was allowed to recover. Black bars represent untreated animals. Grey bars represent animals given 1 day of recovery off antibiotics as in Figure 1. Error bars indicate the standard error of the mean.
+
+
+
+
+**Supplemental Figure 2. Changes between untreated and recovery days.** A) The average thetaYC distance between pretreatment (day -11) and recovery days (days -5 through -1) is represented by circles connected by solid lines. Dashed lines with the same symbol indicate individual mice from the same cage. Antibiotic treatment is indicated by color. B) The average level of the inverse simpson diversity index is plotted by antibiotic treatment across time. Error bars show standard error of the mean. Mice were challenged with *C. difficile* on day 0.
