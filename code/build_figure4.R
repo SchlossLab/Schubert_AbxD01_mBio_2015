@@ -114,7 +114,7 @@ cairo_pdf(file="results/figures/figure4.pdf", width=7.5, height=4.125)
     metro_uci <- aggregate(sig_metro, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]
     metro_lci <- aggregate(sig_metro, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]
 
-    z <- barplot(as.matrix(metro_med), beside=T, names.arg=rep("", ncol(metro_med)), ylim=c(0,80), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
+    z <- barplot(as.matrix(metro_med), beside=T, names.arg=rep("", ncol(metro_med)), ylim=c(0,80), xlim=c(1.5,x_max), axes=F, col=c("gray", "white"))
     arrows(x0=z, y0=as.matrix(metro_med), y1=as.matrix(metro_uci), angle=90, length=0.02)
     arrows(x0=z, y0=as.matrix(metro_med), y1=as.matrix(metro_lci), angle=90, length=0.02)
 
@@ -133,7 +133,7 @@ cairo_pdf(file="results/figures/figure4.pdf", width=7.5, height=4.125)
     amp_uci <- aggregate(sig_amp, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]
     amp_lci <- aggregate(sig_amp, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]
 
-    z <- barplot(as.matrix(amp_med), beside=T, names.arg=rep("", ncol(amp_med)), ylim=c(0,60), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
+    z <- barplot(as.matrix(amp_med), beside=T, names.arg=rep("", ncol(amp_med)), ylim=c(0,60), xlim=c(1.5,x_max), axes=F, col=c("gray", "white"))
     arrows(x0=z, y0=as.matrix(amp_med), y1=as.matrix(amp_uci), angle=90, length=0.02)
     arrows(x0=z, y0=as.matrix(amp_med), y1=as.matrix(amp_lci), angle=90, length=0.02)
 
@@ -161,7 +161,7 @@ cairo_pdf(file="results/figures/figure4.pdf", width=7.5, height=4.125)
     metro_cfu_uci <- aggregate(metro_metadata$CFU, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]+0.1
     metro_cfu_lci <- aggregate(metro_metadata$CFU, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]+0.1
 
-    q <- barplot(as.matrix(metro_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y",  axes=F, col=c("black", "gray", "white"))
+    q <- barplot(as.matrix(metro_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y",  axes=F, col=c("gray", "white"))
     arrows(x0=q, y0=as.matrix(metro_cfu_med), y1=as.matrix(metro_cfu_uci), angle=90, length=0.05)
     arrows(x0=q, y0=as.matrix(metro_cfu_med), y1=as.matrix(metro_cfu_lci), angle=90, length=0.05)
     axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
@@ -175,7 +175,7 @@ cairo_pdf(file="results/figures/figure4.pdf", width=7.5, height=4.125)
     amp_cfu_uci <- aggregate(amp_metadata$CFU, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]+0.1
     amp_cfu_lci <- aggregate(amp_metadata$CFU, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]+0.1
 
-    q <- barplot(as.matrix(amp_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y", axes=F, col=c("black", "gray", "white"))
+    q <- barplot(as.matrix(amp_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y", axes=F, col=c("gray", "white"))
     arrows(x0=q, y0=as.matrix(amp_cfu_med), y1=as.matrix(amp_cfu_uci), angle=90, length=0.05)
     arrows(x0=q, y0=as.matrix(amp_cfu_med), y1=as.matrix(amp_cfu_lci), angle=90, length=0.05)
     axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
