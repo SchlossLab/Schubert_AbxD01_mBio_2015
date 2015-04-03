@@ -1,6 +1,6 @@
 ################################################################################
 #
-# build_figure5.R
+# build_figure5_6.R
 #
 # This script builds Figure 5.
 #
@@ -12,6 +12,7 @@
 #
 # Output...
 #   * results/figures/figure5.pdf
+#   * results/figures/figure6.pdf
 #
 ################################################################################
 
@@ -205,7 +206,7 @@ dev.off()
 
 # To do...
 # * jitter the number of CFU below the limit of detection
-# * 
+# *
 
 #supplemental figures...
 # * full feature importance plot
