@@ -42,7 +42,7 @@ rel_abund <- 100*shared_file/n_seqs
 overlap <- rownames(rel_abund)[which(rownames(rel_abund) %in% rownames(rel_abund))]
 rel_abund <- rel_abund[overlap,]
 counts_file <- counts_file[overlap,]
-
+logCFU <- log10(counts_file$CFU+1)
 
 # let's get the taxonomy data so that we have the string from the kingdom to
 # the family level name or whatever the next level up is that provided a robust
@@ -77,7 +77,7 @@ n_trees <- 1e4
 
 # build the random forest model using log transformed CFU counts.
 set.seed("6201976")
-rf_full <- randomForest(log10(counts_file$CFU+1) ~ ., data=abund_good, importance=TRUE, ntree=n_trees)
+rf_full <- randomForest(logCFU ~ ., data=abund_good, importance=TRUE, ntree=n_trees)
 
 # sort the features by their effect on % increase in the standard error
 importance_sorted <- sort(importance(rf_full)[,1], decreasing=T)
@@ -98,10 +98,10 @@ names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 
 # let's get Rsq for the subset
 set.seed("6201976")
-rf_partial <- randomForest(log10(counts_file$CFU+1) ~ ., data=abund_good[,names(importance_sorted)[1:n_features]], importance=TRUE, ntree=n_trees)
+rf_partial <- randomForest(logCFU ~ ., data=abund_good[,names(importance_sorted)[1:n_features]], importance=TRUE, ntree=n_trees)
 
 
-# let's build figure 5
+# let's build Figure 5
 cairo_pdf(file="results/figures/figure5.pdf", width=7.5, height=3.5)
     layout(matrix(c(1,2), nrow=1), width=c(1,1), height=0.8)
 
@@ -119,7 +119,7 @@ cairo_pdf(file="results/figures/figure5.pdf", width=7.5, height=3.5)
 
 
     par(mar=c(3,4,2,0.5))
-    plot(log10(counts_file$CFU+1), counts_file$fit_full, xlim=c(0,9), ylim=c(0,9),
+    plot(logCFU, counts_file$fit_full, xlim=c(0,9), ylim=c(0,9),
             xlab="", ylab="", cex=0.8, axes=F)
     axis(1)
     axis(2, las=2)
@@ -131,8 +131,13 @@ dev.off()
 
 
 
-# let's build figure 6
+# let's build Figure 6
 cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
+
+    #want to jitter the relative abundance for those mice that had no Cdiff
+    #colonization
+    cd_zeroes <- logCFU == 0
+    logCFU[cd_zeroes] <- runif(sum(cd_zeroes),0,1)
 
     par(mar=c(0.5,0.5,0.5,0.5))
 
@@ -142,7 +147,6 @@ cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
     layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,1,0.3))
 
     for(i in 1:n_features){
-
         #get the row and column number for each spot in the layout
         row <- ceiling(i/3)
         column <- ((i-1) %% 3) + 1
@@ -150,35 +154,27 @@ cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
         #extract the relative abundance data for this OTU
         otu_abund <- rel_abund[,names(importance_subset)[i]]
 
+        #want to jitter the number of tumors for those mice that had a zero
+        #relative abundance
+        ra_zeroes <- otu_abund == 0
+        otu_abund[ra_zeroes] <- runif(sum(ra_zeroes),1.0e-2,1.5e-2)
+
         #plot the relative abundance with the number of tumors for each animal. plot
         #on consistent log scaled x-axis for all OTUs. will throw errors because it
         #can't plot zeroes on a log scale
-        plot(otu_abund,log10(counts_file$CFU+1), log="x",
+        plot(otu_abund,logCFU, log="x",
             pch=19,
             cex=0.5,
-            #pch=pch[treatment],
-            #col=clrs[treatment],
             ylab="", xlab="",
             xlim=c(1e-2, 100), ylim=c(0,9),
             yaxt="n", xaxt="n"
-            #cex.lab=1.5
-            )
-
-        #want to plot the number of tumors for those mice that had a zero relative
-        #abundance
-        zeroes <- otu_abund == 0
-
-        #jitter the points so that they don't fall on top of each other
-        x_zeroes <- runif(sum(zeroes),1.0e-2,1.5e-2)
-        points(x=x_zeroes, log10(counts_file$CFU+1)[zeroes],
-                    pch=19,
-                    cex=0.5
-#                pch=pch[treatment[zeroes]],
-#                col=clrs[treatment[zeroes]]
-                )
+        )
 
         #create a vertical line to denote the limit of detection
         abline(v=2.2e-2, col="gray")
+
+        #create a horizontal line to denote the limit of detection
+        abline(h=1.5, col="gray")
 
         #put the OTU label in the upper left corner of the plot
         text(x=0.7e-2, y=8.8, label=tax_otu_imp_labels[i], pos=4, font=2, cex=0.9)
@@ -204,10 +200,7 @@ cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
 
 dev.off()
 
-# To do...
-# * jitter the number of CFU below the limit of detection
-# *
-
-#supplemental figures...
-# * full feature importance plot
-# * color fit by treatment group
+#To do:
+# * supplemental figure: full feature importance plot
+# * supplemental figure: color fit by treatment group
+# * output model fits to put information into Rmd file
