@@ -79,6 +79,8 @@ n_trees <- 1e4
 set.seed("6201976")
 rf_full <- randomForest(logCFU ~ ., data=abund_good, importance=TRUE, ntree=n_trees)
 
+write(c(ncol(abund_good), rf_full$rsq[n_trees]), file="data/process/random_forest.data")
+
 # sort the features by their effect on % increase in the standard error
 importance_sorted <- sort(importance(rf_full)[,1], decreasing=T)
 
@@ -99,6 +101,7 @@ names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 # let's get Rsq for the subset
 set.seed("6201976")
 rf_partial <- randomForest(logCFU ~ ., data=abund_good[,names(importance_sorted)[1:n_features]], importance=TRUE, ntree=n_trees)
+write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.data", append=)
 
 
 # let's build Figure 5
@@ -200,7 +203,161 @@ cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=9.0)
 
 dev.off()
 
-#To do:
-# * supplemental figure: full feature importance plot
-# * supplemental figure: color fit by treatment group
-# * output model fits to put information into Rmd file
+
+# supplemental figure 5A: full feature importance plot
+cairo_pdf(file="results/figures/figure5A_full.pdf", width=3.5, height=5.0)
+
+    par(mar=c(3,8,0.5,0.5))
+    plot(NA, yaxt="n", xlab="", ylab="", xlim=c(min(importance_sorted), max(importance_sorted)),
+        ylim=c(1, length(importance_sorted)), axes=F)
+
+    abline(h=1:length(importance_sorted), lty=3, col="gray")
+    points(x=rev(importance_sorted), y=1:length(importance_sorted), pch=19, cex=0.8)
+    axis(1, at=seq(0,100,25), label=c("0", "", "50", "", "100"), cex=0.8)
+    box()
+    mtext(side=2, line=7.5, adj=0, at=1:length(importance_sorted), text=rev(tax_otu_labels[names(importance_sorted)]), las=2, cex=0.6)
+    mtext(side=1, text="% Increase in MSE", line=2.0)
+
+dev.off()
+
+
+# supplemental figure 5B: color fit by treatment group
+clrs <- c(
+    "amp-0.5-delay" = "red",
+    "amp-0.5-top_dose" = "red",
+    "cef-0.1-dilution" = "pink",
+    "cef-0.3-dilution" = "pink",
+    "cef-0.5-top_dose" = "pink",
+    "cipro-10mg/kg-top_dose" = "lightgreen",
+    "clinda-10mg/kg-top_dose" = "darkgreen",
+    "control-NA-NA" = "black",
+    "metro-1-delay" = "blue",
+    "metro-1-top_dose" = "blue",
+    "strep-0.1-dilution" = "orange",
+    "strep-0.5-dilution" = "orange",
+    "strep-5-top_dose" = "orange",
+    "vanc-0.1-dilution" = "purple",
+    "vanc-0.3-dilution" = "purple",
+    "vanc-0.625-top_dose" = "purple"
+)
+
+pch <- c(
+    "amp-0.5-delay" = 1,
+    "amp-0.5-top_dose" = 19,
+    "cef-0.1-dilution" = 15,
+    "cef-0.3-dilution" = 17,
+    "cef-0.5-top_dose" = 19,
+    "cipro-10mg/kg-top_dose" = 19,
+    "clinda-10mg/kg-top_dose" = 19,
+    "control-NA-NA" = 19,
+    "metro-1-delay" = 1,
+    "metro-1-top_dose" = 19,
+    "strep-0.1-dilution" = 15,
+    "strep-0.5-dilution" = 17,
+    "strep-5-top_dose" = 19,
+    "vanc-0.1-dilution" = 15,
+    "vanc-0.3-dilution" = 17,
+    "vanc-0.625-top_dose" = 19
+)
+make_gray_plot <- function(drug){
+    plot_data <- !grepl(drug, grouping)
+    plot(logCFU[plot_data], counts_file$fit_full[plot_data], xlim=c(0,9),
+            ylim=c(0,9), xlab="", ylab="", cex=0.8, axes=F, col="gray",
+            pch=pch[grouping[plot_data]])
+    box()
+}
+
+make_colored_plot <- function(drug){
+    plot_data <- grepl(drug, grouping)
+    points(logCFU[plot_data], counts_file$fit_full[plot_data],
+            cex=0.8, col=clrs[grepl(drug, names(clrs))],
+            pch=pch[grouping[plot_data]])
+    axis(1, labels=rep("", 6), at=seq(0,10,2), tick=T)
+    axis(2, labels=rep("", 6), at=seq(0,10,2), tick=T)
+}
+
+
+
+cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
+
+    design <- matrix(1:8, nrow=4, byrow=T)
+    design <- cbind(c(rep(9,4)), design)
+    design <- rbind(design, c(0,10,10))
+    layout(design, widths=c(0.3,1,1), heights=c(1,1,1,1,0.3))
+
+
+    par(mar=c(0.5,1,1.5,0.5))
+
+    #control
+    make_gray_plot("control")
+    make_colored_plot("control")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="No antibiotics", adj=c(0,0), font=2)
+    #legend("topleft", pch=19, col="black", bty="n", legend="No antibiotics", cex=0.7)
+    axis(2, las=2)
+
+    #amp
+    make_gray_plot("amp")
+    make_colored_plot("amp")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Ampicillin (0.5 mg/mL)", adj=c(0,0), font=2)
+    legend("topleft", col="red", cex=0.7, pch=c(19, 1), bty="n",
+        legend=c("1 day recovery", "6 days recovery"))
+
+
+    #cef
+    make_gray_plot("cef")
+    make_colored_plot("cef")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Cefoperazone", adj=c(0,0), font=2)
+    legend("topleft", col="pink", cex=0.7, pch=c(19, 17, 15), bty="n",
+        legend=c("0.5 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
+    axis(2, las=2)
+
+
+    #cipro
+    make_gray_plot("cipro")
+    make_colored_plot("cipro")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Ciprofloxacin (10 mg/kg)", adj=c(0,0), font=2)
+    #legend("topleft", pch=19, bty="n", col="lightgreen", legend="Ciprofloxacin", cex=0.7)
+
+
+    #clinda
+    make_gray_plot("clinda")
+    make_colored_plot("clinda")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Clindamycin (10 mg/kg)", adj=c(0,0), font=2)
+    #legend("topleft", pch=19, bty="n", col="darkgreen", legend="Clindamycin", cex=0.7)
+    axis(2, las=2)
+
+
+    #metro
+    make_gray_plot("metro")
+    make_colored_plot("metro")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Metronidazole (1 mg/mL)", adj=c(0,0), font=2)
+    legend("topleft", col="blue", cex=0.7, pch=c(19, 1), bty="n",
+        legend=c("1 day recovery", "6 days recovery"))
+
+
+    #strep
+    make_gray_plot("strep")
+    make_colored_plot("strep")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Streptomycin", adj=c(0,0), font=2)
+    legend("topleft", col="orange", cex=0.7, pch=c(19, 17, 15), bty="n",
+        legend=c("5 mg/mL", "0.5 mg/mL", "0.1 mg/mL"))
+    axis(2, las=2)
+    axis(1)
+
+    #vanc
+    make_gray_plot("vanc")
+    make_colored_plot("vanc")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Vancomycin", adj=c(0,0), font=2)
+    legend("topleft", col="purple", cex=0.7, pch=c(19, 17, 15), bty="n",
+        legend=c("0.625 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
+    axis(1)
+
+    plot.new()
+    par(mar=rep(0.1,4))
+    text(x=0.5,y=0.5, label="Observed colonization (log CFU)", cex=1.2, srt=90)
+
+
+    plot.new()
+    par(mar=rep(0.1,4))
+    text(x=0.5,y=0.2, label="Predicted colonization (log CFU)", cex=1.2)
+dev.off()
