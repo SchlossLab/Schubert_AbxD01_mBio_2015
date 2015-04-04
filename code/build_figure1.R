@@ -79,46 +79,43 @@ rownames(u_qtr) <- drugs
 u_qtr <- t(u_qtr)
 
 fulldose_phylum_barplot <- function(drug, label){
-    pos <- barplot(as.vector(med_ra[,drug]), ylim=c(0,105), axes=F)
+    pos <- barplot(as.vector(med_ra[,drug]), ylim=c(0,105), axes=F, col="white")
     arrows(x0=pos, x1=pos, y0=med_ra[,drug], y1=u_qtr[,drug], angle=90, length=0.1)
     arrows(x0=pos, x1=pos, y0=med_ra[,drug], y1=l_qtr[,drug], angle=90, length=0.1)
     axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
     box()
-    text(x=4.9, y=70, label=paste(label, "\n", abx_cfu[drug] ,"CFU/g"),adj = c(1,0))
+    text(x=par("usr")[1], y=par("usr")[4]*1.05, label=label, font=2,
+                                                    adj = c(0,0), xpd=TRUE)
     pos
 }
 
 pdf(height=9, width=3.75, file="results/figures/figure1.pdf")
 
     z <- layout(
-        matrix( c(  9,1,
-                    9,2,
-                    9,3,
-                    9,4,
-                    9,5,
-                    9,6,
-                    9,7,
-                    9,8,
-                    0,10), byrow=T, ncol=2), widths=c(0.2, 1), heights=c(rep(1,8), 1)
+        matrix( c(  1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9), byrow=T, ncol=1), widths=c(1), heights=c(rep(1,8), 1)
         )
 
-    par(mar=c(0.5, 0.5, 1.0, 0.5))
+    par(mar=c(0.5, 5, 1.25, 0.5))
 
     pos <- fulldose_phylum_barplot("control", "No antibiotics")
     pos <- fulldose_phylum_barplot("cipro", "Ciprofloxacin")
     pos <- fulldose_phylum_barplot("vanc", "Vancomycin")
     pos <- fulldose_phylum_barplot("amp", "Ampicillin")
+
+    mtext(side=2, line=3, "Relative Abundance (%)")
+
     pos <- fulldose_phylum_barplot("clinda", "Clindamycin")
     pos <- fulldose_phylum_barplot("strep", "Streptomycin")
     pos <- fulldose_phylum_barplot("cef", "Cefoperazone")
     pos <- fulldose_phylum_barplot("metro", "Metronidazol")
-
-
-    plot.new()
-    par(mar=c(0, 0, 0, 0))
-    text(0.25,0.5,"Relative Abundance (%)", srt=90, xpd=T)
-
-    plot.new()
-    text(x=as.vector(pos)/4.75, y=1, labels=rownames(med_ra), srt=70, cex=1, font=1, pos=2, xpd=TRUE)
+    text(x=pos+0.1, y=par("usr")[3]-10, labels=rownames(med_ra), srt=70, cex=1, font=1, pos=2, xpd=NA)
 
 dev.off()
