@@ -10,15 +10,6 @@ opts_chunk$set(warning = FALSE)
 
 
 
-load_package <- function(package){
-    if(!(package %in% rownames(installed.packages()))){
-        install.packages(package)
-    }
-    library(package, quietly=TRUE)
-}
-
-load_package("randomForest")
-load_package("png")
 
 set.seed(6201976)
 ```
