@@ -78,7 +78,14 @@ u_qtr <- u_qtr[,-1]
 rownames(u_qtr) <- drugs
 u_qtr <- t(u_qtr)
 
-
+make_barplot <- function(drug, label){
+    pos <- barplot(as.vector(med_ra[,drug]), ylim=c(0,100), axes=F)
+    arrows(x0=pos, x1=pos, y0=med_ra[,drug], y1=u_qtr[,drug], angle=90, length=0.1)
+    arrows(x0=pos, x1=pos, y0=med_ra[,drug], y1=l_qtr[,drug], angle=90, length=0.1)
+    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
+    box()
+    text(x=4.9, y=70, label=paste(label, "\n", abx_cfu[drug] ,"CFU/g"),adj = c(1,0))
+}
 
 pdf(height=9, width=3.75, file="results/figures/figure1.pdf")
 
@@ -96,53 +103,14 @@ pdf(height=9, width=3.75, file="results/figures/figure1.pdf")
 
     par(mar=c(0.5, 0.5, 1.0, 0.5))
 
-    pos <- barplot(as.vector(med_ra[,"control"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"control"], y1=u_qtr[,"control"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"control"], y1=l_qtr[,"control"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("No antibiotics\n", abx_cfu["control"] ,"CFU/g"),adj = c(1,0))
-
-    pos <- barplot(as.vector(med_ra[,"cipro"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"cipro"], y1=u_qtr[,"cipro"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"cipro"], y1=l_qtr[,"cipro"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("Ciprofloxacin\n", abx_cfu["cipro"] ,"CFU/g"),adj = c(1,0))
-
-    pos <- barplot(as.vector(med_ra[,"vanc"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"vanc"], y1=u_qtr[,"vanc"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"vanc"], y1=l_qtr[,"vanc"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("Vancomycin\n", abx_cfu["vanc"],"CFU/g"),adj = c(1,0))
-
-    pos <- barplot(as.vector(med_ra[,"amp"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"amp"], y1=u_qtr[,"amp"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"amp"], y1=l_qtr[,"amp"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("Ampicillin\n", abx_cfu["amp"],"CFU/g"),adj = c(1,0))
-
-    pos <- barplot(as.vector(med_ra[,"clinda"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"clinda"], y1=u_qtr[,"clinda"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"clinda"], y1=l_qtr[,"clinda"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("Clindamycin\n", abx_cfu["clinda"],"CFU/g"),adj = c(1,0))
-
-    pos <- barplot(as.vector(med_ra[,"strep"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"strep"], y1=u_qtr[,"strep"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"strep"], y1=l_qtr[,"strep"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("Streptomycin\n", abx_cfu["strep"], "CFU/g"),adj = c(1,0))
-
-    pos <- pos <- barplot(as.vector(med_ra[,"cef"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"cef"], y1=u_qtr[,"cef"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"cef"], y1=l_qtr[,"cef"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("Cefoperazone\n", abx_cfu["cef"], "CFU/g"),adj = c(1,0))
-
-    pos <- barplot(as.vector(med_ra[,"metro"]), ylim=c(0,100), axes=F)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"metro"], y1=u_qtr[,"metro"], angle=90, length=0.1)
-    arrows(x0=pos, x1=pos, y0=med_ra[,"metro"], y1=l_qtr[,"metro"], angle=90, length=0.1)
-    axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
-    text(x=4.9, y=70, label=paste("Metronidazol\n", abx_cfu["metro"],"CFU/g"),adj = c(1,0))
+    make_barplot("control", "No antibiotics")
+    make_barplot("cipro", "Ciprofloxacin")
+    make_barplot("vanc", "Vancomycin")
+    make_barplot("amp", "Ampicillin")
+    make_barplot("clinda", "Clindamycin")
+    make_barplot("strep", "Streptomycin")
+    make_barplot("cef", "Cefoperazone")
+    make_barplot("metro", "Metronidazol")
 
 
     plot.new()
