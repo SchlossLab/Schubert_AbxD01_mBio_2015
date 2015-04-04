@@ -132,7 +132,7 @@ dev.off()
 
 
 # let's build Figure 6
-cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
+cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=9.0)
 
     #want to jitter the relative abundance for those mice that had no Cdiff
     #colonization
@@ -164,7 +164,7 @@ cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
         #can't plot zeroes on a log scale
         plot(otu_abund,logCFU, log="x",
             pch=19,
-            cex=0.5,
+            cex=0.8,
             ylab="", xlab="",
             xlim=c(1e-2, 100), ylim=c(0,9),
             yaxt="n", xaxt="n"
