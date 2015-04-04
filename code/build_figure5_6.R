@@ -126,7 +126,7 @@ cairo_pdf(file="results/figures/figure5.pdf", width=7.5, height=3.5)
     box()
     mtext(side=1, text="Observed colonization (log CFU)", line=2.0)
     mtext(side=2, text="Predicted colonization (log CFU)", line=2.5)
-    mtext(text="B", line=2.5, side=2, at=10, las=2, cex=2, font=2)
+    mtext(text="B", line=2.5, side=2, at=10.25, las=2, cex=2, font=2)
 dev.off()
 
 
