@@ -81,15 +81,15 @@ x_max <- length(sig_otus)*3-0.5
 
 
 # let's get the taxonomy data so that we have the string from the kingdom to
-# the family level name or whatever the next level up is that provided a robust
+# the genus level name or whatever the next level up is that provided a robust
 # classification.
 taxonomy_file <- read.table(file="data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.cons.taxonomy", header=T, row.names=1)
 taxonomy <- taxonomy_file$Taxonomy
 names(taxonomy) <- rownames(taxonomy_file)
 taxonomy <- gsub("\\(\\d*\\)", "", taxonomy)
-taxonomy <- gsub(";[^;]*;$", "", taxonomy)
 taxonomy <- gsub(";unclassified", "", taxonomy)
-taxonomy <- gsub("_1", "", taxonomy)
+taxonomy <- gsub("/.*", "", taxonomy)
+taxonomy <- gsub(";$", "", taxonomy)
 taxonomy <- gsub(".*;", "", taxonomy)
 taxonomy <- taxonomy[sig_otus]
 
