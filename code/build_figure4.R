@@ -187,7 +187,7 @@ cairo_pdf(file="results/figures/figure4.pdf", width=7.5, height=4.125)
     mtext(side=4, "C. difficile colonization (CFU/g)", line=3, at=1e10)
 
 
-    text(x=q+0.3, y=par("usr")[1]-0.5, xpd=NA, label=c("No delay", "Delayed"), pos=2, srt=70, cex=1.2)
+    text(x=q+0.3, y=par("usr")[1]-0.5, xpd=NA, label=c("1 day recovery", "6 days recovery"), pos=2, srt=70, cex=1.2)
     plot.new()
 
 dev.off()
