@@ -78,13 +78,14 @@ u_qtr <- u_qtr[,-1]
 rownames(u_qtr) <- drugs
 u_qtr <- t(u_qtr)
 
-make_barplot <- function(drug, label){
-    pos <- barplot(as.vector(med_ra[,drug]), ylim=c(0,100), axes=F)
+fulldose_phylum_barplot <- function(drug, label){
+    pos <- barplot(as.vector(med_ra[,drug]), ylim=c(0,105), axes=F)
     arrows(x0=pos, x1=pos, y0=med_ra[,drug], y1=u_qtr[,drug], angle=90, length=0.1)
     arrows(x0=pos, x1=pos, y0=med_ra[,drug], y1=l_qtr[,drug], angle=90, length=0.1)
     axis(2, at=seq(0,100,25), label=seq(0,100,25), las=1)
     box()
     text(x=4.9, y=70, label=paste(label, "\n", abx_cfu[drug] ,"CFU/g"),adj = c(1,0))
+    pos
 }
 
 pdf(height=9, width=3.75, file="results/figures/figure1.pdf")
@@ -103,14 +104,14 @@ pdf(height=9, width=3.75, file="results/figures/figure1.pdf")
 
     par(mar=c(0.5, 0.5, 1.0, 0.5))
 
-    make_barplot("control", "No antibiotics")
-    make_barplot("cipro", "Ciprofloxacin")
-    make_barplot("vanc", "Vancomycin")
-    make_barplot("amp", "Ampicillin")
-    make_barplot("clinda", "Clindamycin")
-    make_barplot("strep", "Streptomycin")
-    make_barplot("cef", "Cefoperazone")
-    make_barplot("metro", "Metronidazol")
+    pos <- fulldose_phylum_barplot("control", "No antibiotics")
+    pos <- fulldose_phylum_barplot("cipro", "Ciprofloxacin")
+    pos <- fulldose_phylum_barplot("vanc", "Vancomycin")
+    pos <- fulldose_phylum_barplot("amp", "Ampicillin")
+    pos <- fulldose_phylum_barplot("clinda", "Clindamycin")
+    pos <- fulldose_phylum_barplot("strep", "Streptomycin")
+    pos <- fulldose_phylum_barplot("cef", "Cefoperazone")
+    pos <- fulldose_phylum_barplot("metro", "Metronidazol")
 
 
     plot.new()
