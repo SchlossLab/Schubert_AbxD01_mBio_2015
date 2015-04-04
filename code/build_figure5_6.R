@@ -361,3 +361,76 @@ cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
     par(mar=rep(0.1,4))
     text(x=0.5,y=0.2, label="Predicted colonization (log CFU)", cex=1.2)
 dev.off()
+
+
+
+
+# let's build Figure 6 (w/ color & pch)
+cairo_pdf(file="results/figures/figure6_col.pdf", width=7.5, height=9.0)
+
+    #want to jitter the relative abundance for those mice that had no Cdiff
+    #colonization
+    cd_zeroes <- logCFU == 0
+    logCFU[cd_zeroes] <- runif(sum(cd_zeroes),0,1)
+
+    par(mar=c(0.5,0.5,0.5,0.5))
+
+    design <- matrix(1:n_features, nrow=4, byrow=T)
+    design <- cbind(c(rep(13,4)), design)
+    design <- rbind(design, c(0,14,14,14))
+    layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,1,0.3))
+
+    for(i in 1:n_features){
+        #get the row and column number for each spot in the layout
+        row <- ceiling(i/3)
+        column <- ((i-1) %% 3) + 1
+
+        #extract the relative abundance data for this OTU
+        otu_abund <- rel_abund[,names(importance_subset)[i]]
+
+        #want to jitter the number of tumors for those mice that had a zero
+        #relative abundance
+        ra_zeroes <- otu_abund == 0
+        otu_abund[ra_zeroes] <- runif(sum(ra_zeroes),1.0e-2,1.5e-2)
+
+        #plot the relative abundance with the number of tumors for each animal. plot
+        #on consistent log scaled x-axis for all OTUs. will throw errors because it
+        #can't plot zeroes on a log scale
+        plot(otu_abund,logCFU, log="x",
+            pch=pch[grouping],
+            col=clrs[grouping],
+            cex=0.8,
+            ylab="", xlab="",
+            xlim=c(1e-2, 100), ylim=c(0,9),
+            yaxt="n", xaxt="n"
+        )
+
+        #create a vertical line to denote the limit of detection
+        abline(v=2.2e-2, col="gray")
+
+        #create a horizontal line to denote the limit of detection
+        abline(h=1.5, col="gray")
+
+        #put the OTU label in the upper left corner of the plot
+        text(x=0.7e-2, y=8.8, label=tax_otu_imp_labels[i], pos=4, font=2, cex=0.9)
+
+        #if it's on the bottom row, put a customized axis indicating the % rabund
+        if(row == 4){
+            axis(1, at=c(1.25e-2, 1e-1,1e0,1e1,1e2),
+                    label=c("0", "0.1", "1", "10", "100"),
+                    cex.axis=1.5)
+        }
+
+        #if it's in the first column turn the axis labels to be horizontal
+        if(column == 1){
+            axis(2, las=2, cex.axis=1.5)
+        }
+    }
+
+    plot.new()
+    text(x=0.15, y=0.5, label="Observed colonization (log CFU)", cex=1.5, srt=90)
+
+    plot.new()
+    text(x=0.5, y=0.2, label="Relative abundance at Day 0 (%)", cex=1.5)
+
+dev.off()
