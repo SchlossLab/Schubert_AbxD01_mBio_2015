@@ -101,7 +101,7 @@ names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 # let's get Rsq for the subset
 set.seed("6201976")
 rf_partial <- randomForest(logCFU ~ ., data=abund_good[,names(importance_sorted)[1:n_features]], importance=TRUE, ntree=n_trees)
-write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.data", append=)
+write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.data", append=T)
 
 
 # let's build Figure 5
