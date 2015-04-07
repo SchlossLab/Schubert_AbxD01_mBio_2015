@@ -22,8 +22,13 @@ cdiff_challenged <- metadata[metadata$cdiff==TRUE,]
 #get the day 0 samples from the abx treated mice
 abx_treated <- cdiff_challenged[cdiff_challenged$day == 0, ]
 
-#get the pre-abx samples from mice that would receive abx
-untreated <-  cdiff_challenged[cdiff_challenged$preAbx & cdiff_challenged$abx != "none", ]
+#get the pre-abx samples from mice that would receive abx and treat as the
+#control group
+
+control_groups <- c(21, 24, 50, 600, 7, 39, 40, 103, 47, 627, 2, 4, 15, 52, 97, 98)
+
+untreated <-  cdiff_challenged[cdiff_challenged$preAbx &
+                                cdiff_challenged$group %in% control_groups, ]
 
 #concatenate the sample names together
 samples <- c(rownames(abx_treated), rownames(untreated))
