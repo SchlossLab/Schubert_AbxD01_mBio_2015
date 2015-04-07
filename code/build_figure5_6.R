@@ -223,22 +223,22 @@ dev.off()
 
 # supplemental figure 5B: color fit by treatment group
 clrs <- c(
-    "amp-0.5-delay" = "red",
-    "amp-0.5-top_dose" = "red",
-    "cef-0.1-dilution" = "pink",
-    "cef-0.3-dilution" = "pink",
-    "cef-0.5-top_dose" = "pink",
-    "cipro-10mg/kg-top_dose" = "lightgreen",
-    "clinda-10mg/kg-top_dose" = "darkgreen",
+    "amp-0.5-delay" = "#6600FF", #"red",
+    "amp-0.5-top_dose" = "#6600FF", #"red",
+    "cef-0.1-dilution" = "#0092FFFF", #"pink",
+    "cef-0.3-dilution" = "#0092FFFF", #"pink",
+    "cef-0.5-top_dose" = "#0092FFFF", #"pink",
+    "cipro-10mg/kg-top_dose" = "#FF0000FF", #"lightgreen",
+    "clinda-10mg/kg-top_dose" = "#FFCC00", #"darkgreen",
     "control-NA-NA" = "black",
-    "metro-1-delay" = "blue",
-    "metro-1-top_dose" = "blue",
-    "strep-0.1-dilution" = "orange",
-    "strep-0.5-dilution" = "orange",
-    "strep-5-top_dose" = "orange",
-    "vanc-0.1-dilution" = "purple",
-    "vanc-0.3-dilution" = "purple",
-    "vanc-0.625-top_dose" = "purple"
+    "metro-1-delay" = "#FF00DBFF", #"blue",
+    "metro-1-top_dose" = "#FF00DBFF",#"blue",
+    "strep-0.1-dilution" = "#33FFFF", #"orange",
+    "strep-0.5-dilution" = "#33FFFF", #"orange",
+    "strep-5-top_dose" = "#33FFFF", #"orange",
+    "vanc-0.1-dilution" = "#00CC00", #"purple",
+    "vanc-0.3-dilution" = "#00CC00", #"purple",
+    "vanc-0.625-top_dose" = "#00CC00" #"purple"
 )
 
 pch <- c(
@@ -298,8 +298,8 @@ cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
     #amp
     make_gray_plot("amp")
     make_colored_plot("amp")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Ampicillin (0.5 mg/mL)", adj=c(0,0), font=2)
-    legend("topleft", col="red", cex=0.7, pch=c(19, 1), bty="n",
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Ampicillin", adj=c(0,0), font=2)
+    legend("topleft", col=clrs["amp-0.5-top_dose"], cex=0.7, pch=c(19, 1), bty="n",
         legend=c("1 day recovery", "6 days recovery"))
 
 
@@ -307,7 +307,7 @@ cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
     make_gray_plot("cef")
     make_colored_plot("cef")
     text(x=-0.25, y=9.75, xpd=TRUE, label="Cefoperazone", adj=c(0,0), font=2)
-    legend("topleft", col="pink", cex=0.7, pch=c(19, 17, 15), bty="n",
+    legend("topleft", col=clrs["cef-0.5-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
         legend=c("0.5 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
     axis(2, las=2)
 
@@ -315,14 +315,14 @@ cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
     #cipro
     make_gray_plot("cipro")
     make_colored_plot("cipro")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Ciprofloxacin (10 mg/kg)", adj=c(0,0), font=2)
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Ciprofloxacin", adj=c(0,0), font=2)
     #legend("topleft", pch=19, bty="n", col="lightgreen", legend="Ciprofloxacin", cex=0.7)
 
 
     #clinda
     make_gray_plot("clinda")
     make_colored_plot("clinda")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Clindamycin (10 mg/kg)", adj=c(0,0), font=2)
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Clindamycin", adj=c(0,0), font=2)
     #legend("topleft", pch=19, bty="n", col="darkgreen", legend="Clindamycin", cex=0.7)
     axis(2, las=2)
 
@@ -330,8 +330,8 @@ cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
     #metro
     make_gray_plot("metro")
     make_colored_plot("metro")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Metronidazole (1 mg/mL)", adj=c(0,0), font=2)
-    legend("topleft", col="blue", cex=0.7, pch=c(19, 1), bty="n",
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Metronidazole", adj=c(0,0), font=2)
+    legend("topleft", col=clrs["metro-1-top_dose"], cex=0.7, pch=c(19, 1), bty="n",
         legend=c("1 day recovery", "6 days recovery"))
 
 
@@ -339,7 +339,7 @@ cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
     make_gray_plot("strep")
     make_colored_plot("strep")
     text(x=-0.25, y=9.75, xpd=TRUE, label="Streptomycin", adj=c(0,0), font=2)
-    legend("topleft", col="orange", cex=0.7, pch=c(19, 17, 15), bty="n",
+    legend("topleft", col=clrs["strep-5-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
         legend=c("5 mg/mL", "0.5 mg/mL", "0.1 mg/mL"))
     axis(2, las=2)
     axis(1)
@@ -348,7 +348,7 @@ cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
     make_gray_plot("vanc")
     make_colored_plot("vanc")
     text(x=-0.25, y=9.75, xpd=TRUE, label="Vancomycin", adj=c(0,0), font=2)
-    legend("topleft", col="purple", cex=0.7, pch=c(19, 17, 15), bty="n",
+    legend("topleft", col=clrs["vanc-0.625-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
         legend=c("0.625 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
     axis(1)
 
@@ -364,9 +364,10 @@ dev.off()
 
 
 
+n_features <- 9
 
 # let's build Figure 6 (w/ color & pch)
-cairo_pdf(file="results/figures/figure6_col.pdf", width=7.5, height=9.0)
+cairo_pdf(file="results/figures/figure6_col.pdf", width=7.5, height=7.5)
 
     #want to jitter the relative abundance for those mice that had no Cdiff
     #colonization
@@ -375,10 +376,10 @@ cairo_pdf(file="results/figures/figure6_col.pdf", width=7.5, height=9.0)
 
     par(mar=c(0.5,0.5,0.5,0.5))
 
-    design <- matrix(1:n_features, nrow=4, byrow=T)
-    design <- cbind(c(rep(13,4)), design)
-    design <- rbind(design, c(0,14,14,14))
-    layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,1,0.3))
+    design <- matrix(1:n_features, nrow=3, byrow=T)
+    design <- cbind(c(rep(10,4)), design)
+    design <- rbind(design, c(0,11,11,11))
+    layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,0.3))
 
     for(i in 1:n_features){
         #get the row and column number for each spot in the layout
@@ -393,16 +394,22 @@ cairo_pdf(file="results/figures/figure6_col.pdf", width=7.5, height=9.0)
         ra_zeroes <- otu_abund == 0
         otu_abund[ra_zeroes] <- runif(sum(ra_zeroes),1.0e-2,1.5e-2)
 
-        #plot the relative abundance with the number of tumors for each animal. plot
+        #plot the relative abundance with the number of cdiff for each animal. plot
         #on consistent log scaled x-axis for all OTUs. will throw errors because it
         #can't plot zeroes on a log scale
-        plot(otu_abund,logCFU, log="x",
-            pch=pch[grouping],
-            col=clrs[grouping],
+        plot(otu_abund[grouping == "control-NA-NA"], logCFU[grouping == "control-NA-NA"],
+            log="x", pch=19,
+            col="black",
             cex=0.8,
             ylab="", xlab="",
             xlim=c(1e-2, 100), ylim=c(0,9),
             yaxt="n", xaxt="n"
+        )
+
+        points(otu_abund[grouping != "control-NA-NA"], logCFU[grouping != "control-NA-NA"],
+            pch=pch[grouping[grouping != "control-NA-NA"]],
+            col=clrs[grouping[grouping != "control-NA-NA"]],
+            cex=0.8
         )
 
         #create a vertical line to denote the limit of detection
@@ -415,7 +422,7 @@ cairo_pdf(file="results/figures/figure6_col.pdf", width=7.5, height=9.0)
         text(x=0.7e-2, y=8.8, label=tax_otu_imp_labels[i], pos=4, font=2, cex=0.9)
 
         #if it's on the bottom row, put a customized axis indicating the % rabund
-        if(row == 4){
+        if(row == 3){
             axis(1, at=c(1.25e-2, 1e-1,1e0,1e1,1e2),
                     label=c("0", "0.1", "1", "10", "100"),
                     cex.axis=1.5)
