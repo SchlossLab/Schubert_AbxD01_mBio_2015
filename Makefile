@@ -8,8 +8,7 @@
 #	the mock community reference (HMP_MOCK.fasta), the silva reference alignment
 #	(silva.bacteria.align), and the RDP training set data (trainset9_032012).
 #	Finally, we use the HMP_MOCK.align to get the alignment coordinates for the
-#	V3-V4, V4, and V4-V5 data. These data will be stored in the data/references/
-#	folder.
+#	V4 data. These data will be stored in the data/references/ folder.
 #
 #	The targets in this part are all used as dependencies in other rules
 #
@@ -75,6 +74,12 @@ $(REFS)HMP_MOCK.v4.fasta : $(REFS)HMP_MOCK.fasta $(REFS)silva.v4.align
 #
 #
 ################################################################################
+
+# build the files file. probably should replace this chunk eventually
+# with pulling data off of the SRA
+data/process/abxD0.files : code/make_files_file.R data/process/abx_cdiff_metadata.tsv
+	R -e "source('code/make_files_file.R')"
+
 
 # need to get the fastq files. probably should replace this chunk eventually
 # with pulling data off of the SRA
@@ -194,8 +199,8 @@ write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.l
 				results/figures/figure2.pdf\
 				results/figures/figure3.pdf\
 				results/figures/figure4.pdf
-	R -e "library(knitr);knit2html('Schubert_abxD01_mBio_2015.Rmd', 'Schubert_abxD01_mBio_2015.html')"; \
-	pandoc -f markdown -t docx Schubert_abxD01_mBio_2015.md -o Schubert_abxD01_mBio_2015.docx
+	R -e "library(knitr);knit2html('Schubert_abxD01_mBio_2015.Rmd', 'Schubert_abxD01_mBio_2015.html')"
+#	pandoc -f markdown -t docx Schubert_abxD01_mBio_2015.md -o Schubert_abxD01_mBio_2015.docx
 
 
 #$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
