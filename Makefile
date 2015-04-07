@@ -8,8 +8,7 @@
 #	the mock community reference (HMP_MOCK.fasta), the silva reference alignment
 #	(silva.bacteria.align), and the RDP training set data (trainset9_032012).
 #	Finally, we use the HMP_MOCK.align to get the alignment coordinates for the
-#	V3-V4, V4, and V4-V5 data. These data will be stored in the data/references/
-#	folder.
+#	V4 data. These data will be stored in the data/references/ folder.
 #
 #	The targets in this part are all used as dependencies in other rules
 #
@@ -75,6 +74,12 @@ $(REFS)HMP_MOCK.v4.fasta : $(REFS)HMP_MOCK.fasta $(REFS)silva.v4.align
 #
 #
 ################################################################################
+
+# build the files file. probably should replace this chunk eventually
+# with pulling data off of the SRA
+data/process/abxD0.files : code/make_files_file.R data/process/abx_cdiff_metadata.tsv
+	R -e "source('code/make_files_file.R')"
+
 
 # need to get the fastq files. probably should replace this chunk eventually
 # with pulling data off of the SRA
