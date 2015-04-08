@@ -91,15 +91,6 @@ error_rate <- 100 * sum(error_nochim$weight * error_nochim$error)/sum(error_noch
 
 ### Results
 
-```{r top_dose_cfu_analysis}
-cfu <- read.table(file="data/process/abxD1.counts")
-cfu_top_dose <- cfu[cfu$experiment == "top_dose" & cfu$abx != "control",]
-cfu_top_dose_summary <-aggregate(cfu_top_dose$CFU, by=list(cfu_top_dose$abx), summary)
-treatments <- cfu_top_dose_summary$Group.1
-cfu_top_dose_summary <- format(cfu_top_dose_summary$x, scientific=T, digits=2)
-rownames(cfu_top_dose_summary) <- treatments
-```
-
 ```{r amova_analysis}
 amova <- scan(file="data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova", what="", sep="\n", quiet=T)
 
@@ -123,7 +114,7 @@ sig <- p.adjust(pvalue, method="BH")
 
 
 ```{r top_dose_correlation}
-corr_data <- read.table(file="data/process/top_dose_corr.tsv", header=T)
+corr_data <- read.table(file="data/process/correlation_analysis.tsv", header=T)
 families <- gsub(".*;", "", corr_data$taxonomy)
 ave_corr_family_agg <- aggregate(corr_data$sig_corrs, by=list(families), function(x){ c(mean(x), length(x))})
 ave_corr_family <- round(ave_corr_family_agg$x[,1], 2)
