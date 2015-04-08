@@ -46,7 +46,7 @@ cef <- rel_abund[titration$abx == "cef",]
 cef_metadata <- titration[titration$abx == "cef",]
 
 cef_med <- aggregate(cef, by=list(cef_metadata$dose), median)[,-1]
-cef_abund <- apply(cef_med, 2, max) > 3.0
+cef_abund <- apply(cef_med, 2, max) > 1.0
 
 cef_abund_good <- cef[,cef_abund]
 cef_p_value <- rep(NA, ncol(cef_abund_good))

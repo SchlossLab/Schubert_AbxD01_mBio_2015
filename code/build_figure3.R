@@ -15,8 +15,6 @@
 #
 ################################################################################
 
-top_experiment_corr <- read.table(file="data/process/top_dose_corr.tsv", header=T)
-
 # read in the metadata file
 counts_file <- read.table(file="data/process/abxD1.counts", header=T)
 delay <- counts_file[counts_file$abx=="amp" | counts_file$abx=="metro",]
@@ -46,7 +44,7 @@ amp <- rel_abund[delay$abx == "amp",]
 amp_metadata <- delay[delay$abx == "amp",]
 
 amp_med <- aggregate(amp, by=list(amp_metadata$experiment), median)[,-1]
-amp_abund <- apply(amp_med, 2, max) > 3.0
+amp_abund <- apply(amp_med, 2, max) > 1.0
 
 amp_abund_good <- amp[,amp_abund]
 amp_p_value <- rep(NA, ncol(amp_abund_good))
@@ -93,12 +91,9 @@ taxonomy <- gsub(";$", "", taxonomy)
 taxonomy <- gsub(".*;", "", taxonomy)
 taxonomy <- taxonomy[sig_otus]
 
-corr <- round(top_experiment_corr[sig_otus,"sig_corrs"], digits=2)
-corr[is.na(corr)] <- "NS"
-
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0(taxonomy, "\n(OTU ", otu, ", ρ=", corr, ")")
+label <- paste0(taxonomy, "\n(OTU ", otu, ")")
 label <- gsub("\\(.=NS\\)", "(NS)", label)
 
 cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.125)

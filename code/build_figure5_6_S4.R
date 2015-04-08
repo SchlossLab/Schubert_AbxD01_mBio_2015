@@ -88,7 +88,7 @@ importance_sorted <- sort(importance(rf_full)[,1], decreasing=T)
 counts_file$fit_full <- predict(rf_full, abund_good)
 
 # there appears to be a natural break after OTU 11 (the 12th feature)
-n_features <- 12
+n_features <- 9
 importance_subset <- importance_sorted[1:n_features]
 
 tax_otu_imp_labels <- paste0(taxonomy[names(importance_subset)],
@@ -277,7 +277,7 @@ cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
     par(mar=c(0.5,0.5,0.5,0.5))
 
     design <- matrix(1:n_features, nrow=3, byrow=T)
-    design <- cbind(c(rep(10,4)), design)
+    design <- cbind(c(rep(10,3)), design)
     design <- rbind(design, c(0,11,11,11))
     layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,0.3))
 

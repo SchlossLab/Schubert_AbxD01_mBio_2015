@@ -54,11 +54,11 @@ top_dose <- top_dose[overlap,]
 
 
 # limit the analysis to those OTUs that have an median relative abundance over
-# 3% within each antibiotic dose
+# 1% within each antibiotic dose
 control_rabund <- rel_abund[top_dose$abx == "control",]
 control_metadata <- top_dose[top_dose$abx == "control",]
 control_median <- apply(control_rabund, 2, median)
-control_otus <- control_median > 3.0
+control_otus <- control_median > 1.0
 
 otu_hyp_test <- function(drug){
 
