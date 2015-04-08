@@ -113,7 +113,7 @@ pdf(height=9, width=3.75, file="results/figures/figureS1.pdf")
     mtext(side=2, line=3, "Relative Abundance (%)")
 
     pos <- fulldose_phylum_barplot("clinda", "Clindamycin")
-    pos <- fulldose_phylum_barplot("metro", "Metronidazol")
+    pos <- fulldose_phylum_barplot("metro", "Metronidazole")
     pos <- fulldose_phylum_barplot("strep", "Streptomycin")
     pos <- fulldose_phylum_barplot("vanc", "Vancomycin")
     text(x=pos+0.1, y=par("usr")[3]-10, labels=rownames(med_ra), srt=70, cex=1, font=1, pos=2, xpd=NA)
