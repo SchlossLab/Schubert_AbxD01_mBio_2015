@@ -86,7 +86,7 @@ titration_phylum_barplot <- function(drug, label){
     z
 }
 
-pdf(height=5, width=3.75, file="results/figures/figure3_phylum.pdf")
+pdf(height=5, width=3.75, file="results/figures/figureS2.pdf")
 
     z <- layout(
         matrix( c(  1,
