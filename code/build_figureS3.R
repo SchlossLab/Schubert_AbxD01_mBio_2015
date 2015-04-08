@@ -81,7 +81,7 @@ delay_phylum_barplot <- function(drug, label){
     arrows(x0=z, x1=z, y0=as.matrix(med_ra), y1=as.matrix(l_qtr),
                                                     angle=90, length=0.05)
 
-    if(drug == "metro"){
+    if(drug == "amp"){
         legend("topright", bty="n", fill=c("gray", "white"),
                     legend=c("1 day recovery", "6 days recovery"), cex=0.8)
     }
@@ -93,7 +93,7 @@ delay_phylum_barplot <- function(drug, label){
     z
 }
 
-pdf(height=3.25, width=3.75, file="results/figures/figure4_phylum.pdf")
+pdf(height=3.25, width=3.75, file="results/figures/figureS3.pdf")
 
     z <- layout(
         matrix( c(  1,
@@ -103,8 +103,8 @@ pdf(height=3.25, width=3.75, file="results/figures/figure4_phylum.pdf")
 
     par(mar=c(0.5, 5, 1.25, 0.5))
 
-    pos <- delay_phylum_barplot("metro", "Metronidazole")
     pos <- delay_phylum_barplot("amp", "Ampicillin")
+    pos <- delay_phylum_barplot("metro", "Metronidazole")
     mtext(side=2, at=110, line=3,"Relative Abundance (%)")
 
     text(x=pos[2,]-0.3, y=par("usr")[3]-5, labels=taxonomy, srt=70, cex=1, xpd=NA, adj=c(1,1))
