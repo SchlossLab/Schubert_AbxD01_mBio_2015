@@ -11,15 +11,15 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure1.pdf
+#   * results/figures/figure3.pdf
 #
 ################################################################################
 
-top_dose_corr <- read.table(file="data/process/top_dose_corr.tsv", header=T)
+top_experiment_corr <- read.table(file="data/process/top_dose_corr.tsv", header=T)
 
 # read in the metadata file
 counts_file <- read.table(file="data/process/abxD1.counts", header=T)
-titration <- counts_file[counts_file$abx=="vanc" | counts_file$abx=="cef" | counts_file$abx=="strep",]
+delay <- counts_file[counts_file$abx=="amp" | counts_file$abx=="metro",]
 
 
 # read in the shared file and get the relative abundance
@@ -30,70 +30,55 @@ rel_abund <- 100*shared_file/n_seqs
 
 
 # need to figure out which samples made it through the pipeline and look at those
-overlap <- rownames(rel_abund)[which(rownames(rel_abund) %in% rownames(titration))]
+overlap <- rownames(rel_abund)[which(rownames(rel_abund) %in% rownames(delay))]
 rel_abund <- rel_abund[overlap,]
-titration <- titration[overlap,]
+delay <- delay[overlap,]
 
 
-otu_hyp_test <- function(otu, dose){
-    kruskal.test(otu, g=factor(dose))$p.value
+otu_hyp_test <- function(otu, delay){
+    wilcox.test(otu, g=factor(delay))$p.value
 }
+
 
 # limit the analysis to those OTUs that have an median relative abundance over
-# 1% within each antibiotic dose
+# 1% within each antibiotic delay group
+amp <- rel_abund[delay$abx == "amp",]
+amp_metadata <- delay[delay$abx == "amp",]
 
-cef <- rel_abund[titration$abx == "cef",]
-cef_metadata <- titration[titration$abx == "cef",]
+amp_med <- aggregate(amp, by=list(amp_metadata$experiment), median)[,-1]
+amp_abund <- apply(amp_med, 2, max) > 3.0
 
-cef_med <- aggregate(cef, by=list(cef_metadata$dose), median)[,-1]
-cef_abund <- apply(cef_med, 2, max) > 3.0
-
-cef_abund_good <- cef[,cef_abund]
-cef_p_value <- rep(NA, ncol(cef_abund_good))
-for(i in 1:ncol(cef_abund_good)){
-    cef_p_value[i] <- otu_hyp_test(cef_abund_good[,i], cef_metadata$dose)
+amp_abund_good <- amp[,amp_abund]
+amp_p_value <- rep(NA, ncol(amp_abund_good))
+for(i in 1:ncol(amp_abund_good)){
+    amp_p_value[i] <- otu_hyp_test(amp_abund_good[,i], amp_metadata$experiment)
 }
-cef_p_value <- p.adjust(cef_p_value, method="BH")
-cef_sig_otus <- colnames(cef_abund_good[,cef_p_value<0.05])
+amp_p_value <- p.adjust(amp_p_value, method="BH")
+amp_sig_otus <- colnames(amp_abund_good[,amp_p_value<0.05])
 
 
 
 
-vanc <- rel_abund[titration$abx == "vanc",]
-vanc_metadata <- titration[titration$abx == "vanc",]
+metro <- rel_abund[delay$abx == "metro",]
+metro_metadata <- delay[delay$abx == "metro",]
 
-vanc_med <- aggregate(vanc, by=list(vanc_metadata$dose), median)[,-1]
-vanc_abund <- apply(vanc_med, 2, max) > 3.0
+metro_med <- aggregate(metro, by=list(metro_metadata$experiment), median)[,-1]
+metro_abund <- apply(metro_med, 2, max) > 3.0
 
-vanc_abund_good <- vanc[,vanc_abund]
-vanc_p_value <- rep(NA, ncol(vanc_abund_good))
-for(i in 1:ncol(vanc_abund_good)){
-    vanc_p_value[i] <- otu_hyp_test(vanc_abund_good[,i], vanc_metadata$dose)
+metro_abund_good <- metro[,metro_abund]
+metro_p_value <- rep(NA, ncol(metro_abund_good))
+for(i in 1:ncol(metro_abund_good)){
+    metro_p_value[i] <- otu_hyp_test(metro_abund_good[,i], metro_metadata$experiment)
 }
-vanc_p_value <- p.adjust(vanc_p_value, method="BH")
-vanc_sig_otus <- colnames(vanc_abund_good[,vanc_p_value<0.05])
+metro_p_value <- p.adjust(metro_p_value, method="BH")
+metro_sig_otus <- colnames(metro_abund_good[,metro_p_value<0.05])
 
 
 
+sig_otus <- sort(unique(c(amp_sig_otus, metro_sig_otus)))
+x_max <- length(sig_otus)*3-0.5
 
 
-
-strep <- rel_abund[titration$abx == "strep",]
-strep_metadata <- titration[titration$abx == "strep",]
-
-strep_med <- aggregate(strep, by=list(strep_metadata$dose), median)[,-1]
-strep_abund <- apply(strep_med, 2, max) > 3.0
-
-strep_abund_good <- strep[,strep_abund]
-strep_p_value <- rep(NA, ncol(strep_abund_good))
-for(i in 1:ncol(strep_abund_good)){
-    strep_p_value[i] <- otu_hyp_test(strep_abund_good[,i], strep_metadata$dose)
-}
-strep_p_value <- p.adjust(strep_p_value, method="BH")
-strep_sig_otus <- colnames(strep_abund_good[,strep_p_value<0.05])
-
-sig_otus <- sort(unique(c(strep_sig_otus, cef_sig_otus, vanc_sig_otus)))
-x_max <- length(sig_otus)*4-0.5
 
 # let's get the taxonomy data so that we have the string from the kingdom to
 # the genus level name or whatever the next level up is that provided a robust
@@ -108,7 +93,7 @@ taxonomy <- gsub(";$", "", taxonomy)
 taxonomy <- gsub(".*;", "", taxonomy)
 taxonomy <- taxonomy[sig_otus]
 
-corr <- round(top_dose_corr[sig_otus,"sig_corrs"], digits=2)
+corr <- round(top_experiment_corr[sig_otus,"sig_corrs"], digits=2)
 corr[is.na(corr)] <- "NS"
 
 otu <- gsub("Otu0*", "", names(taxonomy))
@@ -116,116 +101,93 @@ otu <- gsub("Otu0*", "", names(taxonomy))
 label <- paste0(taxonomy, "\n(OTU ", otu, ", ρ=", corr, ")")
 label <- gsub("\\(.=NS\\)", "(NS)", label)
 
-cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=5.5)
+cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.125)
     par(cex=1.2)
 
-    layout(matrix(c(1,5,2,6,3,7,4,8), nrow=4, byrow=T), width=c(1,0.25), height=c(1,1,1,1))
+    layout(matrix(c(1,4,2,5,3,6), nrow=3, byrow=T), width=c(1,0.25), height=c(1,1,1))
 
     par(mar=c(0.5,5,1.5,0.5))
-    sig_cef <- cef[,sig_otus]
-    cef_med <- aggregate(sig_cef, by=list(cef_metadata$dose), median)[,-1]
-    cef_uci <- aggregate(sig_cef, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
-    cef_lci <- aggregate(sig_cef, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
 
-    z <- barplot(as.matrix(cef_med), beside=T, names.arg=rep("", ncol(cef_med)), ylim=c(0,23), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
-    arrows(x0=z, y0=as.matrix(cef_med), y1=as.matrix(cef_uci), angle=90, length=0.02)
-    arrows(x0=z, y0=as.matrix(cef_med), y1=as.matrix(cef_lci), angle=90, length=0.02)
+    sig_metro <- metro[,sig_otus]
+    metro_metadata$experiment <- factor(metro_metadata$experiment, levels=c("top_dose", "delay"))
+    metro_med <- aggregate(sig_metro, by=list(metro_metadata$experiment), median)[,-1]
+    metro_uci <- aggregate(sig_metro, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]
+    metro_lci <- aggregate(sig_metro, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]
 
-    text(x=z[2,sig_otus %in% cef_sig_otus], y=-1, labels="*", cex=2, xpd=TRUE)
+    z <- barplot(as.matrix(metro_med), beside=T, names.arg=rep("", ncol(metro_med)), ylim=c(0,80), xlim=c(1.5,x_max), axes=F, col=c("gray", "white"))
+    arrows(x0=z, y0=as.matrix(metro_med), y1=as.matrix(metro_uci), angle=90, length=0.02)
+    arrows(x0=z, y0=as.matrix(metro_med), y1=as.matrix(metro_lci), angle=90, length=0.02)
 
-    abline(v=seq(4.5, length(sig_otus)*4-0.5, 4), col="gray")
-    axis(2, las=1)
+    text(x=z[2,sig_otus %in% metro_sig_otus]-0.5, y=-3, labels="*", cex=2, xpd=TRUE)
+
+    abline(v=seq(3.5, length(sig_otus)*3-0.5, 3), col="gray")
+    axis(2, las=1, at=seq(0,80,20))
     box()
-    text(x=0, y=26, label="Cefoperazone", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
-
-    legend(x=x_max*0.85, y=20, legend=paste(levels(factor(cef_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
+    text(x=0.5, y=89, label="Metronidazole", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
 
-    sig_strep <- strep[,sig_otus]
-    strep_med <- aggregate(sig_strep, by=list(strep_metadata$dose), median)[,-1]
-    strep_uci <- aggregate(sig_strep, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
-    strep_lci <- aggregate(sig_strep, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
 
-    z <- barplot(as.matrix(strep_med), beside=T, names.arg=rep("", ncol(strep_med)), ylim=c(0,65), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
-    arrows(x0=z, y0=as.matrix(strep_med), y1=as.matrix(strep_uci), angle=90, length=0.02)
-    arrows(x0=z, y0=as.matrix(strep_med), y1=as.matrix(strep_lci), angle=90, length=0.02)
+    sig_amp <- amp[,sig_otus]
+    amp_metadata$experiment <- factor(amp_metadata$experiment, levels=c("top_dose", "delay"))
+    amp_med <- aggregate(sig_amp, by=list(amp_metadata$experiment), median)[,-1]
+    amp_uci <- aggregate(sig_amp, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]
+    amp_lci <- aggregate(sig_amp, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]
 
-    text(x=z[2,sig_otus %in% strep_sig_otus], y=-3, labels="*", cex=2, xpd=TRUE)
+    z <- barplot(as.matrix(amp_med), beside=T, names.arg=rep("", ncol(amp_med)), ylim=c(0,60), xlim=c(1.5,x_max), axes=F, col=c("gray", "white"))
+    arrows(x0=z, y0=as.matrix(amp_med), y1=as.matrix(amp_uci), angle=90, length=0.02)
+    arrows(x0=z, y0=as.matrix(amp_med), y1=as.matrix(amp_lci), angle=90, length=0.02)
 
-    abline(v=seq(4.5, length(sig_otus)*4-0.5, 4), col="gray")
-    axis(2, las=1, at=seq(0,60,15))
-    mtext(side=2, "Relative abundance (%)", line=3)
-    box()
-    text(x=0, y=73, label="Streptomycin", adj=c(0,1), cex=1.2, font=2, xpd=T)
+    text(x=z[2,sig_otus %in% amp_sig_otus]-0.5, y=-2.5, labels="*", cex=2, xpd=TRUE)
 
-    legend(x=x_max*0.85, y=60, legend=paste(levels(factor(strep_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
-
-
-    sig_vanc <- vanc[,sig_otus]
-    vanc_med <- aggregate(sig_vanc, by=list(vanc_metadata$dose), median)[,-1]
-    vanc_uci <- aggregate(sig_vanc, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
-    vanc_lci <- aggregate(sig_vanc, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
-
-    z <- barplot(as.matrix(vanc_med), beside=T, names.arg=rep("", ncol(vanc_med)), ylim=c(0,65), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
-    arrows(x0=z, y0=as.matrix(vanc_med), y1=as.matrix(vanc_uci), angle=90, length=0.02)
-    arrows(x0=z, y0=as.matrix(vanc_med), y1=as.matrix(vanc_lci), angle=90, length=0.02)
-
-    text(x=z[2,sig_otus %in% vanc_sig_otus], y=-3, labels="*", cex=2, xpd=TRUE)
-
-    abline(v=seq(4.5, length(sig_otus)*4-0.5, 4), col="gray")
+    abline(v=seq(3.5, length(sig_otus)*3-0.5, 3), col="gray")
     axis(2, las=1, at=seq(0,60,15))
     box()
-    text(x=0, y=73, label="Vancomycin", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
+    text(x=0.5, y=67, label="Ampicillin", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=x_max*0.83, y=60, legend=paste(levels(factor(vanc_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
+    text(x=apply(z, 2, mean)+0.5, y=par("usr")[1]-10, xpd=NA, label=label, pos=2, srt=70, cex=1.2)
 
-    text(x=apply(z, 2, mean)+1, y=par("usr")[1]-10, xpd=NA, label=label, pos=2, srt=70, cex=1.2)
+    mtext(side=2, "Relative abundance (%)", line=3, at=68)
 
     plot.new()
 
+
+
+
     par(mar=c(0.5,0.5,1.5,5))
 
-    cef_cfu_med <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), median)[,-1]+0.1
-    cef_cfu_uci <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]+0.1
-    cef_cfu_lci <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]+0.1
 
-    q <- barplot(as.matrix(cef_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y", axes=F, col=c("black", "gray", "white"))
-    arrows(x0=q, y0=as.matrix(cef_cfu_med), y1=as.matrix(cef_cfu_uci), angle=90, length=0.05)
-    arrows(x0=q, y0=as.matrix(cef_cfu_med), y1=as.matrix(cef_cfu_lci), angle=90, length=0.05)
+
+    metro_cfu_med <- aggregate(metro_metadata$CFU, by=list(metro_metadata$experiment), median)[,-1]+0.1
+    metro_cfu_uci <- aggregate(metro_metadata$CFU, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]+0.1
+    metro_cfu_lci <- aggregate(metro_metadata$CFU, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]+0.1
+
+    q <- barplot(as.matrix(metro_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y",  axes=F, col=c("gray", "white"))
+    arrows(x0=q, y0=as.matrix(metro_cfu_med), y1=as.matrix(metro_cfu_uci), angle=90, length=0.05)
+    arrows(x0=q, y0=as.matrix(metro_cfu_med), y1=as.matrix(metro_cfu_lci), angle=90, length=0.05)
     axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
     box()
-    #pairwise.wilcox.test(cef_metadata$CFU, cef_metadata$dose)
-    text(x=as.vector(q), y=rep(4e8,3), labels=c("a", "a", "b"))
+    #wilcox.test(metro_metadata$CFU~metro_metadata$experiment, alternative="less")
+    text(x=2, y=rep(4e8), labels=c("*"), cex=2)
 
 
-    strep_cfu_med <- aggregate(strep_metadata$CFU, by=list(strep_metadata$dose), median)[,-1]+0.1
-    strep_cfu_uci <- aggregate(strep_metadata$CFU, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]+0.1
-    strep_cfu_lci <- aggregate(strep_metadata$CFU, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]+0.1
 
-    q <- barplot(as.matrix(strep_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y",  axes=F, col=c("black", "gray", "white"))
-    arrows(x0=q, y0=as.matrix(strep_cfu_med), y1=as.matrix(strep_cfu_uci), angle=90, length=0.05)
-    arrows(x0=q, y0=as.matrix(strep_cfu_med), y1=as.matrix(strep_cfu_lci), angle=90, length=0.05)
+    amp_cfu_med <- aggregate(amp_metadata$CFU, by=list(amp_metadata$experiment), median)[,-1]+0.1
+    amp_cfu_uci <- aggregate(amp_metadata$CFU, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]+0.1
+    amp_cfu_lci <- aggregate(amp_metadata$CFU, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.25)})[,-1]+0.1
+
+    q <- barplot(as.matrix(amp_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y", axes=F, col=c("gray", "white"))
+    arrows(x0=q, y0=as.matrix(amp_cfu_med), y1=as.matrix(amp_cfu_uci), angle=90, length=0.05)
+    arrows(x0=q, y0=as.matrix(amp_cfu_med), y1=as.matrix(amp_cfu_lci), angle=90, length=0.05)
     axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
     box()
-    #pairwise.wilcox.test(strep_metadata$CFU, strep_metadata$dose)
-    text(x=as.vector(q), y=rep(4e8,3), labels=c("a", "b", "c"))
-
-    mtext(side=4, "C. difficile colonization (CFU/g)", line=3)
+    #wilcox.test(amp_metadata$CFU~amp_metadata$experiment, alternative="less")
+    text(x=2, y=4e8, labels=c("*"), cex=2)
 
 
-    vanc_cfu_med <- aggregate(vanc_metadata$CFU, by=list(vanc_metadata$dose), median)[,-1]+0.1
-    vanc_cfu_uci <- aggregate(vanc_metadata$CFU, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]+0.1
-    vanc_cfu_lci <- aggregate(vanc_metadata$CFU, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]+0.1
+    mtext(side=4, "C. difficile colonization (CFU/g)", line=3, at=1e10)
 
-    q <- barplot(as.matrix(vanc_cfu_med)+1, beside=T, ylim=c(1, 1e9), log="y",  axes=F, col=c("black", "gray", "white"))
-    arrows(x0=q, y0=as.matrix(vanc_cfu_med), y1=as.matrix(vanc_cfu_uci), angle=90, length=0.05)
-    arrows(x0=q, y0=as.matrix(vanc_cfu_med), y1=as.matrix(vanc_cfu_lci), angle=90, length=0.05)
-    axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
-    box()
-    #pairwise.wilcox.test(vanc_metadata$CFU, vanc_metadata$dose)
-    text(x=q[2,], y=4e8, labels=c("NS"))
 
-    text(x=q+0.3, y=par("usr")[1]-0.5, xpd=NA, label=c("Low", "Medium","High"), pos=2, srt=70, cex=1.2)
+    text(x=q+0.3, y=par("usr")[1]-0.5, xpd=NA, label=c("1 day recovery", "6 days recovery"), pos=2, srt=70, cex=1.2)
     plot.new()
 
 dev.off()
