@@ -200,10 +200,6 @@ results/figures/figure5.pdf results/figures/figure6.pdf results/figures/figureS4
 
 
 
-### Need to add rule for building figures 5 and 6 and supplemental figures
-
-
-
 write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova\
 				$(BASIC_STEM).pick.pick.pick.an.unique_list.groups.ave-std.summary\
 				data/process/abxD1.counts\
@@ -223,11 +219,3 @@ write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.l
                 results/figures/figure6.pdf
 	R -e "library(knitr);knit2html('Schubert_abxD01_mBio_2015.Rmd', 'Schubert_abxD01_mBio_2015.html')"
 #	pandoc -f markdown -t docx Schubert_abxD01_mBio_2015.md -o Schubert_abxD01_mBio_2015.docx
-
-
-#$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared\
-#
-#$(BASIC_STEM).pick.pick.pick.an.unique_list.thetayc.0.03.lt.ave.dist\
-#$(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy\
-#$(BASIC_STEM).pick.v4.wang.pick.pick.tx.shared\
-#$(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy\
