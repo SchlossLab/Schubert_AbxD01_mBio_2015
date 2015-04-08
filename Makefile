@@ -174,7 +174,7 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : 
 #
 ################################################################################
 
-results/figures/figure1.pdf : code/build_figure1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
+results/figures/figure1.pdf : code/build_figure1.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure1.R')"
 
 results/figures/figureS1.pdf : code/build_figureS1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
