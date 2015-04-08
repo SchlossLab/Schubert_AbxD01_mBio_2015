@@ -104,108 +104,8 @@ rf_partial <- randomForest(logCFU ~ ., data=abund_good[,names(importance_sorted)
 write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.data", append=T)
 
 
-# let's build Figure 5
-cairo_pdf(file="results/figures/figure5.pdf", width=7.5, height=3.5)
-    layout(matrix(c(1,2), nrow=1), width=c(1,1), height=0.8)
-
-    par(mar=c(3,9.5,2,0.5))
-    plot(NA, yaxt="n", xlab="", ylab="", xlim=c(0, max(importance_subset)),
-        ylim=c(1, length(importance_subset)), axes=F)
-
-    abline(h=1:length(importance_subset), lty=3, col="gray")
-    points(x=rev(importance_subset), y=1:length(importance_subset), pch=19, cex=0.8)
-    axis(1, at=seq(0,100,25), label=c("0", "", "50", "", "100"), cex=0.8)
-    box()
-    mtext(side=2, line=9, adj=0, at=1:length(importance_subset), text=rev(tax_otu_labels[names(importance_subset)]), las=2, cex=0.7)
-    mtext(side=1, text="% Increase in MSE", line=2.0)
-    mtext(text="A", line=8, side=2, at=n_features+1.5, las=2, cex=2, font=2)
-
-
-    par(mar=c(3,4,2,0.5))
-    plot(logCFU, counts_file$fit_full, xlim=c(0,9), ylim=c(0,9),
-            xlab="", ylab="", cex=0.8, axes=F)
-    axis(1)
-    axis(2, las=2)
-    box()
-    mtext(side=1, text="Observed colonization (log CFU)", line=2.0)
-    mtext(side=2, text="Predicted colonization (log CFU)", line=2.5)
-    mtext(text="B", line=2.5, side=2, at=10.25, las=2, cex=2, font=2)
-dev.off()
-
-
-
-# let's build Figure 6
-cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=9.0)
-
-    #want to jitter the relative abundance for those mice that had no Cdiff
-    #colonization
-    cd_zeroes <- logCFU == 0
-    logCFU[cd_zeroes] <- runif(sum(cd_zeroes),0,1)
-
-    par(mar=c(0.5,0.5,0.5,0.5))
-
-    design <- matrix(1:n_features, nrow=4, byrow=T)
-    design <- cbind(c(rep(13,4)), design)
-    design <- rbind(design, c(0,14,14,14))
-    layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,1,0.3))
-
-    for(i in 1:n_features){
-        #get the row and column number for each spot in the layout
-        row <- ceiling(i/3)
-        column <- ((i-1) %% 3) + 1
-
-        #extract the relative abundance data for this OTU
-        otu_abund <- rel_abund[,names(importance_subset)[i]]
-
-        #want to jitter the number of tumors for those mice that had a zero
-        #relative abundance
-        ra_zeroes <- otu_abund == 0
-        otu_abund[ra_zeroes] <- runif(sum(ra_zeroes),1.0e-2,1.5e-2)
-
-        #plot the relative abundance with the number of tumors for each animal. plot
-        #on consistent log scaled x-axis for all OTUs. will throw errors because it
-        #can't plot zeroes on a log scale
-        plot(otu_abund,logCFU, log="x",
-            pch=19,
-            cex=0.8,
-            ylab="", xlab="",
-            xlim=c(1e-2, 100), ylim=c(0,9),
-            yaxt="n", xaxt="n"
-        )
-
-        #create a vertical line to denote the limit of detection
-        abline(v=2.2e-2, col="gray")
-
-        #create a horizontal line to denote the limit of detection
-        abline(h=1.5, col="gray")
-
-        #put the OTU label in the upper left corner of the plot
-        text(x=0.7e-2, y=8.8, label=tax_otu_imp_labels[i], pos=4, font=2, cex=0.9)
-
-        #if it's on the bottom row, put a customized axis indicating the % rabund
-        if(row == 4){
-            axis(1, at=c(1.25e-2, 1e-1,1e0,1e1,1e2),
-                    label=c("0", "0.1", "1", "10", "100"),
-                    cex.axis=1.5)
-        }
-
-        #if it's in the first column turn the axis labels to be horizontal
-        if(column == 1){
-            axis(2, las=2, cex.axis=1.5)
-        }
-    }
-
-    plot.new()
-    text(x=0.15, y=0.5, label="Observed colonization (log CFU)", cex=1.5, srt=90)
-
-    plot.new()
-    text(x=0.5, y=0.2, label="Relative abundance at Day 0 (%)", cex=1.5)
-
-dev.off()
-
-
-# supplemental figure 5A: full feature importance plot
-cairo_pdf(file="results/figures/figure5A_full.pdf", width=3.5, height=5.0)
+# supplemental figure 4: full feature importance plot
+cairo_pdf(file="results/figures/figureS4.pdf", width=3.5, height=5.0)
 
     par(mar=c(3,8,0.5,0.5))
     plot(NA, yaxt="n", xlab="", ylab="", xlim=c(min(importance_sorted), max(importance_sorted)),
@@ -221,7 +121,7 @@ cairo_pdf(file="results/figures/figure5A_full.pdf", width=3.5, height=5.0)
 dev.off()
 
 
-# supplemental figure 5B: color fit by treatment group
+# figures 5 and 6: color fit by treatment group
 clrs <- c(
     "amp-0.5-delay" = "#6600FF", #"red",
     "amp-0.5-top_dose" = "#6600FF", #"red",
@@ -278,7 +178,7 @@ make_colored_plot <- function(drug){
 
 
 
-cairo_pdf(file="results/figures/figure5B_full.pdf", width=5.0, height=6.0)
+cairo_pdf(file="results/figures/figure5.pdf", width=5.0, height=6.0)
 
     design <- matrix(1:8, nrow=4, byrow=T)
     design <- cbind(c(rep(9,4)), design)
@@ -367,7 +267,7 @@ dev.off()
 n_features <- 9
 
 # let's build Figure 6 (w/ color & pch)
-cairo_pdf(file="results/figures/figure6_col.pdf", width=7.5, height=7.5)
+cairo_pdf(file="results/figures/figure6.pdf", width=7.5, height=7.5)
 
     #want to jitter the relative abundance for those mice that had no Cdiff
     #colonization
