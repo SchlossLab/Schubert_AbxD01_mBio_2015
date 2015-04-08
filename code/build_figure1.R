@@ -3,13 +3,13 @@
 # build_figure1.R
 #
 # This script builds Figure 1, which is a barchart of the median relative
-# abundance of each phylum found in the mice treated with the top dose of
+# abundance of each genus found in the mice treated with the top dose of
 # antibiotics as well as the untreated control mice. Also included is the
 # number of CFU per gram of feces.
 #
 # Dependencies...
-#   * data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.pick.tx.5.subsample.shared
-#   * data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.v4.wang.pick.pick.tx.5.cons.taxonomy
+#   * data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.subsample.shared
+#   * data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.cons.taxonomy
 #   * data/process/abxD1.counts
 #
 # Output...
@@ -58,6 +58,7 @@ top_dose <- top_dose[overlap,]
 control_rabund <- rel_abund[top_dose$abx == "control",]
 control_metadata <- top_dose[top_dose$abx == "control",]
 control_median <- apply(control_rabund, 2, median)
+control_otus <- control_median > 3.0
 
 otu_hyp_test <- function(drug){
 
@@ -147,7 +148,7 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
 
 
-cairo_pdf(file="results/figures/figure1_genus.pdf", width=3.5, height=10.0)
+cairo_pdf(file="results/figures/figure1.pdf", width=3.5, height=10.0)
     par(cex=1.2)
 
     layout(matrix(c(
