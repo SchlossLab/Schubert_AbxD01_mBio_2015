@@ -92,7 +92,7 @@ n_features <- 9
 importance_subset <- importance_sorted[1:n_features]
 
 tax_otu_imp_labels <- paste0(taxonomy[names(importance_subset)],
-                        " (MSE: ", round(importance_subset, 1), "; ",
+                        " (",
                         otus[names(importance_subset)], ")")
 names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 
