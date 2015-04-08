@@ -106,17 +106,17 @@ taxonomy <- gsub(";unclassified", "", taxonomy)
 taxonomy <- gsub("/.*", "", taxonomy)
 taxonomy <- gsub(";$", "", taxonomy)
 taxonomy <- gsub(".*;", "", taxonomy)
+taxonomy <- gsub("_.*", "", taxonomy)
 taxonomy <- taxonomy[sig_otus]
 
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0(taxonomy, "\n(OTU ", otu, ")")
-label <- gsub("\\(.=NS\\)", "(NS)", label)
+label <- paste0(taxonomy, " (OTU ", otu, ")")
 
-cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.5)
+cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.75)
     par(cex=1.2)
 
-    layout(matrix(c(1,5,2,6,3,7,4,8), nrow=4, byrow=T), width=c(1,0.25), height=c(1,1,1,1))
+    layout(matrix(c(1,5,2,6,3,7,4,8), nrow=4, byrow=T), width=c(1,0.25), height=c(1,1,1,1.2))
 
     par(mar=c(0.5,5,1.5,0.5))
     sig_cef <- cef[,sig_otus]
@@ -158,6 +158,8 @@ cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.5)
     legend(x=x_max*0.85, y=60, legend=paste(levels(factor(strep_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
 
 
+
+
     sig_vanc <- vanc[,sig_otus]
     vanc_med <- aggregate(sig_vanc, by=list(vanc_metadata$dose), median)[,-1]
     vanc_uci <- aggregate(sig_vanc, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
@@ -176,7 +178,11 @@ cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.5)
 
     legend(x=x_max*0.83, y=60, legend=paste(levels(factor(vanc_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
 
-    text(x=apply(z, 2, mean)+1, y=par("usr")[1]-10, xpd=NA, label=label, pos=2, srt=70, cex=1.2)
+    text(x=apply(z, 2, mean)+1, y=par("usr")[1]-8, xpd=NA, label=label, pos=2, srt=70, cex=1)
+
+
+
+
 
     plot.new()
 

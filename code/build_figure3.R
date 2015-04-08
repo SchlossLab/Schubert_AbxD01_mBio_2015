@@ -93,13 +93,12 @@ taxonomy <- taxonomy[sig_otus]
 
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0(taxonomy, "\n(OTU ", otu, ")")
-label <- gsub("\\(.=NS\\)", "(NS)", label)
+label <- paste0(taxonomy, " (OTU ", otu, ")")
 
-cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.125)
+cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.5)
     par(cex=1.2)
 
-    layout(matrix(c(1,4,2,5,3,6), nrow=3, byrow=T), width=c(1,0.25), height=c(1,1,1))
+    layout(matrix(c(1,4,2,5,3,6), nrow=3, byrow=T), width=c(1,0.25), height=c(1,1,1.1))
 
     par(mar=c(0.5,5,1.5,0.5))
 
@@ -140,7 +139,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.125)
 
 
 
-    text(x=apply(z, 2, mean)+0.5, y=par("usr")[1]-10, xpd=NA, label=label, pos=2, srt=70, cex=1.2)
+    text(x=apply(z, 2, mean)+0.75, y=par("usr")[1]-8, xpd=NA, label=label, pos=2, srt=70, cex=1)
 
     mtext(side=2, "Relative abundance (%)", line=3, at=68)
 

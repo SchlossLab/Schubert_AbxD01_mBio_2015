@@ -148,7 +148,7 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
 
 
-cairo_pdf(file="results/figures/figure1.pdf", width=3.5, height=10.0)
+cairo_pdf(file="results/figures/figure1.pdf", width=4.5, height=10.0)
     par(cex=1.2)
 
     layout(matrix(c(
