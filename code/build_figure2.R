@@ -108,12 +108,9 @@ taxonomy <- gsub(";$", "", taxonomy)
 taxonomy <- gsub(".*;", "", taxonomy)
 taxonomy <- taxonomy[sig_otus]
 
-corr <- round(top_dose_corr[sig_otus,"sig_corrs"], digits=2)
-corr[is.na(corr)] <- "NS"
-
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0(taxonomy, "\n(OTU ", otu, ", ρ=", corr, ")")
+label <- paste0(taxonomy, "\n(OTU ", otu, ")")
 label <- gsub("\\(.=NS\\)", "(NS)", label)
 
 cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.5)
