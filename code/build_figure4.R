@@ -22,25 +22,26 @@
 
 # read in the metadata file
 counts_file <- read.table(file="data/process/abxD1.counts", header=T)
-top_dose <- counts_file[counts_file$experiment=="top_dose" | counts_file$abx=="control",]
 
 
 # read in the shared file and get the relative abundance
 shared_file <- read.table(file="data/process/abxD0.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.subsample.shared", header=T, row.names=2)
 shared_file <- shared_file[,!(colnames(shared_file) %in% c("label", "numOtus"))]
 n_seqs <- apply(shared_file, 1, sum)[1]
-rel_abund <- shared_file/n_seqs
+rel_abund <- 100 * shared_file/n_seqs
 
 
 # need to figure out which samples made it through the pipeline and look at those
-overlap <- rownames(rel_abund)[which(rownames(rel_abund) %in% rownames(top_dose))]
+overlap <- rownames(rel_abund)[which(rownames(rel_abund) %in% rownames(counts_file))]
 rel_abund <- rel_abund[overlap,]
-top_dose <- top_dose[overlap,]
+counts_file <- counts_file[overlap,]
 
 
 # limit the analysis to those OTUs that have an average relative abundance over
 # 1% across all samples
-abund <- apply(rel_abund, 2, mean) > 0.001
+grouping <- paste(counts_file$abx, counts_file$dose, counts_file$experiment, sep="-")
+medians <- aggregate(rel_abund, by=list(grouping), median)[,-1]
+abund <- apply(medians, 2, max) > 1.0
 rel_abund_good <- rel_abund[,abund]
 
 
@@ -60,7 +61,7 @@ taxonomy <- taxonomy[colnames(rel_abund_good)]
 # calculate the Spearman correlation value and its P-value for each OTU against
 # the number of Cdiff in the feces.
 get_CFU_cor <- function(OTU){
-    cor.test(top_dose$CFU, rel_abund_good[,OTU], method="spearman")[c("estimate","p.value")]
+    cor.test(counts_file$CFU, rel_abund_good[,OTU], method="spearman")[c("estimate","p.value")]
 }
 
 otu_cfu_corrs <- sapply(1:ncol(rel_abund_good), get_CFU_cor)
@@ -129,4 +130,4 @@ dev.off()
 
 
 # output the correlation data
-write.table(file="data/process/top_dose_corr.tsv", cbind(taxonomy=gsub("\\d", "", sig_taxonomy), sig_corrs), quote=F, row.names=T, sep="\t")
+#write.table(file="data/process/top_dose_corr.tsv", cbind(taxonomy=gsub("\\d", "", sig_taxonomy), sig_corrs), quote=F, row.names=T, sep="\t")
