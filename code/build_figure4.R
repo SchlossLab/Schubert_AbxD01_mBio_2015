@@ -104,7 +104,7 @@ phylum_levels <- gsub("Bacteria;\\d", "", phylum_levels)
 tax_labels <- paste(family_levels, phylum_levels)
 
 
-pdf(file="results/figures/figure2.pdf", width=6.5, height=4.0)
+pdf(file="results/figures/figure4.pdf", width=6.5, height=4.0)
 
     set.seed("6201976")
 
