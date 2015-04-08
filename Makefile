@@ -184,13 +184,13 @@ results/figures/figure2.pdf : code/build_figure2.R $(BASIC_STEM).pick.pick.pick.
 	R -e "source('code/build_figure2.R')"
 
 results/figures/figureS2.pdf : code/build_figureS2.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
-		R -e "source('code/build_figureS2.R')"
+	R -e "source('code/build_figureS2.R')"
 
 results/figures/figure3.pdf : code/build_figure3.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure3.R')"
 
 results/figures/figureS3.pdf : code/build_figureS3.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
-		R -e "source('code/build_figureS3.R')"
+	R -e "source('code/build_figureS3.R')"
 
 results/figures/figure4.pdf data/process/top_dose_corr.tsv : code/build_figure4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure4.R')"
