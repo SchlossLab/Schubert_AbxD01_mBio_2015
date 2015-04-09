@@ -5,6 +5,7 @@
 .RData
 
 data/
+upload/
 
 *.qsub*
 mothur*logfile
