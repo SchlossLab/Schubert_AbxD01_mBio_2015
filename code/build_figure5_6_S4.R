@@ -267,7 +267,7 @@ dev.off()
 n_features <- 9
 
 # let's build Figure 6 (w/ color & pch)
-tiff(file="results/figures/figure6.tiff", width=7.5, height=7.5, units="in", res=300)
+tiff(file="results/figures/figure6.tiff", width=6.875, height=7.5, units="in", res=300)
 
     #want to jitter the relative abundance for those mice that had no Cdiff
     #colonization
