@@ -195,12 +195,10 @@
 627-3D-6	627-3D-6_S188_L001_R1_001.fastq	627-3D-6_S188_L001_R2_001.fastq
 627-4D-6	627-4D-6_S189_L001_R1_001.fastq	627-4D-6_S189_L001_R2_001.fastq
 627-5D-6	627-5D-6_S190_L001_R1_001.fastq	627-5D-6_S190_L001_R2_001.fastq
-mock1	mock1_S26_L001_R1_001.fastq	mock1_S26_L001_R2_001.fastq
 mock2	mock2_S27_L001_R1_001.fastq	mock2_S27_L001_R2_001.fastq
 mock3	mock3_S192_L001_R1_001.fastq	mock3_S192_L001_R2_001.fastq
 mock4	mock4_S357_L001_R1_001.fastq	mock4_S357_L001_R2_001.fastq
 mock5	mock5_S96_L001_R1_001.fastq	mock5_S96_L001_R2_001.fastq
 mock6	mock6_S287_L001_R1_001.fastq	mock6_S287_L001_R2_001.fastq
-mock7	mock7_S288_L001_R1_001.fastq	mock7_S288_L001_R2_001.fastq
 mock8	mock8_S384_L001_R1_001.fastq	mock8_S384_L001_R2_001.fastq
 mock9	mock9_S192_L001_R1_001.fastq	mock9_S192_L001_R2_001.fastq
