@@ -115,6 +115,7 @@ analysis, decision to publish, or preparation of the manuscript.
 **Table 1. Description of Antibiotics used in this study**
 
 
+
 | Antibiotic | Administration | Class | Mechanism | Target |
 :---------:|:--------------:|:-----:|:---------:|:---------:
 Ciprofloxacin | Oral gavage, one time | Fluoroquinolone | Inhibits DNA gyrase | Gram +/-
@@ -124,6 +125,8 @@ Streptomycin | *Ad libitum* in drinking water, five days | Aminoglycoside | Inhi
 Cefoperazone | *Ad libitum* in drinking water, five days | β-lactam: Cephalosporin | Inhibits peptidoglycan synthesis | Gram +/-
 Ampicillin | *Ad libitum* in drinking water, five days | β-lactam: Penicillin | Inhibits peptidoglycan synthesis | Gram +/-
 Metronidazole | *Ad libitum* in drinking water, five days | Nitromidazole | Destabilizes bacterial DNA | Anaerobes
+
+
 
 
 ### Figure Legends
