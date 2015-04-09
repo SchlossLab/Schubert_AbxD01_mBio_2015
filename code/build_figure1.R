@@ -13,7 +13,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure1.pdf
+#   * results/figures/figure1.tiff
 #
 ################################################################################
 
@@ -100,11 +100,6 @@ o <- order(control_median[sig_otus], decreasing=T)
 rel_abund_sig <- rel_abund[,sig_otus[o]]
 
 
-#needed?
-#top_dose_corr <- read.table(file="data/process/top_dose_corr.tsv", header=T)
-#corr <- round(top_dose_corr[sig_otus,"sig_corrs"], digits=2)
-#corr[is.na(corr)] <- "NS"
-
 otu <- gsub("Otu0*", "OTU ", names(taxonomy))
 names(otu) <- names(taxonomy)
 
@@ -114,6 +109,8 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
     drug_rabund <- rel_abund_sig[top_dose$abx == drug,]
     drug_metadata <- top_dose[top_dose$abx == drug,]
+
+    n <- nrow(drug_rabund)
 
     drug_med <- apply(drug_rabund, 2, median)
     drug_uci <- apply(drug_rabund, 2, function(x){quantile(x, prob=0.75)})
@@ -138,8 +135,9 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
                             prob=c(0.25, 0.50, 0.75)), scientific=T, digits=2)
 
     summary_string <- paste0(summary_stats[2], " (",
-                        summary_stats[1], "-", summary_stats[3], ")")
+                        summary_stats[1], "-", summary_stats[3], "; N=", n, ")")
     summary_string <- gsub("e\\+0", "x10^", summary_string)
+    summary_string <- gsub("0x10\\^0", "<1x10^2", summary_string)
 
     text(x=par("usr")[2], y=1.05*par("usr")[4], labels=summary_string,
                                 adj=c(1,0), pos=2, cex=0.8, xpd=TRUE)
@@ -148,7 +146,7 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
 
 
-cairo_pdf(file="results/figures/figure1.pdf", width=4.5, height=10.0)
+tiff(file="results/figures/figure1.tiff", width=4.5, height=10.0, units="in", res=300)
     par(cex=1.2)
 
     layout(matrix(c(
@@ -167,15 +165,15 @@ cairo_pdf(file="results/figures/figure1.pdf", width=4.5, height=10.0)
     par(mar=c(0.5,5,1.5,0.5))
 
     z <- single_drug_bars("control", "", "No antibiotics")
-    z <- single_drug_bars("amp", amp_sig_otus, "Ampicillin")
-    z <- single_drug_bars("cef", cef_sig_otus, "Cefoperazone")
-    z <- single_drug_bars("cipro", cipro_sig_otus, "Ciprofloxacin")
-    z <- single_drug_bars("clinda", clinda_sig_otus, "Clindamycin")
+    z <- single_drug_bars("amp", amp_sig_otus, "Ampicillin (0.5 mg/mL)")
+    z <- single_drug_bars("cef", cef_sig_otus, "Cefoperazone (0.5 mg/mL)")
+    z <- single_drug_bars("cipro", cipro_sig_otus, "Ciprofloxacin (10 mg/kg)")
+    z <- single_drug_bars("clinda", clinda_sig_otus, "Clindamycin (10 mg/kg)")
     mtext(side=2, "Relative abundance (%)", line=3, at=110)
 
-    z <- single_drug_bars("metro", metro_sig_otus, "Metronidazole")
-    z <- single_drug_bars("strep", strep_sig_otus, "Streptomycin")
-    z <- single_drug_bars("vanc", vanc_sig_otus, "Vancomycin")
+    z <- single_drug_bars("metro", metro_sig_otus, "Metronidazole (1 mg/mL)")
+    z <- single_drug_bars("strep", strep_sig_otus, "Streptomycin (5 mg/mL)")
+    z <- single_drug_bars("vanc", vanc_sig_otus, "Vancomycin (0.625 mg/mL)")
 
     text(x=z+0.7, y=par("usr")[1]-10, xpd=NA, label=tax_label, pos=2, srt=70)
     plot.new()
