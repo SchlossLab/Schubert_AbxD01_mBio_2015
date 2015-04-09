@@ -117,7 +117,7 @@ analysis, decision to publish, or preparation of the manuscript.
 
 
 | Antibiotic | Administration | Class | Mechanism | Target |
-|:---------:|:--------------:|:-----:|:---------:|:---------:|
+|:---------:|:--------------:|:-----:|:---------:|:---------:
 Ciprofloxacin | Oral gavage, one time | Fluoroquinolone | Inhibits DNA gyrase | Gram +/-
 Clindamycin | IP injection, one time | Lincosamide | Inhibits protein synthesis | Anaerobes
 Vancomycin | *Ad libitum* in drinking water, five days | Glycopeptide | Inhibits peptidoglycan synthesis | Gram +
