@@ -15,8 +15,6 @@
 #
 ################################################################################
 
-#top_dose_corr <- read.table(file="data/process/top_dose_corr.tsv", header=T)
-
 # read in the metadata file
 counts_file <- read.table(file="data/process/abxD1.counts", header=T)
 titration <- counts_file[counts_file$abx=="vanc" | counts_file$abx=="cef" | counts_file$abx=="strep",]
@@ -123,6 +121,7 @@ cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.75)
     cef_med <- aggregate(sig_cef, by=list(cef_metadata$dose), median)[,-1]
     cef_uci <- aggregate(sig_cef, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
     cef_lci <- aggregate(sig_cef, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
+    cef_N <- table(cef_metadata$dose)
 
     z <- barplot(as.matrix(cef_med), beside=T, names.arg=rep("", ncol(cef_med)), ylim=c(0,23), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(cef_med), y1=as.matrix(cef_uci), angle=90, length=0.02)
@@ -135,13 +134,15 @@ cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.75)
     box()
     text(x=0, y=26, label="Cefoperazone", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=x_max*0.85, y=20, legend=paste(levels(factor(cef_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
-
+    legend(x=x_max*0.78, y=20,
+            legend=paste0(levels(factor(cef_metadata$dose)), " mg/mL (N=", cef_N[levels(factor(cef_metadata$dose))], ")"),
+            fill=c("black", "gray", "white"), bg="white")
 
     sig_strep <- strep[,sig_otus]
     strep_med <- aggregate(sig_strep, by=list(strep_metadata$dose), median)[,-1]
     strep_uci <- aggregate(sig_strep, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
     strep_lci <- aggregate(sig_strep, by=list(strep_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
+    strep_N <- table(strep_metadata$dose)
 
     z <- barplot(as.matrix(strep_med), beside=T, names.arg=rep("", ncol(strep_med)), ylim=c(0,65), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(strep_med), y1=as.matrix(strep_uci), angle=90, length=0.02)
@@ -155,7 +156,9 @@ cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.75)
     box()
     text(x=0, y=73, label="Streptomycin", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
-    legend(x=x_max*0.85, y=60, legend=paste(levels(factor(strep_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
+    legend(x=x_max*0.78, y=57,
+            legend=paste0(levels(factor(strep_metadata$dose)), " mg/mL (N=", strep_N[levels(factor(strep_metadata$dose))], ")"),
+            fill=c("black", "gray", "white"), bg="white")
 
 
 
@@ -164,6 +167,7 @@ cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.75)
     vanc_med <- aggregate(sig_vanc, by=list(vanc_metadata$dose), median)[,-1]
     vanc_uci <- aggregate(sig_vanc, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
     vanc_lci <- aggregate(sig_vanc, by=list(vanc_metadata$dose), function(x){quantile(x, prob=0.25)})[,-1]
+    vanc_N <- table(vanc_metadata$dose)
 
     z <- barplot(as.matrix(vanc_med), beside=T, names.arg=rep("", ncol(vanc_med)), ylim=c(0,65), xlim=c(1.5,x_max), axes=F, col=c("black", "gray", "white"))
     arrows(x0=z, y0=as.matrix(vanc_med), y1=as.matrix(vanc_uci), angle=90, length=0.02)
@@ -176,7 +180,9 @@ cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.75)
     box()
     text(x=0, y=73, label="Vancomycin", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=x_max*0.83, y=60, legend=paste(levels(factor(vanc_metadata$dose)), "mg/mL"), fill=c("black", "gray", "white"), bg="white")
+    legend(x=x_max*0.77, y=57,
+            legend=paste0(levels(factor(vanc_metadata$dose)), " mg/mL (N=", vanc_N[levels(factor(vanc_metadata$dose))], ")"),
+            fill=c("black", "gray", "white"), bg="white")
 
     text(x=apply(z, 2, mean)+1, y=par("usr")[1]-8, xpd=NA, label=label, pos=2, srt=70, cex=1)
 
