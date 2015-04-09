@@ -117,7 +117,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.5)
     abline(v=seq(3.5, length(sig_otus)*3-0.5, 3), col="gray")
     axis(2, las=1, at=seq(0,60,15))
     box()
-    text(x=0.5, y=67, label="Ampicillin", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
+    text(x=0.5, y=67, label="Ampicillin (0.5 mg/mL)", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
     sig_metro <- metro[,sig_otus]
     metro_metadata$experiment <- factor(metro_metadata$experiment, levels=c("top_dose", "delay"))
@@ -134,7 +134,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.5)
     abline(v=seq(3.5, length(sig_otus)*3-0.5, 3), col="gray")
     axis(2, las=1, at=seq(0,80,20))
     box()
-    text(x=0.5, y=89, label="Metronidazole", adj=c(0,1), cex=1.2, font=2, xpd=T)
+    text(x=0.5, y=89, label="Metronidazole (1 mg/mL)", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
 
 
@@ -150,6 +150,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.5)
 
     par(mar=c(0.5,0.5,1.5,5))
 
+    n <- table(delay$abx, delay$experiment)
 
     amp_cfu_med <- aggregate(amp_metadata$CFU, by=list(amp_metadata$experiment), median)[,-1]+0.1
     amp_cfu_uci <- aggregate(amp_metadata$CFU, by=list(amp_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]+0.1
@@ -162,6 +163,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.5)
     box()
     #wilcox.test(amp_metadata$CFU~amp_metadata$experiment, alternative="less")
     text(x=2, y=4e8, labels=c("*"), cex=2)
+    text(x=c(1, 1.5,2.5),y=c(4e9, 4e9, 4e9), labels=c("N=", n["amp", 2:1]), xpd=T)
 
     metro_cfu_med <- aggregate(metro_metadata$CFU, by=list(metro_metadata$experiment), median)[,-1]+0.1
     metro_cfu_uci <- aggregate(metro_metadata$CFU, by=list(metro_metadata$experiment), function(x){quantile(x, prob=0.75)})[,-1]+0.1
@@ -174,6 +176,7 @@ cairo_pdf(file="results/figures/figure3.pdf", width=7.5, height=4.5)
     box()
     #wilcox.test(metro_metadata$CFU~metro_metadata$experiment, alternative="less")
     text(x=2, y=rep(4e8), labels=c("*"), cex=2)
+    text(x=c(1, 1.5,2.5),y=c(4e9, 4e9, 4e9), labels=c("N=", n["metro", 2:1]), xpd=T)
 
 
 
