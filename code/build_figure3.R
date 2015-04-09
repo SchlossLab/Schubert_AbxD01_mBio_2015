@@ -11,7 +11,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure3.tiff
+#   * results/figures/figure3.pdf
 #
 ################################################################################
 
@@ -95,7 +95,7 @@ otu <- gsub("Otu0*", "", names(taxonomy))
 
 label <- paste0(taxonomy, " (OTU ", otu, ")")
 
-tiff(file="results/figures/figure3.tiff", width=6.875, height=4.5, units="in", res=300)
+pdf(file="results/figures/figure3.pdf", width=6.875, height=4.5)
     par(cex=1.2)
 
     layout(matrix(c(1,4,2,5,3,6), nrow=3, byrow=T), width=c(1,0.25), height=c(1,1,1.1))

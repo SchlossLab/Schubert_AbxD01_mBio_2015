@@ -11,8 +11,8 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure5.tiff
-#   * results/figures/figure6.tiff
+#   * results/figures/figure5.pdf
+#   * results/figures/figure6.pdf
 #
 ################################################################################
 
@@ -105,7 +105,7 @@ write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.d
 
 
 # supplemental figure 4: full feature importance plot
-tiff(file="results/figures/figureS4.tiff", width=3.5, height=5.0, units="in", res=300)
+pdf(file="results/figures/figureS4.pdf", width=3.5, height=5.0)
 
     par(mar=c(3,8,0.5,0.5))
     plot(NA, yaxt="n", xlab="", ylab="", xlim=c(min(importance_sorted), max(importance_sorted)),
@@ -178,7 +178,7 @@ make_colored_plot <- function(drug){
 
 
 
-tiff(file="results/figures/figure5.tiff", width=5.0, height=6.0, units="in", res=300)
+pdf(file="results/figures/figure5.pdf", width=5.0, height=6.0)
 
     design <- matrix(1:8, nrow=4, byrow=T)
     design <- cbind(c(rep(9,4)), design)
@@ -267,7 +267,7 @@ dev.off()
 n_features <- 9
 
 # let's build Figure 6 (w/ color & pch)
-tiff(file="results/figures/figure6.tiff", width=6.875, height=7.5, units="in", res=300)
+pdf(file="results/figures/figure6.pdf", width=6.875, height=7.5)
 
     #want to jitter the relative abundance for those mice that had no Cdiff
     #colonization

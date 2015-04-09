@@ -13,7 +13,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure1.tiff
+#   * results/figures/figure1.pdf
 #
 ################################################################################
 
@@ -89,7 +89,7 @@ fulldose_phylum_barplot <- function(drug, label){
     pos
 }
 
-tiff(height=9, width=3.75, file="results/figures/figureS1.tiff", units="in", res=300)
+pdf(height=9, width=3.75, file="results/figures/figureS1.pdf")
 
     z <- layout(
         matrix( c(  1,

@@ -93,7 +93,7 @@ delay_phylum_barplot <- function(drug, label){
     z
 }
 
-tiff(height=3.25, width=3.75, file="results/figures/figureS3.tiff", units="in", res=300)
+pdf(height=3.25, width=3.75, file="results/figures/figureS3.pdf")
 
     z <- layout(
         matrix( c(  1,
