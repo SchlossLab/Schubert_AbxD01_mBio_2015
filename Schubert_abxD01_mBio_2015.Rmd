@@ -202,7 +202,7 @@ We have shown across several different types of perturbations that we can accura
 
 
 
-Table 1. Description of Antibiotics used in this study
+**Table 1. Description of Antibiotics used in this study**
 
 Antibiotic | Administration | Class | Mechanism | Target
 :---------:|:--------------:|:-----:|:---------:|:---------:
