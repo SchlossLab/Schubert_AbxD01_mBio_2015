@@ -202,6 +202,19 @@ We have shown across several different types of perturbations that we can accura
 
 
 
+Table 1. Description of Antibiotics used in this study
+
+Antibiotic | Administration | Class | Mechanism | Target
+:---------:|:--------------:|:-----:|:---------:|:---------:
+Ciprofloxacin | Oral gavage, one time | Fluoroquinolone | Inhibits DNA gyrase | Gram +/-
+Clindamycin | IP injection, one time | Lincosamide | Inhibits protein synthesis | Anaerobes
+Vancomycin | *Ad libitum* in drinking water, five days | Glycopeptide | Inhibits peptidoglycan synthesis | Gram +
+Streptomycin | *Ad libitum* in drinking water, five days | Aminoglycoside | Inhibits protein synthesis | Gram +/-
+Cefoperazone | *Ad libitum* in drinking water, five days | β-lactam: Cephalosporin | Inhibits peptidoglycan synthesis | Gram +/-
+Ampicillin | *Ad libitum* in drinking water, five days | β-lactam: Penicillin | Inhibits peptidoglycan synthesis | Gram +/-
+Metronidazole | *Ad libitum* in drinking water, five days | Nitromidazole | Destabilizes bacterial DNA | Anaerobes
+
+
 **Figure Legends**
 
 **Figure 1. Antibiotic treatments result in significant alterations to the structure of the microbiome and variation in colonization resistance.** The median percent relative abundances of the most abundant phyla found in each experimental group on the day of *C. difficile* challenge. Each bargraph depicts a different antibiotic perturbation. The median level *C. difficile* colonization found 24 hours post microbiota sampling is indicated in the top right for each treatment. Error bars indicate the interquartile range.
