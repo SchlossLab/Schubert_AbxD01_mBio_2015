@@ -16,7 +16,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure4.pdf
+#   * results/figures/figure4.tiff
 #
 ################################################################################
 
@@ -105,7 +105,7 @@ phylum_levels <- gsub("Bacteria;\\d", "", phylum_levels)
 tax_labels <- paste(family_levels, phylum_levels)
 
 
-pdf(file="results/figures/figure4.pdf", width=6.5, height=4.0)
+tiff(file="results/figures/figure4.tiff", width=6.5, height=4.0, units="in", res=300)
 
     set.seed("6201976")
 

@@ -11,7 +11,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure2.pdf
+#   * results/figures/figure2.tiff
 #
 ################################################################################
 
@@ -111,7 +111,7 @@ otu <- gsub("Otu0*", "", names(taxonomy))
 
 label <- paste0(taxonomy, " (OTU ", otu, ")")
 
-cairo_pdf(file="results/figures/figure2.pdf", width=7.5, height=5.75)
+tiff(file="results/figures/figure2.tiff", width=7.5, height=5.75, units="in", res=300)
     par(cex=1.2)
 
     layout(matrix(c(1,5,2,6,3,7,4,8), nrow=4, byrow=T), width=c(1,0.25), height=c(1,1,1,1.2))

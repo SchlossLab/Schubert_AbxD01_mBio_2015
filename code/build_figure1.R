@@ -13,7 +13,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure1.pdf
+#   * results/figures/figure1.tiff
 #
 ################################################################################
 
@@ -145,7 +145,7 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
 
 
-cairo_pdf(file="results/figures/figure1.pdf", width=4.5, height=10.0)
+tiff(file="results/figures/figure1.tiff", width=4.5, height=10.0, units="in", res=300)
     par(cex=1.2)
 
     layout(matrix(c(
