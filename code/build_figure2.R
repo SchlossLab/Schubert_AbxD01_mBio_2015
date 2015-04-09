@@ -111,7 +111,7 @@ otu <- gsub("Otu0*", "", names(taxonomy))
 
 label <- paste0(taxonomy, " (OTU ", otu, ")")
 
-tiff(file="results/figures/figure2.tiff", width=7.5, height=5.75, units="in", res=300)
+tiff(file="results/figures/figure2.tiff", width=6.875, height=5.75, units="in", res=300)
     par(cex=1.2)
 
     layout(matrix(c(1,5,2,6,3,7,4,8), nrow=4, byrow=T), width=c(1,0.25), height=c(1,1,1,1.2))
@@ -134,7 +134,7 @@ tiff(file="results/figures/figure2.tiff", width=7.5, height=5.75, units="in", re
     box()
     text(x=0, y=26, label="Cefoperazone", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=x_max*0.78, y=20,
+    legend(x=x_max*0.75, y=20,
             legend=paste0(levels(factor(cef_metadata$dose)), " mg/mL (N=", cef_N[levels(factor(cef_metadata$dose))], ")"),
             fill=c("black", "gray", "white"), bg="white")
 
@@ -156,7 +156,7 @@ tiff(file="results/figures/figure2.tiff", width=7.5, height=5.75, units="in", re
     box()
     text(x=0, y=73, label="Streptomycin", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
-    legend(x=x_max*0.78, y=57,
+    legend(x=x_max*0.75, y=57,
             legend=paste0(levels(factor(strep_metadata$dose)), " mg/mL (N=", strep_N[levels(factor(strep_metadata$dose))], ")"),
             fill=c("black", "gray", "white"), bg="white")
 
@@ -180,7 +180,7 @@ tiff(file="results/figures/figure2.tiff", width=7.5, height=5.75, units="in", re
     box()
     text(x=0, y=73, label="Vancomycin", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=x_max*0.77, y=57,
+    legend(x=x_max*0.75, y=57,
             legend=paste0(levels(factor(vanc_metadata$dose)), " mg/mL (N=", vanc_N[levels(factor(vanc_metadata$dose))], ")"),
             fill=c("black", "gray", "white"), bg="white")
 
