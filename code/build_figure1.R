@@ -137,7 +137,7 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
     summary_string <- paste0(summary_stats[2], " (",
                         summary_stats[1], "-", summary_stats[3], "; N=", n, ")")
     summary_string <- gsub("e\\+0", "x10^", summary_string)
-    summary_string <- gsub("0x10\\^0", "<10^2", summary_string)
+    summary_string <- gsub("0x10\\^0", "<1x10^2", summary_string)
 
     text(x=par("usr")[2], y=1.05*par("usr")[4], labels=summary_string,
                                 adj=c(1,0), pos=2, cex=0.8, xpd=TRUE)
