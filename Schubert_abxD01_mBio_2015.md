@@ -113,13 +113,13 @@ analysis, decision to publish, or preparation of the manuscript.
 
 | Antibiotic | Administration | Class | Mechanism | Target |
 |:---------:|:--------------:|:-----:|:---------:|:---------:|
-Ciprofloxacin | Oral gavage, one time | Fluoroquinolone | Inhibits DNA gyrase | Gram +/-
-Clindamycin | IP injection, one time | Lincosamide | Inhibits protein synthesis | Anaerobes
-Vancomycin | *Ad libitum* in drinking water, five days | Glycopeptide | Inhibits peptidoglycan synthesis | Gram +
-Streptomycin | *Ad libitum* in drinking water, five days | Aminoglycoside | Inhibits protein synthesis | Gram +/-
-Cefoperazone | *Ad libitum* in drinking water, five days | β-lactam: Cephalosporin | Inhibits peptidoglycan synthesis | Gram +/-
-Ampicillin | *Ad libitum* in drinking water, five days | β-lactam: Penicillin | Inhibits peptidoglycan synthesis | Gram +/-
-Metronidazole | *Ad libitum* in drinking water, five days | Nitromidazole | Destabilizes bacterial DNA | Anaerobes
+| Ciprofloxacin | Oral gavage, one time | Fluoroquinolone | Inhibits DNA gyrase | Gram +/- |
+| Clindamycin | IP injection, one time | Lincosamide | Inhibits protein synthesis | Anaerobes |
+| Vancomycin | *Ad libitum* in drinking water, five days | Glycopeptide | Inhibits peptidoglycan synthesis | Gram + |
+| Streptomycin | *Ad libitum* in drinking water, five days | Aminoglycoside | Inhibits protein synthesis | Gram +/- |
+| Cefoperazone | *Ad libitum* in drinking water, five days | β-lactam: Cephalosporin | Inhibits peptidoglycan synthesis | Gram +/- |
+| Ampicillin | *Ad libitum* in drinking water, five days | β-lactam: Penicillin | Inhibits peptidoglycan synthesis | Gram +/- |
+| Metronidazole | *Ad libitum* in drinking water, five days | Nitromidazole | Destabilizes bacterial DNA | Anaerobes |
 
 
 ### Figure Legends
