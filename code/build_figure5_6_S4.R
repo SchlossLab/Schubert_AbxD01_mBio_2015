@@ -87,8 +87,8 @@ importance_sorted <- sort(importance(rf_full)[,1], decreasing=T)
 # fit the model back on the datar and tack it to the end of the counts file
 counts_file$fit_full <- predict(rf_full, abund_good)
 
-# there appears to be a natural break after OTU 11 (the 12th feature)
-n_features <- 9
+# let's plot the top 12 features
+n_features <- 12
 importance_subset <- importance_sorted[1:n_features]
 
 tax_otu_imp_labels <- paste0(taxonomy[names(importance_subset)],
@@ -264,8 +264,6 @@ dev.off()
 
 
 
-n_features <- 9
-
 # let's build Figure 6 (w/ color & pch)
 pdf(file="results/figures/figure6.pdf", width=6.875, height=7.5)
 
@@ -276,10 +274,10 @@ pdf(file="results/figures/figure6.pdf", width=6.875, height=7.5)
 
     par(mar=c(0.5,0.5,0.5,0.5))
 
-    design <- matrix(1:n_features, nrow=3, byrow=T)
-    design <- cbind(c(rep(10,3)), design)
-    design <- rbind(design, c(0,11,11,11))
-    layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,0.3))
+    design <- matrix(1:n_features, nrow=4, byrow=T)
+    design <- cbind(c(rep(13,3)), design)
+    design <- rbind(design, c(0,14,14,14))
+    layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,1,0.3))
 
     for(i in 1:n_features){
         #get the row and column number for each spot in the layout
@@ -322,7 +320,7 @@ pdf(file="results/figures/figure6.pdf", width=6.875, height=7.5)
         text(x=0.7e-2, y=8.8, label=tax_otu_imp_labels[i], pos=4, font=2, cex=0.9)
 
         #if it's on the bottom row, put a customized axis indicating the % rabund
-        if(row == 3){
+        if(row == 4){
             axis(1, at=c(1.25e-2, 1e-1,1e0,1e1,1e2),
                     label=c("0", "0.1", "1", "10", "100"),
                     cex.axis=1.5)
