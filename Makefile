@@ -217,5 +217,6 @@ write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.l
 				results/figures/figureS4.pdf\
 				results/figures/figure5.pdf\
                 results/figures/figure6.pdf
-	R -e "library(knitr);knit2html('Schubert_abxD01_mBio_2015.Rmd', 'Schubert_abxD01_mBio_2015.html')";\
+	R -e "library(knitr);knit2html('Schubert_abxD01_mBio_2015.Rmd', 'Schubert_abxD01_mBio_2015.html')"
 	pandoc -f markdown -t docx Schubert_abxD01_mBio_2015.md -o Schubert_abxD01_mBio_2015.docx
+
