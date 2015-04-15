@@ -1,0 +1,232 @@
+amp-cef-cipro-clinda-control-metro-strep-vanc	Among	Within	Total
+SS	19.1853	8.07462	27.2599
+df	7	89	96
+MS	2.74076	0.0907261
+
+Fs:	30.2091
+p-value: <1e-05*
+
+amp-cef	Among	Within	Total
+SS	0.23905	1.77075	2.0098
+df	1	8	9
+MS	0.23905	0.221343
+
+Fs:	1.07999
+p-value: 0.36515
+
+amp-cipro	Among	Within	Total
+SS	1.0708	1.35235	2.42315
+df	1	9	10
+MS	1.0708	0.150261
+
+Fs:	7.12622
+p-value: 0.0256
+
+amp-clinda	Among	Within	Total
+SS	1.05643	1.19209	2.24852
+df	1	15	16
+MS	1.05643	0.0794729
+
+Fs:	13.293
+p-value: 4e-05*
+
+amp-control	Among	Within	Total
+SS	1.97902	4.93621	6.91523
+df	1	54	55
+MS	1.97902	0.0914113
+
+Fs:	21.6496
+p-value: 3e-05*
+
+amp-metro	Among	Within	Total
+SS	0.68273	1.38186	2.06459
+df	1	11	12
+MS	0.68273	0.125623
+
+Fs:	5.43474
+p-value: 0.00042*
+
+amp-strep	Among	Within	Total
+SS	1.40204	2.8808	4.28284
+df	1	12	13
+MS	1.40204	0.240067
+
+Fs:	5.84021
+p-value: 0.0019
+
+amp-vanc	Among	Within	Total
+SS	1.76777	1.63566	3.40342
+df	1	10	11
+MS	1.76777	0.163566
+
+Fs:	10.8077
+p-value: 0.001*
+
+cef-cipro	Among	Within	Total
+SS	1.36602	0.764735	2.13075
+df	1	7	8
+MS	1.36602	0.109248
+
+Fs:	12.5039
+p-value: 0.00812
+
+cef-clinda	Among	Within	Total
+SS	1.14056	0.604475	1.74503
+df	1	13	14
+MS	1.14056	0.0464981
+
+Fs:	24.5291
+p-value: 0.00057*
+
+cef-control	Among	Within	Total
+SS	2.01736	4.34859	6.36595
+df	1	52	53
+MS	2.01736	0.0836267
+
+Fs:	24.1234
+p-value: <1e-05*
+
+cef-metro	Among	Within	Total
+SS	0.683243	0.794238	1.47748
+df	1	9	10
+MS	0.683243	0.0882486
+
+Fs:	7.74224
+p-value: 0.00346
+
+cef-strep	Among	Within	Total
+SS	1.27383	2.29318	3.56701
+df	1	10	11
+MS	1.27383	0.229318
+
+Fs:	5.55485
+p-value: 0.00329
+
+cef-vanc	Among	Within	Total
+SS	1.35446	1.04804	2.4025
+df	1	8	9
+MS	1.35446	0.131005
+
+Fs:	10.339
+p-value: 0.00491
+
+cipro-clinda	Among	Within	Total
+SS	3.29207	0.18608	3.47815
+df	1	14	15
+MS	3.29207	0.0132915
+
+Fs:	247.683
+p-value: 0.00018*
+
+cipro-control	Among	Within	Total
+SS	0.156374	3.93019	4.08657
+df	1	53	54
+MS	0.156374	0.0741546
+
+Fs:	2.10876
+p-value: 0.08719
+
+cipro-metro	Among	Within	Total
+SS	2.65324	0.375843	3.02908
+df	1	10	11
+MS	2.65324	0.0375843
+
+Fs:	70.5944
+p-value: 0.00132*
+
+cipro-strep	Among	Within	Total
+SS	1.07587	1.87479	2.95065
+df	1	11	12
+MS	1.07587	0.170435
+
+Fs:	6.31246
+p-value: 0.00599
+
+cipro-vanc	Among	Within	Total
+SS	2.25815	0.629646	2.88779
+df	1	9	10
+MS	2.25815	0.0699607
+
+Fs:	32.2774
+p-value: 0.00228
+
+clinda-control	Among	Within	Total
+SS	8.19242	3.76994	11.9624
+df	1	59	60
+MS	8.19242	0.0638972
+
+Fs:	128.212
+p-value: <1e-05*
+
+clinda-metro	Among	Within	Total
+SS	0.0889502	0.215584	0.304534
+df	1	16	17
+MS	0.0889502	0.013474
+
+Fs:	6.60163
+p-value: 0.00093*
+
+clinda-strep	Among	Within	Total
+SS	3.61661	1.71453	5.33114
+df	1	17	18
+MS	3.61661	0.100855
+
+Fs:	35.8597
+p-value: <1e-05*
+
+clinda-vanc	Among	Within	Total
+SS	2.84213	0.469387	3.31151
+df	1	15	16
+MS	2.84213	0.0312925
+
+Fs:	90.8246
+p-value: 7e-05*
+
+control-metro	Among	Within	Total
+SS	5.2439	3.9597	9.2036
+df	1	55	56
+MS	5.2439	0.0719945
+
+Fs:	72.8375
+p-value: <1e-05*
+
+control-strep	Among	Within	Total
+SS	2.02303	5.45864	7.48168
+df	1	56	57
+MS	2.02303	0.0974758
+
+Fs:	20.7542
+p-value: <1e-05*
+
+control-vanc	Among	Within	Total
+SS	4.1823	4.2135	8.3958
+df	1	54	55
+MS	4.1823	0.0780278
+
+Fs:	53.6001
+p-value: <1e-05*
+
+metro-strep	Among	Within	Total
+SS	2.69732	1.90429	4.60161
+df	1	13	14
+MS	2.69732	0.146484
+
+Fs:	18.4137
+p-value: 9e-05*
+
+metro-vanc	Among	Within	Total
+SS	2.20561	0.65915	2.86476
+df	1	11	12
+MS	2.20561	0.0599227
+
+Fs:	36.8076
+p-value: 0.00055*
+
+strep-vanc	Among	Within	Total
+SS	1.69486	2.15809	3.85295
+df	1	12	13
+MS	1.69486	0.179841
+
+Fs:	9.4242
+p-value: 0.00355
+
