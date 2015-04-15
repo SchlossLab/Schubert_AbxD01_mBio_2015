@@ -100,10 +100,12 @@ o <- order(control_median[sig_otus], decreasing=T)
 rel_abund_sig <- rel_abund[,sig_otus[o]]
 
 
-otu <- gsub("Otu0*", "OTU ", names(taxonomy))
+otu <- gsub("Otu0*", "OTU~", names(taxonomy))
 names(otu) <- names(taxonomy)
 
-tax_label <- paste0(taxonomy[sig_otus[o]], " (", otu[sig_otus[o]], ")")
+#tax_label <- paste0(taxonomy[sig_otus[o]], " (", otu[sig_otus[o]], ")")
+tax_label <- paste0("italic(", taxonomy[sig_otus[o]], ")~(", otu[sig_otus[o]], ")")
+
 
 single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
@@ -134,19 +136,23 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
     summary_stats <- format(quantile(drug_metadata$CFU,
                             prob=c(0.25, 0.50, 0.75)), scientific=T, digits=2)
 
-    summary_string <- paste0(summary_stats[2], " (",
-                        summary_stats[1], "-", summary_stats[3], "; N=", n, ")")
-    summary_string <- gsub("e\\+0", "x10^", summary_string)
-    summary_string <- gsub("0x10\\^0", "<1x10^2", summary_string)
+    summary_string <- paste0(summary_stats[2], "~(", summary_stats[1], "-", summary_stats[3], ")")
 
-    text(x=par("usr")[2], y=1.05*par("usr")[4], labels=summary_string,
+    summary_string <- gsub("(\\d\\.\\d*)e\\+0", "plain('\\1x10')^", summary_string)
+    summary_string <- gsub("0e\\+00", "plain('<1x10')^2", summary_string)
+
+    summary_string <- paste0(summary_string, "~plain(' N=')~", n)
+
+#    print(summary_string)
+    text(x=par("usr")[2], y=1.05*par("usr")[4], labels=parse(text=summary_string),
                                 adj=c(1,0), pos=2, cex=0.8, xpd=TRUE)
+
     z
 }
 
 
 
-pdf(file="results/figures/figure1.pdf", width=4.5, height=10.0)
+tiff(file="results/figures/figure1.tiff", width=4.5, height=10.0, unit="in", res=300)
     par(cex=1.2)
 
     layout(matrix(c(
@@ -175,7 +181,7 @@ pdf(file="results/figures/figure1.pdf", width=4.5, height=10.0)
     z <- single_drug_bars("strep", strep_sig_otus, "Streptomycin (5 mg/mL)")
     z <- single_drug_bars("vanc", vanc_sig_otus, "Vancomycin (0.625 mg/mL)")
 
-    text(x=z+0.7, y=par("usr")[1]-10, xpd=NA, label=tax_label, pos=2, srt=70)
+    text(x=z+0.7, y=par("usr")[1]-10, xpd=NA, label=parse(text=tax_label), cex=0.9, pos=2, srt=70)
     plot.new()
 
 dev.off()
