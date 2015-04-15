@@ -143,7 +143,6 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
     summary_string <- paste0(summary_string, "~plain(' N=')~", n)
 
-#    print(summary_string)
     text(x=par("usr")[2], y=1.05*par("usr")[4], labels=parse(text=summary_string),
                                 adj=c(1,0), pos=2, cex=0.8, xpd=TRUE)
 
