@@ -91,10 +91,6 @@ counts_file$fit_full <- predict(rf_full, abund_good)
 n_features <- 12
 importance_subset <- importance_sorted[1:n_features]
 
-tax_otu_imp_labels <- paste0("bolditalic('", taxonomy[names(importance_subset)],
-                        "')~bold('(",
-                        otus[names(importance_subset)], ")')")
-names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 
 
 
@@ -265,6 +261,18 @@ dev.off()
 
 
 # let's build Figure 6 (w/ color & pch)
+
+correlations <- read.table(file="data/process/correlation_analysis.tsv", header=T, row.names=1)
+correlations$sig_corrs <- round(correlations$sig_corrs, 2)
+
+rho <- correlations[names(importance_subset), "sig_corrs"]
+rho[is.na(rho)] <- "N.S."
+
+tax_otu_imp_labels <- paste0("bolditalic('", taxonomy[names(importance_subset)],
+                        "')~bold('(",
+                        otus[names(importance_subset)], "; \u03C1=)')")
+names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
+
 tiff(file="results/figures/figure6.tiff", width=6.875, height=7.5, unit="in", res=300)
 
     #want to jitter the relative abundance for those mice that had no Cdiff
