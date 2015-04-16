@@ -186,7 +186,7 @@ results/figures/figure3.tiff : code/build_figure3.R $(BASIC_STEM).pick.pick.pick
 results/figures/figure4.tiff data/process/correlation_analysis.tsv : code/build_figure4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure4.R')"
 
-results/figures/figure5.pdf results/figures/figure6.pdf results/figures/figureS4.pdf data/process/random_forest.data : code/build_figure5_6_S4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
+results/figures/figure5.tiff results/figures/figure6.tiff results/figures/figureS4.pdf data/process/random_forest.data : code/build_figure5_6_S4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure5_6_S4.R')"
 
 results/figures/figureS1.pdf : code/build_figureS1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts

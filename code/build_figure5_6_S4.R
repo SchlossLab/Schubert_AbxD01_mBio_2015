@@ -58,10 +58,10 @@ taxonomy <- gsub("/.*", "", taxonomy)
 taxonomy <- gsub(".*;", "", taxonomy)
 taxonomy <- gsub("_sensu_stricto", "", taxonomy)
 
-otus <- gsub("tu0*", "TU ", names(taxonomy))
+otus <- gsub("tu0*", "TU~", names(taxonomy))
 names(otus) <- names(taxonomy)
 
-tax_otu_labels <- paste0(taxonomy, " (", otus, ")")
+tax_otu_labels <- paste0("italic(", taxonomy, ")~(", otus, ")")
 names(tax_otu_labels) <- names(taxonomy)
 
 # limit the analysis to those OTUs that have an median relative abundance over
@@ -91,8 +91,8 @@ counts_file$fit_full <- predict(rf_full, abund_good)
 n_features <- 12
 importance_subset <- importance_sorted[1:n_features]
 
-tax_otu_imp_labels <- paste0(taxonomy[names(importance_subset)],
-                        " (",
+tax_otu_imp_labels <- paste0("italic(", taxonomy[names(importance_subset)],
+                        ")~(",
                         otus[names(importance_subset)], ")")
 names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 
@@ -105,17 +105,17 @@ write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.d
 
 
 # supplemental figure 4: full feature importance plot
-pdf(file="results/figures/figureS4.pdf", width=3.5, height=5.0)
+tiff(file="results/figures/figureS4.tiff", width=4, height=5.0, unit="in", res=300)
 
-    par(mar=c(3,8,0.5,0.5))
-    plot(NA, yaxt="n", xlab="", ylab="", xlim=c(min(importance_sorted), max(importance_sorted)),
+    par(mar=c(3,9,0.5,0.5))
+    plot(NA, yaxt="n", xlab="", ylab="", xlim=c(min(importance_sorted), 100),
         ylim=c(1, length(importance_sorted)), axes=F)
 
     abline(h=1:length(importance_sorted), lty=3, col="gray")
     points(x=rev(importance_sorted), y=1:length(importance_sorted), pch=19, cex=0.8)
     axis(1, at=seq(0,100,25), label=c("0", "", "50", "", "100"), cex=0.8)
     box()
-    mtext(side=2, line=7.5, adj=0, at=1:length(importance_sorted), text=rev(tax_otu_labels[names(importance_sorted)]), las=2, cex=0.6)
+    mtext(side=2, line=8.5, adj=0, at=1:length(importance_sorted), text=parse(text=rev(tax_otu_labels[names(importance_sorted)])), las=2, cex=0.6)
     mtext(side=1, text="% Increase in MSE", line=2.0)
 
 dev.off()
@@ -178,12 +178,12 @@ make_colored_plot <- function(drug){
 
 
 
-pdf(file="results/figures/figure5.pdf", width=5.0, height=6.0)
+tiff(file="results/figures/figure5.tiff", width=5.0, height=6.0, unit="in", res=300)
 
     design <- matrix(1:8, nrow=4, byrow=T)
     design <- cbind(c(rep(9,4)), design)
     design <- rbind(design, c(0,10,10))
-    layout(design, widths=c(0.3,1,1), heights=c(1,1,1,1,0.3))
+    layout(design, widths=c(0.2,1,1), heights=c(1,1,1,1,0.3))
 
 
     par(mar=c(0.5,1,1.5,0.5))
@@ -254,7 +254,7 @@ pdf(file="results/figures/figure5.pdf", width=5.0, height=6.0)
 
     plot.new()
     par(mar=rep(0.1,4))
-    text(x=0.5,y=0.5, label="Observed colonization (log CFU)", cex=1.2, srt=90)
+    text(x=0.25,y=0.5, label="Observed colonization (log CFU)", cex=1.2, srt=90)
 
 
     plot.new()
@@ -265,7 +265,7 @@ dev.off()
 
 
 # let's build Figure 6 (w/ color & pch)
-pdf(file="results/figures/figure6.pdf", width=6.875, height=7.5)
+tiff(file="results/figures/figure6.tiff", width=6.875, height=7.5, unit="in", res=300)
 
     #want to jitter the relative abundance for those mice that had no Cdiff
     #colonization
@@ -275,7 +275,7 @@ pdf(file="results/figures/figure6.pdf", width=6.875, height=7.5)
     par(mar=c(0.5,0.5,0.5,0.5))
 
     design <- matrix(1:n_features, nrow=4, byrow=T)
-    design <- cbind(c(rep(13,3)), design)
+    design <- cbind(c(rep(13,4)), design)
     design <- rbind(design, c(0,14,14,14))
     layout(design, widths=c(0.3,1,1,1), heights=c(1,1,1,1,0.3))
 
@@ -317,7 +317,7 @@ pdf(file="results/figures/figure6.pdf", width=6.875, height=7.5)
         abline(h=1.5, col="gray")
 
         #put the OTU label in the upper left corner of the plot
-        text(x=0.7e-2, y=8.8, label=tax_otu_imp_labels[i], pos=4, font=2, cex=0.9)
+        text(x=0.7e-2, y=8.8, label=parse(text=tax_otu_imp_labels[i]), pos=4, cex=0.9)
 
         #if it's on the bottom row, put a customized axis indicating the % rabund
         if(row == 4){
