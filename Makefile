@@ -177,26 +177,26 @@ $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.lt.ave.amova : 
 results/figures/figure1.tiff : code/build_figure1.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure1.R')"
 
-results/figures/figureS1.pdf : code/build_figureS1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
-	R -e "source('code/build_figureS1.R')"
-
-results/figures/figure2.pdf : code/build_figure2.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
+results/figures/figure2.tiff : code/build_figure2.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure2.R')"
-
-results/figures/figureS2.pdf : code/build_figureS2.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
-	R -e "source('code/build_figureS2.R')"
 
 results/figures/figure3.pdf : code/build_figure3.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure3.R')"
-
-results/figures/figureS3.pdf : code/build_figureS3.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
-	R -e "source('code/build_figureS3.R')"
 
 results/figures/figure4.pdf data/process/correlation_analysis.tsv : code/build_figure4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure4.R')"
 
 results/figures/figure5.pdf results/figures/figure6.pdf results/figures/figureS4.pdf data/process/random_forest.data : code/build_figure5_6_S4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure5_6_S4.R')"
+
+results/figures/figureS1.pdf : code/build_figureS1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
+			R -e "source('code/build_figureS1.R')"
+
+results/figures/figureS2.pdf : code/build_figureS2.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
+		R -e "source('code/build_figureS2.R')"
+
+results/figures/figureS3.pdf : code/build_figureS3.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
+	R -e "source('code/build_figureS3.R')"
 
 
 
@@ -208,7 +208,7 @@ write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.l
 				data/process/random_forest.data\
 				data/process/correlation_analysis.tsv\
 				results/figures/figure1.tiff\
-				results/figures/figure2.pdf\
+				results/figures/figure2.tiff\
 				results/figures/figure3.pdf\
 				results/figures/figureS1.pdf\
 				results/figures/figureS2.pdf\

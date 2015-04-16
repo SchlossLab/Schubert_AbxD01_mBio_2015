@@ -109,14 +109,19 @@ taxonomy <- taxonomy[sig_otus]
 
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0(taxonomy, " (OTU ", otu, ")")
+label <- paste0("italic(", taxonomy,")~(OTU~", otu, ")")
 
-pdf(file="results/figures/figure2.pdf", width=6.875, height=5.75)
+#tax_label <- paste0("italic(", taxonomy[sig_otus[o]], ")~(", otu[sig_otus[o]], ")")
+
+tiff(file="results/figures/figure2.tiff", width=6.875, height=5.75, unit="in", res=300)
     par(cex=1.2)
 
-    layout(matrix(c(1,5,2,6,3,7,4,8), nrow=4, byrow=T), width=c(1,0.25), height=c(1,1,1,1.2))
+    layout_matrix <- matrix(c(1,5,2,6,3,7,4,8), nrow=4, byrow=T)
+    layout_matrix <- cbind(c(9,9,9,0), layout_matrix, c(10,10,10,0))
 
-    par(mar=c(0.5,5,1.5,0.5))
+    layout(layout_matrix, width=c(0.15, 1.25, 0.25, 0.15), height=c(1,1,1,1.2))
+
+    par(mar=c(0.75,0.25,1.5,0.5), oma=c(0,0,0,0))
     sig_cef <- cef[,sig_otus]
     cef_med <- aggregate(sig_cef, by=list(cef_metadata$dose), median)[,-1]
     cef_uci <- aggregate(sig_cef, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]
@@ -134,7 +139,7 @@ pdf(file="results/figures/figure2.pdf", width=6.875, height=5.75)
     box()
     text(x=0, y=26, label="Cefoperazone", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=x_max*0.75, y=20,
+    legend(x=x_max*0.7, y=20,
             legend=paste0(levels(factor(cef_metadata$dose)), " mg/mL (N=", cef_N[levels(factor(cef_metadata$dose))], ")"),
             fill=c("black", "gray", "white"), bg="white")
 
@@ -152,11 +157,10 @@ pdf(file="results/figures/figure2.pdf", width=6.875, height=5.75)
 
     abline(v=seq(4.5, length(sig_otus)*4-0.5, 4), col="gray")
     axis(2, las=1, at=seq(0,60,15))
-    mtext(side=2, "Relative abundance (%)", line=3)
     box()
     text(x=0, y=73, label="Streptomycin", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
-    legend(x=x_max*0.75, y=57,
+    legend(x=x_max*0.7, y=57,
             legend=paste0(levels(factor(strep_metadata$dose)), " mg/mL (N=", strep_N[levels(factor(strep_metadata$dose))], ")"),
             fill=c("black", "gray", "white"), bg="white")
 
@@ -180,19 +184,18 @@ pdf(file="results/figures/figure2.pdf", width=6.875, height=5.75)
     box()
     text(x=0, y=73, label="Vancomycin", adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    legend(x=x_max*0.75, y=57,
+    legend(x=x_max*0.7, y=57,
             legend=paste0(levels(factor(vanc_metadata$dose)), " mg/mL (N=", vanc_N[levels(factor(vanc_metadata$dose))], ")"),
             fill=c("black", "gray", "white"), bg="white")
 
-    text(x=apply(z, 2, mean)+1, y=par("usr")[1]-8, xpd=NA, label=label, pos=2, srt=70, cex=1)
-
-
-
+    text(x=apply(z, 2, mean)+1.75, y=par("usr")[1]-5, xpd=NA,
+                label=parse(text=label), pos=2, srt=70, cex=0.9)
 
 
     plot.new()
 
-    par(mar=c(0.5,0.5,1.5,5))
+
+    par(mar=c(0.5,0.5,1.5,0.5))
 
     cef_cfu_med <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), median)[,-1]+0.1
     cef_cfu_uci <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]+0.1
@@ -219,7 +222,6 @@ pdf(file="results/figures/figure2.pdf", width=6.875, height=5.75)
     #pairwise.wilcox.test(strep_metadata$CFU, strep_metadata$dose)
     text(x=as.vector(q), y=rep(4e8,3), labels=c("a", "b", "c"))
 
-    mtext(side=4, "C. difficile colonization (CFU/g)", line=3)
 
 
     vanc_cfu_med <- aggregate(vanc_metadata$CFU, by=list(vanc_metadata$dose), median)[,-1]+0.1
@@ -236,5 +238,14 @@ pdf(file="results/figures/figure2.pdf", width=6.875, height=5.75)
 
     text(x=q+0.3, y=par("usr")[1]-0.5, xpd=NA, label=c("Low", "Medium","High"), pos=2, srt=70, cex=1.2)
     plot.new()
+
+
+    plot.new()
+    par(mar=c(0.1,0.1,0.1,0.1))
+    text(x=0.25, y=0.5, "Relative abundance (%)", srt=90, cex=1.5)
+
+    plot.new()
+    par(mar=c(0.1,0.1,0.1,0.1))
+    text(x=0.75, y=0.5, expression(italic(C.~difficile)~colonization~(CFU/g)), srt=-90, cex=1.5)
 
 dev.off()
