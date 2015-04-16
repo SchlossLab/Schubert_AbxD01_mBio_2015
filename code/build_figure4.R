@@ -16,7 +16,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure4.pdf
+#   * results/figures/figure4.tiff
 #
 ################################################################################
 
@@ -102,12 +102,9 @@ phylum_levels <- gsub("Bacteria;\\d", "", phylum_levels)
 # merge the family name with the phylum so that we have something like:
 #   Enterobacteriacease (P)
 # indicating that it is from the *P*roteobacteria
-tax_labels <- paste(family_levels, phylum_levels)
+tax_labels <- paste0("italic(", family_levels, ")~", phylum_levels)
 
-
-pdf(file="results/figures/figure4.pdf", width=6.5, height=4.0)
-
-    set.seed("6201976")
+tiff(file="results/figures/figure4.tiff", width=6.5, height=4.0, unit="in", res=300)
 
     par(mar=c(10,6,0.5,0.5))
 
@@ -121,7 +118,7 @@ pdf(file="results/figures/figure4.pdf", width=6.5, height=4.0)
                 ylim=c(-0.8, 0.8), axes=F, ylab="", pch=1, add=T)
 
     #use the prettified taxa labels
-    text(1:length(tax_labels)+0.5, par("usr")[3]-0.05, label=(tax_labels), xpd=NA, pos=2, srt=70, cex=1)
+    text(1:length(tax_labels)+0.5, par("usr")[3]-0.05, label=parse(text=tax_labels), xpd=NA, pos=2, srt=70, cex=0.9)
 
     axis(2, at=seq(-0.75,0.75,0.25), label=format(seq(-0.75,0.75,0.25), nsmall=2L), las=1)
     mtext(2, text="Spearman Correlation\nCoefficient", line=3.5)
