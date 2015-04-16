@@ -270,7 +270,7 @@ rho[is.na(rho)] <- "N.S."
 
 tax_otu_imp_labels <- paste0("bolditalic('", taxonomy[names(importance_subset)],
                         "')~bold('(",
-                        otus[names(importance_subset)], "; \u03C1=)')")
+                        otus[names(importance_subset)], "; \u03C1=", rho, ")')")
 names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 
 tiff(file="results/figures/figure6.tiff", width=6.875, height=7.5, unit="in", res=300)
