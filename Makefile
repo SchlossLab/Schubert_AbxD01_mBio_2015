@@ -180,7 +180,7 @@ results/figures/figure1.tiff : code/build_figure1.R $(BASIC_STEM).pick.pick.pick
 results/figures/figure2.tiff : code/build_figure2.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure2.R')"
 
-results/figures/figure3.pdf : code/build_figure3.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
+results/figures/figure3.tiff : code/build_figure3.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure3.R')"
 
 results/figures/figure4.pdf data/process/correlation_analysis.tsv : code/build_figure4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
@@ -209,7 +209,7 @@ write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.l
 				data/process/correlation_analysis.tsv\
 				results/figures/figure1.tiff\
 				results/figures/figure2.tiff\
-				results/figures/figure3.pdf\
+				results/figures/figure3.tiff\
 				results/figures/figureS1.pdf\
 				results/figures/figureS2.pdf\
 				results/figures/figureS3.pdf\

@@ -11,7 +11,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure3.pdf
+#   * results/figures/figure3.tiff
 #
 ################################################################################
 
@@ -93,14 +93,17 @@ taxonomy <- taxonomy[sig_otus]
 
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0(taxonomy, " (OTU ", otu, ")")
+label <- paste0("italic(", taxonomy,")~(OTU~", otu, ")")
 
-pdf(file="results/figures/figure3.pdf", width=6.875, height=4.5)
+tiff(file="results/figures/figure3.tiff", width=6.875, height=4.5, unit="in", res=300)
     par(cex=1.2)
 
-    layout(matrix(c(1,4,2,5,3,6), nrow=3, byrow=T), width=c(1,0.25), height=c(1,1,1.1))
+    layout_matrix <- matrix(c(1,4,2,5,3,6), nrow=3, byrow=T)
+    layout_matrix <- cbind(c(7,7,0), layout_matrix, c(8,8,0))
 
-    par(mar=c(0.5,5,1.5,0.5))
+    layout(layout_matrix, width=c(0.15, 1, 0.25, 0.15), height=c(1,1,1.1))
+
+    par(mar=c(0.75,0.75,1.5,0.5))
 
     sig_amp <- amp[,sig_otus]
     amp_metadata$experiment <- factor(amp_metadata$experiment, levels=c("top_dose", "delay"))
@@ -137,18 +140,15 @@ pdf(file="results/figures/figure3.pdf", width=6.875, height=4.5)
     text(x=0.5, y=89, label="Metronidazole (1 mg/mL)", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
 
+    text(x=apply(z, 2, mean)+1.25, y=par("usr")[1]-8, xpd=NA, label=parse(text=label), pos=2, srt=70, cex=0.9)
 
-
-    text(x=apply(z, 2, mean)+0.75, y=par("usr")[1]-8, xpd=NA, label=label, pos=2, srt=70, cex=1)
-
-    mtext(side=2, "Relative abundance (%)", line=3, at=68)
 
     plot.new()
 
 
 
 
-    par(mar=c(0.5,0.5,1.5,5))
+    par(mar=c(0.5,0.5,1.5,1.5))
 
     n <- table(delay$abx, delay$experiment)
 
@@ -178,14 +178,15 @@ pdf(file="results/figures/figure3.pdf", width=6.875, height=4.5)
     text(x=2, y=rep(4e8), labels=c("*"), cex=2)
     text(x=c(1, 1.5,2.5),y=c(4e9, 4e9, 4e9), labels=c("N=", n["metro", 2:1]), xpd=T)
 
-
-
-
-
-    mtext(side=4, "C. difficile colonization (CFU/g)", line=3, at=1e10)
-
-
     text(x=q+0.3, y=par("usr")[1]-0.5, xpd=NA, label=c("1 day recovery", "6 days recovery"), pos=2, srt=70, cex=1.2)
     plot.new()
+
+    plot.new()
+    par(mar=c(0,0,0,0))
+    text(x=0.5, y=0.5, "Relative abundance (%)", srt=90, cex=1.5)
+
+    plot.new()
+    text(x=0.5, y=0.5, expression(italic(C.~difficile)~colonization~(CFU/g)), srt=-90, cex=1.5)
+
 
 dev.off()
