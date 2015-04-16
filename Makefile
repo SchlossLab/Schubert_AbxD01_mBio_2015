@@ -189,13 +189,13 @@ results/figures/figure4.tiff data/process/correlation_analysis.tsv : code/build_
 results/figures/figure5.tiff results/figures/figure6.tiff results/figures/figureS4.tiff data/process/random_forest.data : code/build_figure5_6_S4.R $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.subsample.shared $(BASIC_STEM).pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figure5_6_S4.R')"
 
-results/figures/figureS1.pdf : code/build_figureS1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
+results/figures/figureS1.tiff : code/build_figureS1.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
 			R -e "source('code/build_figureS1.R')"
 
-results/figures/figureS2.pdf : code/build_figureS2.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
+results/figures/figureS2.tiff : code/build_figureS2.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
 		R -e "source('code/build_figureS2.R')"
 
-results/figures/figureS3.pdf : code/build_figureS3.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
+results/figures/figureS3.tiff : code/build_figureS3.R $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.subsample.shared $(BASIC_STEM).pick.v4.wang.pick.pick.tx.5.cons.taxonomy data/process/abxD1.counts
 	R -e "source('code/build_figureS3.R')"
 
 
@@ -213,9 +213,9 @@ write.paper : $(BASIC_STEM).pick.pick.pick.an.unique_list.topdose.thetayc.0.03.l
 				results/figures/figure4.tiff\
 				results/figures/figure5.tiff\
 				results/figures/figure6.tiff\
-				results/figures/figureS1.pdf\
-				results/figures/figureS2.pdf\
-				results/figures/figureS3.pdf\
+				results/figures/figureS1.tiff\
+				results/figures/figureS2.tiff\
+				results/figures/figureS3.tiff\
 				results/figures/figureS4.tiff
 	R -e "library(knitr);knit2html('Schubert_abxD01_mBio_2015.Rmd', 'Schubert_abxD01_mBio_2015.html')"
 	pandoc -f markdown -t docx Schubert_abxD01_mBio_2015.md -o Schubert_abxD01_mBio_2015.docx

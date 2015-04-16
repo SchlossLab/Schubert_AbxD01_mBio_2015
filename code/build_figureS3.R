@@ -93,7 +93,7 @@ delay_phylum_barplot <- function(drug, label){
     z
 }
 
-pdf(height=3.25, width=3.75, file="results/figures/figureS3.pdf")
+tiff(height=3.25, width=3.75, file="results/figures/figureS3.tiff", res=300, unit="in")
 
     z <- layout(
         matrix( c(  1,
@@ -107,7 +107,7 @@ pdf(height=3.25, width=3.75, file="results/figures/figureS3.pdf")
     pos <- delay_phylum_barplot("metro", "Metronidazole")
     mtext(side=2, at=110, line=3,"Relative Abundance (%)")
 
-    text(x=pos[2,]-0.3, y=par("usr")[3]-5, labels=taxonomy, srt=70, cex=1, xpd=NA, adj=c(1,1))
+    text(x=pos[2,]-0.6, y=par("usr")[3]-5, labels=taxonomy, srt=70, cex=1, xpd=NA, adj=c(1,1), font=3)
 
 
 dev.off()

@@ -86,7 +86,7 @@ titration_phylum_barplot <- function(drug, label){
     z
 }
 
-pdf(height=5, width=3.75, file="results/figures/figureS2.pdf")
+tiff(height=5, width=3.75, file="results/figures/figureS2.tiff", unit="in", res=300)
 
     z <- layout(
         matrix( c(  1,
@@ -102,7 +102,7 @@ pdf(height=5, width=3.75, file="results/figures/figureS2.pdf")
     mtext(side=2, line=3,"Relative Abundance (%)")
     pos <- titration_phylum_barplot("vanc", "Vancomycin")
 
-    text(x=pos[2,]-0.3, y=par("usr")[3]-5, labels=taxonomy, srt=70, cex=1, xpd=NA, adj=c(1,1))
+    text(x=pos[2,]-0.3, y=par("usr")[3]-5, labels=taxonomy, srt=70, cex=1, xpd=NA, adj=c(1,1), font=3)
 
 
 dev.off()
