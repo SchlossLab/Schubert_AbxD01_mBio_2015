@@ -58,10 +58,10 @@ taxonomy <- gsub("/.*", "", taxonomy)
 taxonomy <- gsub(".*;", "", taxonomy)
 taxonomy <- gsub("_sensu_stricto", "", taxonomy)
 
-otus <- gsub("tu0*", "TU~", names(taxonomy))
+otus <- gsub("tu0*", "TU ", names(taxonomy))
 names(otus) <- names(taxonomy)
 
-tax_otu_labels <- paste0("italic(", taxonomy, ")~(", otus, ")")
+tax_otu_labels <- paste0("italic('", taxonomy, "')~plain('(", otus, ")')")
 names(tax_otu_labels) <- names(taxonomy)
 
 # limit the analysis to those OTUs that have an median relative abundance over
@@ -91,9 +91,9 @@ counts_file$fit_full <- predict(rf_full, abund_good)
 n_features <- 12
 importance_subset <- importance_sorted[1:n_features]
 
-tax_otu_imp_labels <- paste0("italic(", taxonomy[names(importance_subset)],
-                        ")~(",
-                        otus[names(importance_subset)], ")")
+tax_otu_imp_labels <- paste0("bolditalic('", taxonomy[names(importance_subset)],
+                        "')~bold('(",
+                        otus[names(importance_subset)], ")')")
 names(tax_otu_imp_labels) <- names(taxonomy[names(importance_subset)])
 
 
@@ -107,7 +107,7 @@ write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.d
 # supplemental figure 4: full feature importance plot
 tiff(file="results/figures/figureS4.tiff", width=4, height=5.0, unit="in", res=300)
 
-    par(mar=c(3,9,0.5,0.5))
+    par(mar=c(3,8,0.5,0.5))
     plot(NA, yaxt="n", xlab="", ylab="", xlim=c(min(importance_sorted), 100),
         ylim=c(1, length(importance_sorted)), axes=F)
 
@@ -115,7 +115,7 @@ tiff(file="results/figures/figureS4.tiff", width=4, height=5.0, unit="in", res=3
     points(x=rev(importance_sorted), y=1:length(importance_sorted), pch=19, cex=0.8)
     axis(1, at=seq(0,100,25), label=c("0", "", "50", "", "100"), cex=0.8)
     box()
-    mtext(side=2, line=8.5, adj=0, at=1:length(importance_sorted), text=parse(text=rev(tax_otu_labels[names(importance_sorted)])), las=2, cex=0.6)
+    mtext(side=2, line=7.5, adj=0, at=1:length(importance_sorted), text=parse(text=rev(tax_otu_labels[names(importance_sorted)])), las=2, cex=0.6)
     mtext(side=1, text="% Increase in MSE", line=2.0)
 
 dev.off()

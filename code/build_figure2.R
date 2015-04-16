@@ -11,7 +11,7 @@
 #   * data/process/abxD1.counts
 #
 # Output...
-#   * results/figures/figure2.pdf
+#   * results/figures/figure2.tiff
 #
 ################################################################################
 
@@ -109,7 +109,7 @@ taxonomy <- taxonomy[sig_otus]
 
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0("italic(", taxonomy,")~(OTU~", otu, ")")
+label <- paste0("italic('", taxonomy,"')~(OTU~", otu, ")")
 
 #tax_label <- paste0("italic(", taxonomy[sig_otus[o]], ")~(", otu[sig_otus[o]], ")")
 
@@ -189,7 +189,7 @@ tiff(file="results/figures/figure2.tiff", width=6.875, height=5.75, unit="in", r
             fill=c("black", "gray", "white"), bg="white")
 
     text(x=apply(z, 2, mean)+1.75, y=par("usr")[1]-5, xpd=NA,
-                label=parse(text=label), pos=2, srt=70, cex=0.9)
+                label=parse(text=label), pos=2, srt=70, cex=1.0)
 
 
     plot.new()
@@ -246,6 +246,6 @@ tiff(file="results/figures/figure2.tiff", width=6.875, height=5.75, unit="in", r
 
     plot.new()
     par(mar=c(0.1,0.1,0.1,0.1))
-    text(x=0.75, y=0.5, expression(italic(C.~difficile)~colonization~(CFU/g)), srt=-90, cex=1.5)
+    text(x=0.75, y=0.5, expression(italic('C. difficile')~colonization~(CFU/g)), srt=-90, cex=1.5)
 
 dev.off()

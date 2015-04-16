@@ -93,7 +93,7 @@ taxonomy <- taxonomy[sig_otus]
 
 otu <- gsub("Otu0*", "", names(taxonomy))
 
-label <- paste0("italic(", taxonomy,")~(OTU~", otu, ")")
+label <- paste0("italic('", taxonomy,"')~(OTU~", otu, ")")
 
 tiff(file="results/figures/figure3.tiff", width=6.875, height=4.5, unit="in", res=300)
     par(cex=1.2)
@@ -140,7 +140,7 @@ tiff(file="results/figures/figure3.tiff", width=6.875, height=4.5, unit="in", re
     text(x=0.5, y=89, label="Metronidazole (1 mg/mL)", adj=c(0,1), cex=1.2, font=2, xpd=T)
 
 
-    text(x=apply(z, 2, mean)+1.25, y=par("usr")[1]-8, xpd=NA, label=parse(text=label), pos=2, srt=70, cex=0.9)
+    text(x=apply(z, 2, mean)+1.25, y=par("usr")[1]-8, xpd=NA, label=parse(text=label), pos=2, srt=70, cex=1.0)
 
 
     plot.new()
@@ -186,7 +186,7 @@ tiff(file="results/figures/figure3.tiff", width=6.875, height=4.5, unit="in", re
     text(x=0.5, y=0.5, "Relative abundance (%)", srt=90, cex=1.5)
 
     plot.new()
-    text(x=0.5, y=0.5, expression(italic(C.~difficile)~colonization~(CFU/g)), srt=-90, cex=1.5)
+    text(x=0.5, y=0.5, expression(italic('C. difficile')~colonization~(CFU/g)), srt=-90, cex=1.5)
 
 
 dev.off()
