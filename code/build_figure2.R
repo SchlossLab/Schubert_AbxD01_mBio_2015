@@ -194,8 +194,7 @@ tiff(file="results/figures/figure2.tiff", width=6.875, height=5.75, unit="in", r
 
     plot.new()
 
-
-    par(mar=c(0.5,0.5,1.5,0.5))
+    par(mar=c(0.75,0.5,1.5,0.5))
 
     cef_cfu_med <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), median)[,-1]+0.1
     cef_cfu_uci <- aggregate(cef_metadata$CFU, by=list(cef_metadata$dose), function(x){quantile(x, prob=0.75)})[,-1]+0.1

@@ -147,8 +147,7 @@ tiff(file="results/figures/figure3.tiff", width=6.875, height=4.5, unit="in", re
 
 
 
-
-    par(mar=c(0.5,0.5,1.5,1.5))
+    par(mar=c(0.75,0.5,1.5,1.5))
 
     n <- table(delay$abx, delay$experiment)
 
