@@ -106,16 +106,16 @@ tiff(height=9, width=3.75, file="results/figures/figureS1.tiff", unit="in", res=
     par(mar=c(0.5, 5, 1.25, 0.5))
 
     pos <- fulldose_phylum_barplot("control", "No antibiotics")
-    pos <- fulldose_phylum_barplot("amp", "Ampicillin")
-    pos <- fulldose_phylum_barplot("cef", "Cefoperazone")
     pos <- fulldose_phylum_barplot("cipro", "Ciprofloxacin")
+    pos <- fulldose_phylum_barplot("vanc", "Vancomycin")
+    pos <- fulldose_phylum_barplot("amp", "Ampicillin")
 
-    mtext(side=2, line=3, "Relative Abundance (%)")
+    mtext(side=2, line=3, at=0, "Relative Abundance (%)")
 
     pos <- fulldose_phylum_barplot("clinda", "Clindamycin")
-    pos <- fulldose_phylum_barplot("metro", "Metronidazole")
     pos <- fulldose_phylum_barplot("strep", "Streptomycin")
-    pos <- fulldose_phylum_barplot("vanc", "Vancomycin")
+    pos <- fulldose_phylum_barplot("metro", "Metronidazole")
+    pos <- fulldose_phylum_barplot("cef", "Cefoperazone")
     text(x=pos+0.1, y=par("usr")[3]-10, labels=rownames(med_ra), srt=70, cex=1, font=3, pos=2, xpd=NA)
 
 dev.off()
