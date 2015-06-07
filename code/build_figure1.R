@@ -182,7 +182,7 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
     axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
 
     if(summary_stats[2] == 0){
-        text(x=0.2, y=10, label="NC")
+        text(x=0.2, y=10, label=expression(plain('<10')^2))
     }
 
     z
@@ -213,13 +213,14 @@ tiff(file="results/figures/figure1.tiff", width=4.5, height=10.0, unit="in", res
     par(mar=c(0.75,0.25,1.5,0.5), oma=c(0,0,0,0))
 
     z <- single_drug_bars("control", "", "No antibiotics")
-    z <- single_drug_bars("amp", amp_sig_otus, "Ampicillin (0.5 mg/mL)")
-    z <- single_drug_bars("cef", cef_sig_otus, "Cefoperazone (0.5 mg/mL)")
     z <- single_drug_bars("cipro", cipro_sig_otus, "Ciprofloxacin (10 mg/kg)")
-    z <- single_drug_bars("clinda", clinda_sig_otus, "Clindamycin (10 mg/kg)")
-    z <- single_drug_bars("metro", metro_sig_otus, "Metronidazole (1 mg/mL)")
-    z <- single_drug_bars("strep", strep_sig_otus, "Streptomycin (5 mg/mL)")
     z <- single_drug_bars("vanc", vanc_sig_otus, "Vancomycin (0.625 mg/mL)")
+
+    z <- single_drug_bars("amp", amp_sig_otus, "Ampicillin (0.5 mg/mL)")
+    z <- single_drug_bars("clinda", clinda_sig_otus, "Clindamycin (10 mg/kg)")
+    z <- single_drug_bars("strep", strep_sig_otus, "Streptomycin (5 mg/mL)")
+    z <- single_drug_bars("metro", metro_sig_otus, "Metronidazole (1 mg/mL)")
+    z <- single_drug_bars("cef", cef_sig_otus, "Cefoperazone (0.5 mg/mL)")
 
     plot(NA, type="n", axes=F, xlim=c(0, max(z)), ylim=c(0,1))
     text(x=z+0.5, y=1.2, xpd=NA, label=parse(text=tax_label), pos=2, srt=70, cex=1.0)
