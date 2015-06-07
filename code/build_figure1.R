@@ -61,6 +61,7 @@ control_median <- apply(control_rabund, 2, median)
 control_otus <- control_median > 1.0
 
 otu_hyp_test <- function(drug){
+
     drug_rabund <- rel_abund[top_dose$abx == drug,]
     drug_metadata <- top_dose[top_dose$abx == drug,]
     drug_otus <- apply(drug_rabund, 2, median) > 3.0
@@ -73,9 +74,14 @@ otu_hyp_test <- function(drug){
 
     p_values <- rep(NA, n_otus)
 
+    warn_orig <- options("warn")$warn
+    options("warn"= -1)
+
     for(i in 1:n_otus){
         p_values[i] <- wilcox.test(combined_rabund[,i], g=drugged)$p.value
     }
+
+    options("warn" = warn_orig)
 
     adj_p_values <- p.adjust(p_values, method="BH")
     colnames(combined_rabund)[adj_p_values<0.05]
@@ -106,6 +112,9 @@ tax_label <- paste0("italic('", taxonomy[sig_otus[o]], "')~(", otu[sig_otus[o]],
 
 single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 
+#    drug <- "control"
+#    drug_sig_otus <- ""
+#    drug_label <- "No antibiotics"
     drug_rabund <- rel_abund_sig[top_dose$abx == drug,]
     drug_metadata <- top_dose[top_dose$abx == drug,]
 
@@ -119,31 +128,65 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
                     ylim=c(0,1+max(drug_uci)), xlim=c(0,x_max), axes=F,
                     col="white")
 
+    warn_orig <- options("warn")$warn
+    options("warn"= -1)
+
     arrows(x0=z, y0=drug_med, y1=drug_uci, angle=90, length=0.05)
     arrows(x0=z, y0=drug_med, y1=drug_lci, angle=90, length=0.05)
+
+    options("warn"= warn_orig)
 
     text(x=z[sig_otus[o] %in% drug_sig_otus], y=-0.05*max(drug_uci),
                                             labels="*", cex=2, xpd=TRUE)
 
     axis(2, las=1)
     box()
+
+    if(grepl(")", drug_label)){
+        drug_label <- gsub(")", paste0("; N=", n, ")"), drug_label)
+    } else {
+        drug_label <- paste0(drug_label, "; N=", n, ")")
+    }
+
     text(x=par("usr")[1], y=par("usr")[4]*1.175, label=drug_label,
                                 adj=c(0,1), cex=1.2, font=2, xpd=TRUE)
 
-    summary_stats <- format(quantile(drug_metadata$CFU,
-                            prob=c(0.25, 0.50, 0.75)), scientific=T, digits=2)
 
-    summary_string <- paste0(summary_stats[2], "~(", summary_stats[1], "-", summary_stats[3], ")")
 
-    summary_string <- gsub("(\\d\\.\\d*)e\\+0", "plain('\\1x10')^", summary_string)
-    summary_string <- gsub("0e\\+00", "plain('<1x10')^2", summary_string)
 
-    summary_string <- paste0(summary_string, "~plain(' N=", n, "')")
+#    summary_stats <- format(quantile(drug_metadata$CFU,
+#                            prob=c(0.25, 0.50, 0.75)), scientific=T, digits=2)
+#
+#    summary_string <- paste0(summary_stats[2], "~(", summary_stats[1], "-", summary_stats[3], ")")
+#
+#    summary_string <- gsub("(\\d\\.\\d*)e\\+0", "plain('\\1x10')^", summary_string)
+#    summary_string <- gsub("0e\\+00", "plain('<1x10')^2", summary_string)
+#
+#    summary_string <- paste0(summary_string, "~plain(' N=", n, "')")
+#
+#    text(x=par("usr")[2], y=1.05*par("usr")[4], labels=parse(text=summary_string),
+#                                adj=c(1,0), pos=2, cex=0.8, xpd=TRUE)
 
-    text(x=par("usr")[2], y=1.05*par("usr")[4], labels=parse(text=summary_string),
-                                adj=c(1,0), pos=2, cex=0.8, xpd=TRUE)
+    summary_stats <- quantile(drug_metadata$CFU, prob=c(0.25, 0.50, 0.75))
+    z2 <- barplot(summary_stats[2]+1, width=0.3, xlim=c(-0.1,0.5), ylim=c(1,1e9), log="y", axes=FALSE, col="white", names.arg="")
+
+    warn_orig <- options("warn")$warn
+    options("warn"= -1)
+
+    arrows(x0=z2, y0=summary_stats[2]+1, y1=summary_stats[3]+1, angle=90, length=0.05)
+    arrows(x0=z2, y0=summary_stats[2]+1, y1=summary_stats[1]+1, angle=90, length=0.05)
+
+    options("warn"= warn_orig)
+
+    box()
+    axis(4, las=1, at=c(1, 1e2, 1e4, 1e6, 1e8), label=c(0, expression(10^2), expression(10^4), expression(10^6), expression(10^8)))
+
+    if(summary_stats[2] == 0){
+        text(x=0.2, y=10, label="NC")
+    }
 
     z
+
 }
 
 
@@ -151,33 +194,45 @@ single_drug_bars <- function(drug, drug_sig_otus, drug_label){
 tiff(file="results/figures/figure1.tiff", width=4.5, height=10.0, unit="in", res=300)
     par(cex=1.2)
 
-    layout(matrix(c(
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9
-        ),
-        nrow=9, byrow=T), width=c(1), height=c(1,1,1,1,1,1,1,1,1.5))
+    layout_matrix <-matrix(c(
+            1,  2,
+            3,  4,
+            5,  6,
+            7,  8,
+            9, 10,
+           11, 12,
+           13, 14,
+           15, 16,
+           17, 18
+        ),nrow=9, byrow=T)
+    layout_matrix <- cbind(c(rep(19,8),0), layout_matrix, c(rep(20,8),0))
 
-    par(mar=c(0.5,5,1.5,0.5))
+    layout(layout_matrix, width=c(0.2, 1.25, 0.15, 0.2), height=c(rep(1,8),1.5))
+
+#    par(mar=c(0.5,5,1.5,0.5))
+    par(mar=c(0.75,0.25,1.5,0.5), oma=c(0,0,0,0))
 
     z <- single_drug_bars("control", "", "No antibiotics")
     z <- single_drug_bars("amp", amp_sig_otus, "Ampicillin (0.5 mg/mL)")
     z <- single_drug_bars("cef", cef_sig_otus, "Cefoperazone (0.5 mg/mL)")
     z <- single_drug_bars("cipro", cipro_sig_otus, "Ciprofloxacin (10 mg/kg)")
     z <- single_drug_bars("clinda", clinda_sig_otus, "Clindamycin (10 mg/kg)")
-    mtext(side=2, "Relative abundance (%)", line=3, at=110)
-
     z <- single_drug_bars("metro", metro_sig_otus, "Metronidazole (1 mg/mL)")
     z <- single_drug_bars("strep", strep_sig_otus, "Streptomycin (5 mg/mL)")
     z <- single_drug_bars("vanc", vanc_sig_otus, "Vancomycin (0.625 mg/mL)")
 
-    text(x=z+0.7, y=par("usr")[1]-10, xpd=NA, label=parse(text=tax_label), cex=1.0, pos=2, srt=70)
+    plot(NA, type="n", axes=F, xlim=c(0, max(z)), ylim=c(0,1))
+    text(x=z+0.5, y=1.2, xpd=NA, label=parse(text=tax_label), pos=2, srt=70, cex=1.0)
+
+
+        plot.new()
+
     plot.new()
+    par(mar=c(0.1,0.1,0.1,0.1))
+    text(x=0.25, y=0.5, "Relative abundance (%)", srt=90, cex=1.5)
+
+    plot.new()
+    par(mar=c(0.1,0.1,0.1,0.1))
+    text(x=0.75, y=0.5, expression(italic('C. difficile')~colonization~(CFU/g)), srt=-90, cex=1.5)
 
 dev.off()
