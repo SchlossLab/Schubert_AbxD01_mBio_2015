@@ -79,7 +79,7 @@ n_trees <- 1e4
 set.seed("6201976")
 rf_full <- randomForest(logCFU ~ ., data=abund_good, importance=TRUE, ntree=n_trees)
 
-write(c(ncol(abund_good), rf_full$rsq[n_trees]), file="data/process/random_forest.data")
+write(paste("full", ncol(abund_good), rf_full$rsq[n_trees], sep="\t"), file="data/process/random_forest.data")
 
 # sort the features by their effect on % increase in the standard error
 importance_sorted <- sort(importance(rf_full)[,1], decreasing=T)
@@ -92,13 +92,17 @@ n_features <- 12
 importance_subset <- importance_sorted[1:n_features]
 
 
-
-
 # let's get Rsq for the subset
 set.seed("6201976")
 rf_partial <- randomForest(logCFU ~ ., data=abund_good[,names(importance_sorted)[1:n_features]], importance=TRUE, ntree=n_trees)
-write(c(n_features, rf_partial$rsq[n_trees]), file="data/process/random_forest.data", append=T)
+write(paste("partial", n_features, rf_partial$rsq[n_trees], "\t"), file="data/process/random_forest.data", append=T)
 
+
+
+colonized <- rep("yes", length(logCFU))
+colonized[logCFU<2] <- "no"
+binary_model <- randomForest(x=abund_good, y=as.factor(colonized), importance=TRUE, ntree=n_trees)
+write(paste("binary", ncol(abund_good), binary_model$err.rate[n_trees], "\t"), file="data/process/random_forest.data", append=T)
 
 # supplemental figure 4: full feature importance plot
 tiff(file="results/figures/figureS4.tiff", width=4, height=5.0, unit="in", res=300)
@@ -111,7 +115,10 @@ tiff(file="results/figures/figureS4.tiff", width=4, height=5.0, unit="in", res=3
     points(x=rev(importance_sorted), y=1:length(importance_sorted), pch=19, cex=0.8)
     axis(1, at=seq(0,100,25), label=c("0", "", "50", "", "100"), cex=0.8)
     box()
-    mtext(side=2, line=7.5, adj=0, at=1:length(importance_sorted), text=parse(text=rev(tax_otu_labels[names(importance_sorted)])), las=2, cex=0.6)
+    mtext(side=2, line=7.5, adj=0, at=1:length(importance_sorted),
+            text=parse(text=rev(tax_otu_labels[names(importance_sorted)])),
+            las=2, cex=0.6,
+            col=c(rep("black", length(importance_sorted)-12), rep("red", 12)))
     mtext(side=1, text="% Increase in MSE", line=2.0)
 
 dev.off()
@@ -191,29 +198,26 @@ tiff(file="results/figures/figure5.tiff", width=5.0, height=6.0, unit="in", res=
     #legend("topleft", pch=19, col="black", bty="n", legend="No antibiotics", cex=0.7)
     axis(2, las=2)
 
-    #amp
-    make_gray_plot("amp")
-    make_colored_plot("amp")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Ampicillin", adj=c(0,0), font=2)
-    legend("topleft", col=clrs["amp-0.5-top_dose"], cex=0.7, pch=c(19, 1), bty="n",
-        legend=c("1 day recovery", "6 days recovery"))
-
-
-    #cef
-    make_gray_plot("cef")
-    make_colored_plot("cef")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Cefoperazone", adj=c(0,0), font=2)
-    legend("topleft", col=clrs["cef-0.5-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
-        legend=c("0.5 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
-    axis(2, las=2)
-
-
     #cipro
     make_gray_plot("cipro")
     make_colored_plot("cipro")
     text(x=-0.25, y=9.75, xpd=TRUE, label="Ciprofloxacin", adj=c(0,0), font=2)
     #legend("topleft", pch=19, bty="n", col="lightgreen", legend="Ciprofloxacin", cex=0.7)
 
+    #vanc
+    make_gray_plot("vanc")
+    make_colored_plot("vanc")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Vancomycin", adj=c(0,0), font=2)
+    legend("topleft", col=clrs["vanc-0.625-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
+        legend=c("0.625 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
+    axis(2, las=2)
+
+    #amp
+    make_gray_plot("amp")
+    make_colored_plot("amp")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Ampicillin", adj=c(0,0), font=2)
+    legend("topleft", col=clrs["amp-0.5-top_dose"], cex=0.7, pch=c(19, 1), bty="n",
+        legend=c("1 day recovery", "6 days recovery"))
 
     #clinda
     make_gray_plot("clinda")
@@ -222,6 +226,12 @@ tiff(file="results/figures/figure5.tiff", width=5.0, height=6.0, unit="in", res=
     #legend("topleft", pch=19, bty="n", col="darkgreen", legend="Clindamycin", cex=0.7)
     axis(2, las=2)
 
+    #strep
+    make_gray_plot("strep")
+    make_colored_plot("strep")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Streptomycin", adj=c(0,0), font=2)
+    legend("topleft", col=clrs["strep-5-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
+                legend=c("5 mg/mL", "0.5 mg/mL", "0.1 mg/mL"))
 
     #metro
     make_gray_plot("metro")
@@ -229,24 +239,17 @@ tiff(file="results/figures/figure5.tiff", width=5.0, height=6.0, unit="in", res=
     text(x=-0.25, y=9.75, xpd=TRUE, label="Metronidazole", adj=c(0,0), font=2)
     legend("topleft", col=clrs["metro-1-top_dose"], cex=0.7, pch=c(19, 1), bty="n",
         legend=c("1 day recovery", "6 days recovery"))
-
-
-    #strep
-    make_gray_plot("strep")
-    make_colored_plot("strep")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Streptomycin", adj=c(0,0), font=2)
-    legend("topleft", col=clrs["strep-5-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
-        legend=c("5 mg/mL", "0.5 mg/mL", "0.1 mg/mL"))
+    axis(1)
     axis(2, las=2)
+
+            #cef
+    make_gray_plot("cef")
+    make_colored_plot("cef")
+    text(x=-0.25, y=9.75, xpd=TRUE, label="Cefoperazone", adj=c(0,0), font=2)
+    legend("topleft", col=clrs["cef-0.5-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
+        legend=c("0.5 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
     axis(1)
 
-    #vanc
-    make_gray_plot("vanc")
-    make_colored_plot("vanc")
-    text(x=-0.25, y=9.75, xpd=TRUE, label="Vancomycin", adj=c(0,0), font=2)
-    legend("topleft", col=clrs["vanc-0.625-top_dose"], cex=0.7, pch=c(19, 17, 15), bty="n",
-        legend=c("0.625 mg/mL", "0.3 mg/mL", "0.1 mg/mL"))
-    axis(1)
 
     plot.new()
     par(mar=rep(0.1,4))
